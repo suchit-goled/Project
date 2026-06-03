@@ -768,9 +768,17 @@ app.get("/all-orders", async (req, res) => {
       await Order.find()
         .sort({ _id: -1 });
 
-  } catch (err) {
+    res.json(orders);
+
+  }
+
+  catch (err) {
 
     console.log(err);
+
+    res.status(500).json({
+      success: false
+    });
 
   }
 

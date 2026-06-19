@@ -829,14 +829,9 @@ app.put(
 // SERVER
 // ==============================
 
-app.listen(8000, () => {
+const PORT = process.env.PORT || 8000;
 
-  console.log(
-    "Server Running On 8000"
-  );
-
+app.listen(PORT, () => {
+  console.log(`Server Running On ${PORT}`);
 });
 
-app.get("/", (req, res) => {
-  res.send("Backend Running");
-});

@@ -22,21 +22,21 @@ function Admin() {
     useEffect(() => {
 
         // PRODUCTS
-        axios.get("http://localhost:8000/admin/products")
+        axios.get("https://your-render-url.onrender.com/admin/products")
             .then((res) => {
                 setProducts(res.data);
             })
             .catch((err) => console.log(err));
 
         // CARTS
-        axios.get("http://localhost:8000/admin/carts")
+        axios.get("https://your-render-url.onrender.com/admin/carts")
             .then((res) => {
                 setCarts(res.data);
             })
             .catch((err) => console.log(err));
 
         // USERS
-        axios.get("http://localhost:8000/admin/users")
+        axios.get("https://your-render-url.onrender.com/admin/users")
             .then((res) => {
                 setUsers(res.data);
             })
@@ -56,7 +56,7 @@ function Admin() {
         try {
 
             await axios.post(
-                "http://localhost:8000/admin/add-product",
+                "https://your-render-url.onrender.com/admin/add-product",
                 {
                     product_title: title,
                     discounted_price: price,
@@ -74,7 +74,7 @@ function Admin() {
 
             // refresh products
             const updated = await axios.get(
-                "http://localhost:8000/admin/products"
+                "https://your-render-url.onrender.com/admin/products"
             );
 
             setProducts(updated.data);
@@ -93,7 +93,7 @@ function Admin() {
         try {
 
             await axios.delete(
-                `http://localhost:8000/admin/delete-product/${id}`
+                `https://your-render-url.onrender.com/admin/delete-product/${id}`
             );
 
             alert("Product Deleted");
@@ -116,7 +116,7 @@ function Admin() {
         try {
 
             await axios.delete(
-                `http://localhost:8000/admin/delete-user/${id}`
+                `https://your-render-url.onrender.com/admin/delete-user/${id}`
             );
 
             alert("User Deleted");
@@ -139,7 +139,7 @@ function Admin() {
         try {
 
             await axios.put(
-                `http://localhost:8000/admin/update-role/${id}`,
+                `https://your-render-url.onrender.com/admin/update-role/${id}`,
                 { role }
             );
 
@@ -167,7 +167,7 @@ function Admin() {
         try {
 
             await axios.put(
-                `http://localhost:8000/admin/ban-user/${id}`
+                `https://your-render-url.onrender.com/admin/ban-user/${id}`
             );
 
             alert("User Banned");

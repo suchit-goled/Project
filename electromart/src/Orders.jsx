@@ -19,7 +19,7 @@ function Orders() {
       })
       .catch((err) => console.log(err));
 
-  }, []);
+  }, [userId]);
 
   // CANCEL ORDER
   const cancelOrder = async (id) => {

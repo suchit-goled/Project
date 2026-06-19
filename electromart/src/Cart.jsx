@@ -18,7 +18,7 @@ function Cart() {
       .then((res) => setItems(res.data))
       .catch((err) => console.log(err));
 
-  }, []);
+  }, [userId]);
 
   // REMOVE ITEM
   const removeItem = async (productId) => {

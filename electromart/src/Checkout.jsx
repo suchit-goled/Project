@@ -35,7 +35,7 @@ function Checkout() {
             .then((res) => setItems(res.data))
             .catch((err) => console.log(err));
 
-    }, []);
+    }, [userId]);
 
     // PLACE ORDER
 

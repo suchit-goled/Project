@@ -19,15 +19,13 @@ app.use(cors());
 // DATABASE CONNECTION
 // ==============================
 console.log(process.env.MONGO_URI);
-
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("✅ Atlas Connected");
-  })
-  .catch((err) => {
-    console.log("❌ Atlas Error");
-    console.log(err);
-  });
+mongoose.connect(process.env.MONGO_URI, {
+  dbName: "ElectroNova"
+})
+.then(() => {
+  console.log("✅ Atlas Connected");
+  console.log("Database:", mongoose.connection.name);
+});
 
 // ==============================
 // PRODUCT SCHEMA
@@ -50,7 +48,7 @@ const productSchema = new mongoose.Schema({
 const Product = mongoose.model(
   "Product",
   productSchema,
-  "products"
+  "Products"
 );
 
 // ==============================

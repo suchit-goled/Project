@@ -8,14 +8,14 @@ function Products() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    let url = "http://localhost:8000/products";
+    let url = "https://project-vlbr.onrender.com/products";
 
     if (category) {
-      url = `http://localhost:8000/products/category/${category}`;
+      url = `https://project-vlbr.onrender.com/products/category/${category}`;
     }
 
     if (key) {
-      url = `http://localhost:8000/products/search/${key}`;
+      url = `https://project-vlbr.onrender.com/products/search/${key}`;
     }
 
     axios.get(url)
@@ -54,7 +54,7 @@ function Products() {
                   return;
                 }
 
-                axios.post("http://localhost:8000/add-to-cart", {
+                axios.post("https://project-vlbr.onrender.com/add-to-cart", {
                   userId,
                   product: p
                 })

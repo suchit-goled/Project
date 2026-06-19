@@ -31,7 +31,7 @@ function Checkout() {
     useEffect(() => {
 
         axios
-            .get(`http://localhost:8000/cart/${userId}`)
+            .get(`https://project-vlbr.onrender.com/cart/${userId}`)
             .then((res) => setItems(res.data))
             .catch((err) => console.log(err));
 
@@ -61,7 +61,7 @@ function Checkout() {
         try {
 
             await axios.post(
-                "http://localhost:8000/place-order",
+                "https://project-vlbr.onrender.com/place-order",
                 {
 
                     userId,
@@ -228,7 +228,7 @@ function Checkout() {
                                             onClick={() => {
 
                                                 axios.put(
-                                                    "http://localhost:8000/cart/decrease",
+                                                    "https://project-vlbr.onrender.com/cart/decrease",
                                                     {
                                                         userId,
                                                         productId: item.productId
@@ -253,7 +253,7 @@ function Checkout() {
                                             onClick={() => {
 
                                                 axios.put(
-                                                    "http://localhost:8000/cart/increase",
+                                                    "https://project-vlbr.onrender.com/cart/increase",
                                                     {
                                                         userId,
                                                         productId: item.productId
@@ -277,7 +277,7 @@ function Checkout() {
                                         onClick={() => {
 
                                             axios.delete(
-                                                "http://localhost:8000/cart/remove",
+                                                "https://project-vlbr.onrender.com/cart/remove",
                                                 {
                                                     data: {
                                                         userId,

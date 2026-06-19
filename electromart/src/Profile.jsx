@@ -7,7 +7,7 @@ function Profile() {
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/cart/${userId}`)
+    axios.get(`https://project-vlbr.onrender.com/cart/${userId}`)
       .then(res => setOrders(res.data))
       .catch(err => console.log(err));
   }, [userId]);

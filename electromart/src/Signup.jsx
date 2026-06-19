@@ -8,7 +8,7 @@ function Signup() {
     const navigate = useNavigate();
 
     const handleSignup = async () => {
-        const res = await axios.post("http://localhost:8000/signup", {
+        const res = await axios.post("https://project-vlbr.onrender.com/signup", {
             username,
             password
         });

@@ -22,7 +22,7 @@ function AdminOrders() {
         try {
 
             const res = await axios.get(
-                "http://localhost:8000/all-orders"
+                "https://project-vlbr.onrender.com/all-orders"
             );
 
             console.log(res.data);
@@ -50,7 +50,7 @@ function AdminOrders() {
 
             await axios.put(
 
-                `http://localhost:8000/update-order-status/${id}`,
+                `https://project-vlbr.onrender.com/update-order-status/${id}`,
 
                 { status }
 

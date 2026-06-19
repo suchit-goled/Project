@@ -11,13 +11,13 @@ function ProductDetails() {
   const [related, setRelated] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/products/${id}`)
+    axios.get(`https://project-vlbr.onrender.com/products/${id}`)
       .then(res => {
         setProduct(res.data);
 
         // fetch related products
         return axios.get(
-          `http://localhost:8000/products/category/${res.data.product_category}`
+          `https://project-vlbr.onrender.com/products/category/${res.data.product_category}`
         );
       })
       .then(res => setRelated(res.data.slice(0, 4)))
@@ -34,7 +34,7 @@ function ProductDetails() {
     }
 
     try {
-      await axios.post("http://localhost:8000/add-to-cart", {
+      await axios.post("https://project-vlbr.onrender.com/add-to-cart", {
         userId,
         product
       });

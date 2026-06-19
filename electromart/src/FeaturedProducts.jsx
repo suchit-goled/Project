@@ -10,7 +10,7 @@ function FeaturedProducts() {
     // 🔥 Fetch featured products
     useEffect(() => {
         axios
-            .get("http://localhost:8000/featured-products")
+            .get("https://project-vlbr.onrender.com/featured-products")
             .then((res) => {
                 setProducts(res.data);
             })

@@ -11,7 +11,7 @@ function Orders() {
   useEffect(() => {
 
     axios
-      .get(`http://localhost:8000/orders/${userId}`)
+      .get(`https://project-vlbr.onrender.com/orders/${userId}`)
       .then((res) => {
 
         setOrders(res.data);
@@ -27,7 +27,7 @@ function Orders() {
     try {
 
       await axios.delete(
-        `http://localhost:8000/orders/${id}`
+        `https://project-vlbr.onrender.com/orders/${id}`
       );
 
       setOrders(

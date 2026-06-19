@@ -6,6 +6,10 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 
+import dotenv from "dotenv";
+
+dotenv.config();
+
 const app = express();
 
 app.use(express.json());
@@ -14,10 +18,16 @@ app.use(cors());
 // ==============================
 // DATABASE CONNECTION
 // ==============================
+console.log(process.env.MONGO_URI);
 
-mongoose.connect("mongodb://localhost:27017/electromart")
-  .then(() => console.log("DB Connected"))
-  .catch((err) => console.log(err));
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("✅ Atlas Connected");
+  })
+  .catch((err) => {
+    console.log("❌ Atlas Error");
+    console.log(err);
+  });
 
 // ==============================
 // PRODUCT SCHEMA
@@ -825,4 +835,8 @@ app.listen(8000, () => {
     "Server Running On 8000"
   );
 
+});
+
+app.get("/", (req, res) => {
+  res.send("Backend Running");
 });

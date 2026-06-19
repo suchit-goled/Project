@@ -89,7 +89,7 @@ function FeaturedProducts() {
                                     return;
                                 }
 
-                                axios.post("http://localhost:8000/add-to-cart", {
+                                axios.post("https://project-vlbr.onrender.com/add-to-cart", {
                                     userId,
                                     product: p
                                 })

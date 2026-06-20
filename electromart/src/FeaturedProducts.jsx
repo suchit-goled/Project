@@ -8,14 +8,17 @@ function FeaturedProducts() {
     const navigate = useNavigate();
 
     // 🔥 Fetch featured products
-    useEffect(() => {
-        axios
-            .get("https://project-vlbr.onrender.com/featured-products")
-            .then((res) => {
-                setProducts(res.data);
-            })
-            .catch((err) => console.log(err));
-    }, []);
+   useEffect(() => {
+    console.log("NEW FEATURED PRODUCTS CODE RUNNING");
+
+    axios
+      .get("https://project-vlbr.onrender.com/featured-products")
+      .then((res) => {
+          console.log(res.data);
+          setProducts(res.data);
+      })
+      .catch(console.error);
+}, []);
 
     // 🔄 Auto slide
     useEffect(() => {

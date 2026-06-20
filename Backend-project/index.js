@@ -175,13 +175,28 @@ app.get("/products", async (req, res) => {
 
 // FEATURED PRODUCTS
 app.get("/featured-products", async (req, res) => {
+  try {
 
-  const data = await Product.find({
-    isFeatured: true
-  }).limit(10);
+    console.log("DB:", mongoose.connection.name);
+    console.log("Collection:", Product.collection.name);
 
-  res.json(data);
+    const count = await Product.countDocuments();
 
+    console.log("Total Products:", count);
+
+    const data = await Product.find().limit(5);
+
+    res.json(data);
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: err.message
+    });
+
+  }
 });
 
 // SINGLE PRODUCT

@@ -1,4 +1,4 @@
-console.log("DEPLOY VERSION 20-JUNE");
+
 
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";

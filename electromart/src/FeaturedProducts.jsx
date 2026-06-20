@@ -1,3 +1,5 @@
+console.log("DEPLOY VERSION 20-JUNE");
+
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -8,17 +10,17 @@ function FeaturedProducts() {
     const navigate = useNavigate();
 
     // 🔥 Fetch featured products
-   useEffect(() => {
-    console.log("NEW FEATURED PRODUCTS CODE RUNNING");
+    useEffect(() => {
+        console.log("NEW FEATURED PRODUCTS CODE RUNNING");
 
-    axios
-      .get("https://project-vlbr.onrender.com/featured-products")
-      .then((res) => {
-          console.log(res.data);
-          setProducts(res.data);
-      })
-      .catch(console.error);
-}, []);
+        axios
+            .get("https://project-vlbr.onrender.com/featured-products")
+            .then((res) => {
+                console.log(res.data);
+                setProducts(res.data);
+            })
+            .catch(console.error);
+    }, []);
 
     // 🔄 Auto slide
     useEffect(() => {

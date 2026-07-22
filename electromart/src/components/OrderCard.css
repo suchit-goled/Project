@@ -1,0 +1,167 @@
+.order-card{
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 12px 35px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.order-card:hover{
+    transform:translateY(-5px);
+}
+
+.order-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+.order-header h3{
+    margin-bottom:8px;
+}
+
+.order-header p{
+    color:#666;
+}
+
+.badges{
+    display:flex;
+    gap:10px;
+}
+
+.badge{
+    padding:8px 16px;
+    border-radius:30px;
+    color:white;
+    font-size:14px;
+    font-weight:600;
+}
+
+.payment.paid{
+    background:#16a34a;
+}
+
+.payment.pending{
+    background:#f59e0b;
+}
+
+.order.pending{
+    background:#3b82f6;
+}
+
+.order.confirmed{
+    background:#0ea5e9;
+}
+
+.order.shipped{
+    background:#8b5cf6;
+}
+
+.order.delivered{
+    background:#16a34a;
+}
+
+.order.cancelled{
+    background:#ef4444;
+}
+
+.products{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.product-row{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.product-row img{
+    width:90px;
+    height:90px;
+    object-fit:cover;
+    border-radius:12px;
+}
+
+.product-info{
+    flex:1;
+}
+
+.product-info h4{
+    margin-bottom:8px;
+}
+
+.product-info p{
+    color:#666;
+}
+
+.product-price{
+    font-size:20px;
+    font-weight:bold;
+}
+
+.order-footer{
+    margin-top:25px;
+    border-top:1px solid #eee;
+    padding-top:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:20px;
+}
+
+.footer-buttons{
+    display:flex;
+    gap:12px;
+}
+
+.details-btn,
+.cancel-btn{
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.details-btn{
+    background:#2563eb;
+    color:white;
+}
+
+.cancel-btn{
+    background:#ef4444;
+    color:white;
+}
+
+.details-btn:hover,
+.cancel-btn:hover{
+    opacity:.9;
+}
+
+@media(max-width:768px){
+
+.order-footer{
+    flex-direction:column;
+}
+
+.footer-buttons{
+    width:100%;
+}
+
+.details-btn,
+.cancel-btn{
+    width:100%;
+}
+
+.product-row{
+    flex-direction:column;
+    text-align:center;
+}
+
+}

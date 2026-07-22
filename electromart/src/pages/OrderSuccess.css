@@ -1,0 +1,139 @@
+.order-success-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa, #eef2f7);
+    padding: 50px 20px;
+}
+
+.order-success-empty {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.order-success-empty h2 {
+    font-size: 32px;
+    color: #333;
+}
+
+.order-success-empty button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.success-animation {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.success-icon {
+    font-size: 110px;
+    color: #22c55e;
+    filter: drop-shadow(0 10px 25px rgba(34, 197, 94, .35));
+}
+
+.success-heading {
+    text-align: center;
+    margin: 30px auto 40px;
+    max-width: 700px;
+}
+
+.success-heading h1 {
+    font-size: 42px;
+    color: #111827;
+    margin-bottom: 15px;
+}
+
+.success-heading p {
+    font-size: 18px;
+    color: #6b7280;
+}
+
+.order-info-card {
+    max-width: 1000px;
+    margin: 0 auto 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.info-box {
+    background: white;
+    border-radius: 18px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,.08);
+}
+
+.info-box span {
+    display: block;
+    color: #777;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.info-box strong {
+    color: #222;
+    font-size: 17px;
+}
+
+.success-buttons {
+    max-width: 700px;
+    margin: 50px auto 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.success-buttons button {
+    padding: 14px 28px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.success-buttons button:first-child {
+    background: #2563eb;
+    color: white;
+}
+
+.success-buttons button:last-child {
+    background: #16a34a;
+    color: white;
+}
+
+.success-buttons button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,.15);
+}
+
+@media (max-width:768px) {
+
+    .success-heading h1 {
+        font-size: 32px;
+    }
+
+    .success-heading p {
+        font-size: 16px;
+    }
+
+    .success-buttons {
+        flex-direction: column;
+    }
+
+    .success-buttons button {
+        width: 100%;
+    }
+}

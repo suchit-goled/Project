@@ -1,0 +1,245 @@
+.cart-item {
+
+    display: flex;
+
+    gap: 25px;
+
+    padding: 25px;
+
+    background: #111827;
+
+    border-radius: 18px;
+
+    border: 1px solid rgba(255,255,255,.06);
+
+    transition: .3s;
+
+    margin-bottom: 25px;
+
+}
+
+.cart-item:hover{
+
+    transform: translateY(-4px);
+
+    box-shadow:0 12px 35px rgba(0,0,0,.35);
+
+}
+
+.cart-image{
+
+    width:180px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.cart-image img{
+
+    width:160px;
+
+    height:160px;
+
+    object-fit:contain;
+
+}
+
+.cart-details{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.cart-details h3{
+
+    color:#F8FAFC;
+
+    font-size:1.3rem;
+
+    margin-bottom:10px;
+
+}
+
+.rating{
+
+    color:#FFD166;
+
+    margin-bottom:15px;
+
+}
+
+.rating span{
+
+    color:#94A3B8;
+
+}
+
+.price-box{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    margin-bottom:18px;
+
+    flex-wrap:wrap;
+
+}
+
+.current-price{
+
+    color:#FF8A3D;
+
+    font-size:1.6rem;
+
+    font-weight:700;
+
+}
+
+.original-price{
+
+    color:#94A3B8;
+
+    text-decoration:line-through;
+
+}
+
+.discount{
+
+    color:#22C55E;
+
+    font-weight:600;
+
+}
+
+.delivery{
+
+    color:#22C55E;
+
+    margin-bottom:22px;
+
+}
+
+.cart-actions{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-top:auto;
+
+    flex-wrap:wrap;
+
+    gap:20px;
+
+}
+
+.quantity-box{
+
+    display:flex;
+
+    align-items:center;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+}
+
+.quantity-box button{
+
+    width:45px;
+
+    height:45px;
+
+    border:none;
+
+    background:#1F2937;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-size:1.2rem;
+
+}
+
+.quantity-box span{
+
+    width:55px;
+
+    text-align:center;
+
+    color:white;
+
+    font-weight:600;
+
+}
+
+.remove-btn{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    background:#EF4444;
+
+    color:white;
+
+    border:none;
+
+    padding:12px 20px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.remove-btn:hover{
+
+    background:#DC2626;
+
+}
+
+@media(max-width:768px){
+
+.cart-item{
+
+flex-direction:column;
+
+}
+
+.cart-image{
+
+width:100%;
+
+}
+
+.cart-actions{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+}
+
+}

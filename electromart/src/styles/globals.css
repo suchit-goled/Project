@@ -1,0 +1,56 @@
+@import url('./variables.css');
+
+*,
+*::before,
+*::after{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg-primary);
+    color:var(--text-primary);
+    overflow-x:hidden;
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+button{
+    border:none;
+    cursor:pointer;
+    font-family:inherit;
+}
+
+input,
+textarea,
+select{
+    font-family:inherit;
+    outline:none;
+}
+
+img{
+    width:100%;
+    display:block;
+}
+
+ul{
+    list-style:none;
+}
+
+.container{
+    width:min(92%,var(--container-width));
+    margin:auto;
+}
+
+section{
+    padding:var(--section-spacing) 0;
+}

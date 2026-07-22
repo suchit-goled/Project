@@ -1,0 +1,51 @@
+.shipping-card {
+    max-width: 900px;
+    margin: 30px auto;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 15px 40px rgba(0,0,0,.08);
+}
+
+.shipping-card h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #222;
+    margin-bottom: 25px;
+}
+
+.shipping-content {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.shipping-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #555;
+    font-size: 16px;
+}
+
+.shipping-address {
+    margin-top: 10px;
+    padding: 18px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    line-height: 1.8;
+    color: #444;
+}
+
+@media (max-width:768px){
+
+.shipping-card{
+    padding:20px;
+}
+
+.shipping-card h2{
+    font-size:22px;
+}
+
+}

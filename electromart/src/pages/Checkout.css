@@ -1,0 +1,47 @@
+.checkout-page{
+
+    padding:40px 0 80px;
+
+    min-height:100vh;
+
+    background:#f5f7fb;
+
+}
+
+.checkout-layout{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr;
+
+    gap:35px;
+
+    margin-top:40px;
+
+}
+
+.checkout-right{
+
+    position:sticky;
+
+    top:100px;
+
+    height:fit-content;
+
+}
+
+@media(max-width:992px){
+
+.checkout-layout{
+
+    grid-template-columns:1fr;
+
+}
+
+.checkout-right{
+
+    position:static;
+
+}
+
+}

@@ -1,0 +1,34 @@
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.loading-state,
+.error-state,
+.empty-state {
+    min-height: 450px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.loading-state {
+    color: #ffffff;
+    font-size: 22px;
+}
+
+.error-state {
+    color: #ff6b6b;
+    font-size: 22px;
+}
+
+.empty-state h2 {
+    color: #ffffff;
+    margin-bottom: 12px;
+}
+
+.empty-state p {
+    color: #94A3B8;
+}

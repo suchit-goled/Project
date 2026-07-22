@@ -1,0 +1,31 @@
+.specs{
+
+margin-top:80px;
+
+background:#111827;
+
+padding:35px;
+
+border-radius:24px;
+
+border:1px solid rgba(255,255,255,.08);
+
+}
+
+.spec-row{
+
+display:flex;
+
+justify-content:space-between;
+
+padding:18px 0;
+
+border-bottom:1px solid rgba(255,255,255,.06);
+
+}
+
+.spec-row:last-child{
+
+border:none;
+
+}

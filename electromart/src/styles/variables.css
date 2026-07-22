@@ -1,0 +1,30 @@
+:root {
+
+  /* Colors */
+  --bg: #070B14;
+  --surface: #111827;
+  --surface-light: rgba(255,255,255,.05);
+
+  --primary: #FF8A3D;
+  --primary-hover: #ff9b57;
+
+  --text: #F8FAFC;
+  --muted: #94A3B8;
+
+  --border: rgba(255,255,255,.08);
+
+  --nova-glow: rgba(37,99,235,.25);
+
+  /* Radius */
+  --radius-sm:12px;
+  --radius-md:18px;
+  --radius-lg:26px;
+
+  /* Shadows */
+  --shadow-lg:
+      0 20px 60px rgba(0,0,0,.35);
+
+  /* Transition */
+  --transition:.35s ease;
+
+}

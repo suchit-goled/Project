@@ -3,13 +3,28 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import "./styles/globals.css";
+import "./styles/animations.css";
+import { SearchProvider } from './SearchContext.jsx/SearchContext';
+import { CartProvider } from "./context/CartContext";
+import { AuthProvider } from "./context/AuthContext";
+import { WishlistProvider } from './context/WishlistContext';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+ 
+   <SearchProvider>
+    <AuthProvider>
+         <WishlistProvider>
+        <CartProvider>
+            <React.StrictMode>
+                <App />
+            </React.StrictMode>
+        </CartProvider>
+        </WishlistProvider>
+    </AuthProvider>
+</SearchProvider>
   
 );
 

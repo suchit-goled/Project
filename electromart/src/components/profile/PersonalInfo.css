@@ -1,0 +1,69 @@
+.personal-info {
+    background: #111827;
+    border-radius: 20px;
+    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.personal-info h2 {
+    color: #F8FAFC;
+    margin-bottom: 25px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.info-row:last-of-type {
+    margin-bottom: 25px;
+}
+
+.info-row span:first-child {
+    color: #94A3B8;
+    font-weight: 500;
+}
+
+.info-row span:last-child {
+    color: #F8FAFC;
+    font-weight: 600;
+}
+
+.personal-info button {
+    background: #FF8A3D;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.personal-info button:hover {
+    background: #ff9d5c;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255, 138, 61, 0.3);
+}
+
+.personal-info button:active {
+    transform: scale(0.98);
+}
+
+@media (max-width: 768px) {
+    .info-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .personal-info button {
+        width: 100%;
+    }
+}

@@ -1,0 +1,25 @@
+.my-orders-page{
+    max-width:1200px;
+    margin:auto;
+    padding:40px 20px;
+}
+
+.my-orders-page h1{
+    font-size:38px;
+    margin-bottom:30px;
+    color:#222;
+}
+
+.orders-grid{
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+}
+
+.orders-loading{
+    min-height:60vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:24px;
+}

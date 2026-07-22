@@ -1,0 +1,92 @@
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background: #111827;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 18px;
+    padding: 28px 22px;
+    transition: all .3s ease;
+    cursor: pointer;
+}
+
+.stat-card:hover {
+    transform: translateY(-6px);
+    border-color: #FF8A3D;
+    box-shadow: 0 20px 40px rgba(255,138,61,.18);
+}
+
+.stat-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 26px;
+    margin-bottom: 18px;
+}
+
+/* Orders */
+
+.orders .stat-icon {
+    background: rgba(59,130,246,.15);
+    color: #3B82F6;
+}
+
+/* Wishlist */
+
+.wishlist .stat-icon {
+    background: rgba(239,68,68,.15);
+    color: #EF4444;
+}
+
+/* Cart */
+
+.cart .stat-icon {
+    background: rgba(34,197,94,.15);
+    color: #22C55E;
+}
+
+/* Address */
+
+.address .stat-icon {
+    background: rgba(250,204,21,.15);
+    color: #FACC15;
+}
+
+.stat-card h3 {
+    color: #F8FAFC;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.stat-card p {
+    color: #94A3B8;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+@media (max-width:768px){
+
+.stats-grid{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+}
+
+@media (max-width:500px){
+
+.stats-grid{
+
+grid-template-columns:1fr;
+
+}
+
+}

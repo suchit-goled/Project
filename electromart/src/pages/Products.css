@@ -1,0 +1,25 @@
+.products-page {
+    padding: 40px 0;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.products-layout {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+}
+
+.filters-sidebar {
+    width: 300px;
+    flex-shrink: 0;
+}
+
+.products-content {
+    flex: 1;
+    min-width: 0;
+}

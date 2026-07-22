@@ -1,0 +1,526 @@
+/* ===========================
+   HERO SECTION
+=========================== */
+
+.hero {
+  position: relative;
+  min-height: calc(100vh - 80px);
+  overflow: hidden;
+  background: linear-gradient(135deg, #050816 0%, #0b1225 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+}
+
+.hero-bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: 0;
+}
+
+.hero-bg-circle-1 {
+  width: 500px;
+  height: 500px;
+  background: rgba(15, 77, 131, 0.18);
+  top: -120px;
+  right: -120px;
+}
+
+.hero-bg-circle-2 {
+  width: 450px;
+  height: 450px;
+  background: rgba(0, 102, 255, 0.18);
+  bottom: -150px;
+  left: -150px;
+}
+
+.hero__container {
+  width: min(1400px, 92%);
+  margin: auto;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+
+  gap: 50px;
+
+  position: relative;
+  z-index: 2;
+}
+
+/* ===========================
+   LEFT
+=========================== */
+
+.hero__left {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.hero__badge {
+  width: fit-content;
+
+  padding: 10px 22px;
+
+  border-radius: 999px;
+
+  background: rgba(255,255,255,.05);
+
+  border:1px solid rgba(255,255,255,.08);
+
+  color:#ffb84d;
+
+  font-weight:600;
+}
+
+.hero__left h1{
+    font-size:60px;
+    line-height:1;
+    margin:0;
+}
+
+.hero__left h2{
+    font-size:36px;
+    line-height:1.1;
+    margin:0;
+}
+
+.hero__left p{
+
+  max-width:560px;
+
+  font-size:18px;
+
+  color:#94a3b8;
+
+  line-height:1.8;
+
+}
+
+/* ===========================
+   BUTTONS
+=========================== */
+
+.hero__buttons{
+
+  display:flex;
+
+  gap:18px;
+
+}
+
+.primary{
+
+  padding:16px 34px;
+
+  border:none;
+
+  border-radius:14px;
+
+  background:#ff8a3d;
+
+  color:#fff;
+
+  font-size:16px;
+
+  font-weight:600;
+
+  cursor:pointer;
+
+  transition:.35s;
+
+}
+
+.primary:hover{
+
+  transform:translateY(-4px);
+
+  box-shadow:0 15px 35px rgba(255,138,61,.35);
+
+}
+
+.secondary{
+
+  padding:16px 34px;
+
+  border-radius:14px;
+
+  border:1px solid rgba(255,255,255,.12);
+
+  background:transparent;
+
+  color:white;
+
+  cursor:pointer;
+
+  font-size:16px;
+
+  transition:.35s;
+
+}
+
+.secondary:hover{
+
+  background:rgba(255,255,255,.06);
+
+}
+
+/* ===========================
+   STATS
+=========================== */
+
+.hero__stats{
+
+  display:flex;
+
+  gap:18px;
+
+}
+
+.stat-card{
+
+  min-width:150px;
+
+  padding:18px;
+
+  border-radius:18px;
+
+  background:rgba(255,255,255,.05);
+
+  backdrop-filter:blur(20px);
+
+  border:1px solid rgba(255,255,255,.08);
+
+}
+
+.stat-card h3{
+
+  color:#ff8a3d;
+
+  font-size:24px;
+
+  margin-bottom:5px;
+
+}
+
+.stat-card span{
+
+  color:#94a3b8;
+
+  font-size:14px;
+
+}
+
+/* ===========================
+   RIGHT SIDE
+=========================== */
+
+.hero__right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.showcase {
+    position: relative;
+    width: 650px;
+    height: 650px;
+    animation: floatContainer 6s ease-in-out infinite;
+}
+
+/* Center Glow */
+
+.showcase::before {
+    content: "";
+    position: absolute;
+    width: 430px;
+    height: 430px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+
+    background: radial-gradient(
+        circle,
+        rgba(255, 138, 61, 0.28),
+        transparent 70%
+    );
+
+    filter: blur(45px);
+}
+
+.hero-image {
+    position: absolute;
+    object-fit: contain;
+    transition: .4s ease;
+    user-select: none;
+    filter: drop-shadow(0 25px 45px rgba(0,0,0,.45));
+}
+
+.hero-image:hover {
+    transform: translateY(-15px) scale(1.05);
+}
+
+/* ===========================
+   PRODUCT POSITIONING
+=========================== */
+
+/* Laptop */
+
+.macbook {
+    width: 470px;
+    left: 40px;
+    bottom: 0;
+    z-index: 1;
+    animation: floatSlow 6s ease-in-out infinite;
+}
+
+/* Phone */
+
+.iphone {
+    width: 210px;
+    right: 10px;
+    top: 40px;
+    z-index: 3;
+    animation: floatMedium 5s ease-in-out infinite;
+}
+
+/* Watch */
+
+.watch {
+    width: 140px;
+    left: 40px;
+    top: 80px;
+    z-index: 2;
+    animation: floatFast 4s ease-in-out infinite;
+}
+
+/* ===========================
+   ANIMATIONS
+=========================== */
+
+@keyframes floatContainer {
+
+    0%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-10px);
+    }
+
+    100%{
+        transform:translateY(0);
+    }
+
+}
+
+@keyframes floatSlow {
+
+    0%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-12px);
+    }
+
+    100%{
+        transform:translateY(0);
+    }
+
+}
+
+@keyframes floatMedium {
+
+    0%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-20px);
+    }
+
+    100%{
+        transform:translateY(0);
+    }
+
+}
+
+@keyframes floatFast {
+
+    0%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-15px);
+    }
+
+    100%{
+        transform:translateY(0);
+    }
+
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media (max-width:1200px){
+
+.hero__container{
+
+grid-template-columns:1fr;
+
+text-align:center;
+
+padding:80px 0;
+
+}
+
+.hero__left{
+
+align-items:center;
+
+}
+
+.hero__stats{
+
+justify-content:center;
+
+flex-wrap:wrap;
+
+}
+
+.showcase{
+
+width:520px;
+
+height:520px;
+
+margin:auto;
+
+}
+
+.macbook{
+
+width:380px;
+
+left:70px;
+
+bottom:20px;
+
+}
+
+.iphone{
+
+width:170px;
+
+right:20px;
+
+top:20px;
+
+}
+
+.watch{
+
+width:110px;
+
+left:40px;
+
+top:60px;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.hero{
+
+padding:50px 0;
+
+}
+
+.hero__left h1{
+
+font-size:46px;
+
+}
+
+.hero__left h2{
+
+font-size:32px;
+
+}
+
+.hero__buttons{
+
+flex-direction:column;
+
+width:100%;
+
+}
+
+.primary,
+.secondary{
+
+width:100%;
+
+}
+
+.hero__stats{
+
+flex-direction:column;
+
+}
+
+.stat-card{
+
+width:100%;
+
+}
+
+.showcase{
+
+width:330px;
+
+height:330px;
+
+}
+
+.macbook{
+
+width:250px;
+
+left:35px;
+
+bottom:10px;
+
+}
+
+.iphone{
+
+width:110px;
+
+right:0;
+
+top:20px;
+
+}
+
+.watch{
+
+width:70px;
+
+left:20px;
+
+top:40px;
+
+}
+
+}

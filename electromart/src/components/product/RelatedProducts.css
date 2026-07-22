@@ -1,0 +1,35 @@
+.related-products{
+
+    margin-top:100px;
+
+}
+
+.related-products h2{
+
+    color:white;
+
+    font-size:34px;
+
+    margin-bottom:35px;
+
+}
+
+.related-products .swiper{
+
+    padding:10px 5px 40px;
+
+}
+
+.related-products .swiper-button-prev,
+.related-products .swiper-button-next{
+
+    color:#FF8A3D;
+
+}
+
+.related-products .swiper-button-prev:hover,
+.related-products .swiper-button-next:hover{
+
+    transform:scale(1.1);
+
+}

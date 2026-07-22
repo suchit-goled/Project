@@ -1,0 +1,63 @@
+.address-card{
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:35px;
+
+    box-shadow:0 5px 18px rgba(0,0,0,.08);
+
+}
+
+.address-card h2{
+
+    margin-bottom:25px;
+
+    color:#111827;
+
+}
+
+.address-grid{
+
+    display:grid;
+
+    gap:18px;
+
+}
+
+.address-grid input,
+.address-grid textarea{
+
+    width:100%;
+
+    border:1px solid #d1d5db;
+
+    border-radius:10px;
+
+    padding:14px 16px;
+
+    font-size:15px;
+
+    transition:.3s;
+
+}
+
+.address-grid textarea{
+
+    min-height:110px;
+
+    resize:none;
+
+}
+
+.address-grid input:focus,
+.address-grid textarea:focus{
+
+    outline:none;
+
+    border-color:#ff6b35;
+
+    box-shadow:0 0 0 3px rgba(255,107,53,.2);
+
+}

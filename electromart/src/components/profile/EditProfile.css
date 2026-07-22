@@ -1,0 +1,38 @@
+.edit-profile-page {
+    min-height: 100vh;
+    background: #f5f7fb;
+    padding: 50px 20px;
+}
+
+.edit-profile-container {
+    max-width: 900px;
+    margin: auto;
+}
+
+.page-header {
+    margin-bottom: 35px;
+}
+
+.page-header h1 {
+    font-size: 34px;
+    font-weight: 700;
+    color: #222;
+    margin-top: 15px;
+}
+
+.page-header p {
+    color: #777;
+    margin-top: 8px;
+}
+
+.back-btn {
+    display: inline-block;
+    text-decoration: none;
+    color: #ff6b35;
+    font-weight: 600;
+    transition: .3s;
+}
+
+.back-btn:hover {
+    color: #e65b28;
+}

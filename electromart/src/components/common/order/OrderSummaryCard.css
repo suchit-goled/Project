@@ -1,0 +1,133 @@
+.summary-card {
+    width: 100%;
+    max-width: 900px;
+    margin: 30px auto;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+}
+
+.summary-card h2 {
+    margin-bottom: 25px;
+    font-size: 28px;
+    color: #222;
+    font-weight: 700;
+}
+
+.product-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.summary-product {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 18px;
+    border-radius: 15px;
+    background: #f8f9fa;
+    transition: 0.3s ease;
+}
+
+.summary-product:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.summary-product img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid #e5e5e5;
+}
+
+.summary-details {
+    flex: 1;
+}
+
+.summary-details h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #222;
+}
+
+.summary-details p {
+    margin: 5px 0;
+    color: #666;
+    font-size: 15px;
+}
+
+.summary-total {
+    font-size: 22px;
+    font-weight: bold;
+    color: #16a34a;
+}
+
+.summary-card hr {
+    margin: 30px 0;
+    border: none;
+    border-top: 1px solid #ececec;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 14px 0;
+    font-size: 17px;
+    color: #444;
+}
+
+.price-row span:last-child {
+    font-weight: 600;
+}
+
+.price-row.total {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 2px dashed #ddd;
+    font-size: 22px;
+    font-weight: bold;
+    color: #111;
+}
+
+.price-row.total span:last-child {
+    color: #16a34a;
+}
+
+@media (max-width: 768px) {
+
+    .summary-card {
+        padding: 20px;
+    }
+
+    .summary-product {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .summary-product img {
+        width: 120px;
+        height: 120px;
+    }
+
+    .summary-details {
+        text-align: center;
+    }
+
+    .summary-total {
+        margin-top: 10px;
+        font-size: 20px;
+    }
+
+    .price-row {
+        font-size: 16px;
+    }
+
+    .price-row.total {
+        font-size: 20px;
+    }
+}

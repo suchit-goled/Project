@@ -1,0 +1,28 @@
+.product-details{
+    background:#070B14;
+    min-height:100vh;
+    padding:120px 0 80px;
+}
+
+.product-layout{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:70px;
+    align-items:start;
+}
+
+.product-right{
+    display:flex;
+    flex-direction:column;
+    gap:32px;
+}
+
+@media(max-width:992px){
+
+.product-layout{
+
+grid-template-columns:1fr;
+
+}
+
+}

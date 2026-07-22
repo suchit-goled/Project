@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+    useCallback,
+} from "react";
 import CartService from "../services/cart.service";
 import { useAuth } from "./AuthContext";
 
@@ -17,7 +23,7 @@ export const CartProvider = ({ children }) => {
     // ============================
     // Fetch Cart
     // ============================
-    const fetchCart = async () => {
+   const fetchCart = useCallback(async () => {
 
         if (!userId) {
             setCart([]);
@@ -53,13 +59,10 @@ export const CartProvider = ({ children }) => {
         }
         console.log("Fetching cart for user:", userId);
 
-    };
-
-    useEffect(() => {
-
-        fetchCart();
-
     }, [userId]);
+    useEffect(() => {
+    fetchCart();
+}, [fetchCart]);
 
     // ============================
     // Add To Cart

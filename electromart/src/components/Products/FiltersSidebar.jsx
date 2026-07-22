@@ -1,21 +1,11 @@
 import "./FiltersSidebar.css";
 
-const categories = [
-    "Smartphones",
-    "Laptops",
-    "Headphones",
-    "Watches",
-];
-
 const FiltersSidebar = ({
-    categories,
-
+    categories = [],
     category,
     setCategory,
-
     rating,
     setRating,
-
     maxPrice,
     setMaxPrice,
 }) => {
@@ -24,31 +14,30 @@ const FiltersSidebar = ({
 
             <h2>Filters</h2>
 
+            {/* Categories */}
             <div className="filter-section">
 
                 <h3>Categories</h3>
 
-                {categories.map((item) => (
+                {categories.length > 0 ? (
+                    categories.map((item) => (
+                        <label key={item}>
+                            <input
+                                type="radio"
+                                name="category"
+                                checked={category === item}
+                                onChange={() => setCategory(item)}
+                            />
+                            {item}
+                        </label>
+                    ))
+                ) : (
+                    <p>No Categories</p>
+                )}
 
-    <label key={item}>
-
-        <input
-
-            type="radio"
-
-            checked={category === item}
-
-            onChange={() => setCategory(item)}
-
-        />
-
-        {item}
-
-    </label>
-
-))}
             </div>
 
+            {/* Price Filter */}
             <div className="filter-section">
 
                 <h3>Maximum Price</h3>
@@ -57,6 +46,7 @@ const FiltersSidebar = ({
                     type="range"
                     min="0"
                     max="200000"
+                    step="1000"
                     value={maxPrice}
                     onChange={(e) =>
                         setMaxPrice(Number(e.target.value))
@@ -67,6 +57,7 @@ const FiltersSidebar = ({
 
             </div>
 
+            {/* Rating Filter */}
             <div className="filter-section">
 
                 <h3>Minimum Rating</h3>
@@ -77,14 +68,16 @@ const FiltersSidebar = ({
                         setRating(Number(e.target.value))
                     }
                 >
-                    <option value="0">All</option>
-                    <option value="4">4★ & Above</option>
-                    <option value="3">3★ & Above</option>
-                    <option value="2">2★ & Above</option>
+                    <option value={0}>All</option>
+                    <option value={4}>4★ & Above</option>
+                    <option value={3}>3★ & Above</option>
+                    <option value={2}>2★ & Above</option>
+                    <option value={1}>1★ & Above</option>
                 </select>
 
             </div>
 
+            {/* Clear Filters */}
             <button
                 className="clear-btn"
                 onClick={() => {

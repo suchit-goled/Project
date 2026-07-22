@@ -14,7 +14,7 @@ import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
-import Orders from "./pages/Orders";
+
 import Admin from "./pages/Admin";
 import AdminOrders from "./pages/AdminOrders";
 import Wishlist from "./pages/Wishlist";

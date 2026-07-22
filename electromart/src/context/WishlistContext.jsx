@@ -39,10 +39,8 @@ export const WishlistProvider = ({ children }) => {
     };
 
     useEffect(() => {
-
-        fetchWishlist();
-
-    }, [user]);
+    fetchWishlist();
+}, [fetchWishlist]);
 
 
 

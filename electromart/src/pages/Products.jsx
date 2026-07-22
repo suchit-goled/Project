@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./Products.css";
 
 import ProductService from "../services/product.service";
@@ -10,7 +10,6 @@ import ProductGrid from "../components/Products/ProductGrid";
 import { useSearch } from "../SearchContext.jsx/SearchContext";
 
 const Products = () => {
-
     const { search } = useSearch();
 
     const [products, setProducts] = useState([]);
@@ -27,16 +26,8 @@ const Products = () => {
     const [rating, setRating] = useState(0);
     const [maxPrice, setMaxPrice] = useState(200000);
 
-    useEffect(() => {
-
-        fetchProducts();
-
-    }, [page]);
-
-    const fetchProducts = async () => {
-
+    const fetchProducts = useCallback(async () => {
         try {
-
             setLoading(true);
             setError("");
 
@@ -44,45 +35,33 @@ const Products = () => {
                 page,
             });
 
-            console.log(response);
-
             setProducts(response.data.products);
             setTotalPages(response.data.totalPages);
 
             const uniqueCategories = [
-
                 ...new Set(
-
                     response.data.products.map(
                         (product) => product.product_category
                     )
-
                 ),
-
             ];
 
             setCategories(uniqueCategories);
-
         } catch (err) {
-
             console.error(err);
-
             setError("Failed to load products.");
-
         } finally {
-
             setLoading(false);
-
         }
+    }, [page]);
 
-    };
+    useEffect(() => {
+        fetchProducts();
+    }, [fetchProducts]);
 
     return (
-
         <section className="products-page">
-
             <div className="container">
-
                 <ProductsHeader
                     search={search}
                     sort={sort}
@@ -90,7 +69,6 @@ const Products = () => {
                 />
 
                 <div className="products-layout">
-
                     <FiltersSidebar
                         categories={categories}
                         category={category}
@@ -102,7 +80,6 @@ const Products = () => {
                     />
 
                     <div className="products-content">
-
                         <ProductGrid
                             products={products}
                             loading={loading}
@@ -116,17 +93,11 @@ const Products = () => {
                             totalPages={totalPages}
                             setPage={setPage}
                         />
-
                     </div>
-
                 </div>
-
             </div>
-
         </section>
-
     );
-
 };
 
 export default Products;

@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import "./OrderSuccess.css";
-import ShippingAddressCard from "../components/common/order/ShippingCard";
+
 
 import SuccessAnimation from "../components/SuccessAnimation";
 import OrderSummaryCard from "../components/common/order/OrderSummaryCard";

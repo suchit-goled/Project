@@ -3,7 +3,7 @@ import "./OrderSummary.css";
 import { useNavigate } from "react-router-dom";
 
 import { useCart } from "../../context/CartContext";
-import { useAuth } from "../../context/AuthContext";
+
 import { useState } from "react";
 
 import OrderService from "../../services/order.service";
@@ -13,11 +13,11 @@ const OrderSummary = ({ address }) => {
 
     const navigate = useNavigate();
 
-    const { user } = useAuth();
+    
     const [paymentMethod, setPaymentMethod] = useState("Cash On Delivery");
 
     const { cart, clearCart } = useCart();
-    const userId = user?._id || user?.id;
+    
 
     const subtotal = cart.reduce(
         (total, item) => total + item.price * item.quantity,

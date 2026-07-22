@@ -1,11 +1,9 @@
 import Razorpay from "razorpay";
-
-console.log("KEY_ID:", process.env.RAZORPAY_KEY_ID);
-console.log("KEY_SECRET:", process.env.RAZORPAY_KEY_SECRET);
+import env from "./env.js";
 
 const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
+  key_id: env.razorpay_key_id,
+  key_secret: env.razorpay_key_secret,
 });
 
 export default razorpay;

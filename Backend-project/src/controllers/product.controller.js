@@ -2,29 +2,22 @@ import productService from "../services/product.service.js";
 import ApiResponse from "../utils/apiResponse.js";
 
 class ProductController {
-    async getProducts(req, res, next) {
-        console.log("Collection:", Product.collection.collectionName);
+   async getProducts(req, res, next) {
+    try {
+        const data = await productService.getProducts(req.query);
 
-const count = await Product.countDocuments({});
-console.log("Total products:", count);
+        console.log("Controller Products:", data.products.length);
 
-const first = await Product.findOne();
-console.log("First product:", first);
-        try {
-            const data = await productService.getProducts(req.query);
-
-            console.log("Controller Products:", data.products.length);
-
-            return ApiResponse.success(
-                res,
-                data,
-                "Products fetched successfully."
-            );
-        } catch (error) {
-            console.error(error);
-            next(error);
-        }
+        return ApiResponse.success(
+            res,
+            data,
+            "Products fetched successfully."
+        );
+    } catch (error) {
+        console.error(error);
+        next(error);
     }
+}
 
     async getFeaturedProducts(req, res, next) {
         try {

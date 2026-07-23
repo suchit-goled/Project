@@ -3,9 +3,11 @@ import env from "./env.js";
 
 
 const connectDatabase = async () => {
-    
+    console.log(mongoose.connection.host);
+console.log(mongoose.connection.name);
 
     try {
+         console.log("Mongo URI:", env.mongo_uri);
         await mongoose.connect(env.mongo_uri);
 
         console.log("✅ MongoDB Connected");

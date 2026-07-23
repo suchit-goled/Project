@@ -2,7 +2,7 @@ import Product from "../models/Product.js";
 
 class ProductRepository {
 
-    async getProducts(query, page, limit) {
+   async getProducts(query, page, limit) {
 
     console.log("Database:", Product.db.name);
     console.log("Collection:", Product.collection.collectionName);

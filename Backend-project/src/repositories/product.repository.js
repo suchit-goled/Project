@@ -2,19 +2,27 @@ import Product from "../models/Product.js";
 
 class ProductRepository {
 
-   async getProducts(query, page, limit) {
+    async getProducts(query, page, limit) {
+
+    console.log("Database:", Product.db.name);
+    console.log("Collection:", Product.collection.collectionName);
+
+    const count = await Product.countDocuments({});
+    console.log("Products count:", count);
+
+    const first = await Product.findOne();
+    console.log("First product:", first);
 
     const {
-        search,
-        category,
-        minPrice,
-        maxPrice,
-        rating,
-        sort
+      search,
+      category,
+      minPrice,
+      maxPrice,
+      rating,
+      sort
     } = query;
 
     const filter = {};
-
     // Search by product title
     if (search) {
         filter.product_title = {

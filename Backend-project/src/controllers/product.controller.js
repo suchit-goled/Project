@@ -3,6 +3,13 @@ import ApiResponse from "../utils/apiResponse.js";
 
 class ProductController {
     async getProducts(req, res, next) {
+        console.log("Collection:", Product.collection.collectionName);
+
+const count = await Product.countDocuments({});
+console.log("Total products:", count);
+
+const first = await Product.findOne();
+console.log("First product:", first);
         try {
             const data = await productService.getProducts(req.query);
 

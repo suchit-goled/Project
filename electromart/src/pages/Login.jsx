@@ -98,7 +98,7 @@ const Login = () => {
 
                     Don't have an account?
 
-                    <Link to="/signup">
+                    <Link to="/register">
 
                         Sign Up
 

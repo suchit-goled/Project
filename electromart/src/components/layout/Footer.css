@@ -1,0 +1,259 @@
+/* =========================================
+   FOOTER
+========================================= */
+
+.footer {
+  width: 100%;
+  min-height: 300px;
+  padding: 70px 8% 50px;
+
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  column-gap: 70px;
+
+  background: #0f172a;
+  color: #ffffff;
+
+  box-sizing: border-box;
+
+  position: relative;
+}
+
+
+/* =========================================
+   LEFT / BRAND
+========================================= */
+
+.footer-left {
+  width: 100%;
+  max-width: 380px;
+
+  display: block;
+
+  margin: 0;
+  padding: 0;
+
+  position: static;
+}
+
+.footer-left h2 {
+  margin: 0 0 16px;
+
+  font-size: 30px;
+  font-weight: 700;
+
+  color: #ffffff;
+  letter-spacing: -0.5px;
+}
+
+.footer-left h2 span {
+  color: #22c55e;
+}
+
+.footer-left p {
+  margin: 0;
+
+  max-width: 330px;
+
+  color: #94a3b8;
+
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+
+/* =========================================
+   FOOTER COLUMNS
+========================================= */
+
+.footer-column {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  gap: 14px;
+
+  margin: 0;
+  padding: 0;
+
+  position: static;
+}
+
+.footer-column h3 {
+  margin: 0 0 20px;
+
+  font-size: 22px;
+  font-weight: 600;
+
+  color: #ffffff;
+}
+
+
+/* =========================================
+   LINKS
+========================================= */
+
+.footer-column a {
+  display: inline-block;
+
+  width: fit-content;
+
+  margin: 0;
+  padding: 0;
+
+  background: transparent;
+  border: none;
+
+  color: #94a3b8;
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 400;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.footer-column a:hover {
+  color: #22c55e;
+
+  transform: translateX(5px);
+}
+
+
+/* =========================================
+   IF YOU ARE STILL USING BUTTONS
+========================================= */
+
+.footer-column button {
+  display: inline-block;
+
+  width: fit-content;
+
+  margin: 0;
+  padding: 0;
+
+  background: transparent;
+
+  border: none;
+  outline: none;
+
+  color: #94a3b8;
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 400;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.footer-column button:hover {
+  color: #22c55e;
+
+  transform: translateX(5px);
+}
+
+
+/* =========================================
+   FOOTER BOTTOM LINE
+========================================= */
+
+.footer::before {
+  content: "";
+
+  position: absolute;
+
+  left: 8%;
+  right: 8%;
+  bottom: 0;
+
+  height: 1px;
+
+  background: rgba(255, 255, 255, 0.08);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1000px) {
+
+  .footer {
+    grid-template-columns: 1.5fr 1fr 1fr;
+
+    column-gap: 40px;
+
+    padding: 60px 6% 45px;
+  }
+
+  .footer-left {
+    grid-column: 1 / -1;
+
+    max-width: 500px;
+
+    margin-bottom: 25px;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 650px) {
+
+  .footer {
+    grid-template-columns: 1fr;
+
+    row-gap: 35px;
+
+    padding: 50px 8% 40px;
+  }
+
+  .footer-left {
+    grid-column: auto;
+
+    max-width: 100%;
+
+    margin-bottom: 10px;
+  }
+
+  .footer-left h2 {
+    font-size: 27px;
+  }
+
+  .footer-left p {
+    max-width: 100%;
+
+    font-size: 14px;
+  }
+
+  .footer-column {
+    gap: 12px;
+  }
+
+  .footer-column h3 {
+    margin-bottom: 8px;
+
+    font-size: 19px;
+  }
+
+  .footer-column a,
+  .footer-column button {
+    font-size: 14px;
+  }
+}

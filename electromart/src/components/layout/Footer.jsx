@@ -1,12 +1,19 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import "../layout/Footer.css";
 
 function Footer() {
+  const navigate = useNavigate();
+
   return (
-    <div id="about" className="footer">
+    <footer className="footer">
 
       {/* Left */}
       <div className="footer-left">
-        <h2> Electro<span>Nova</span></h2>
+        <h2>
+          Electro<span>Nova</span>
+        </h2>
+
         <p>
           Tech that powers your life — curated electronics for the modern home.
         </p>
@@ -15,31 +22,67 @@ function Footer() {
       {/* Shop */}
       <div className="footer-column">
         <h3>Shop</h3>
-        <p>Smartphones</p>
-        <p>Laptops</p>
-        <p>Audio</p>
-        <p>Wearables</p>
+
+        <button onClick={() => navigate("/products?category=smartphones")}>
+          Smartphones
+        </button>
+
+        <button onClick={() => navigate("/products?category=laptops")}>
+          Laptops
+        </button>
+
+        <button onClick={() => navigate("/products?category=audio")}>
+          Audio
+        </button>
+
+        <button onClick={() => navigate("/products?category=wearables")}>
+          Wearables
+        </button>
       </div>
 
       {/* Support */}
       <div className="footer-column">
         <h3>Support</h3>
-        <p>Contact</p>
-        <p>Shipping</p>
-        <p>Returns</p>
-        <p>Warranty</p>
+
+        <button onClick={() => navigate("/contact")}>
+          Contact
+        </button>
+
+        <button onClick={() => navigate("/shipping")}>
+          Shipping
+        </button>
+
+        <button onClick={() => navigate("/returns")}>
+          Returns
+        </button>
+
+        <button onClick={() => navigate("/warranty")}>
+          Warranty
+        </button>
       </div>
 
       {/* Company */}
       <div className="footer-column">
         <h3>Company</h3>
-        <p>About</p>
-        <p>Careers</p>
-        <p>Press</p>
-        <p>Blog</p>
+
+        <button onClick={() => navigate("/about")}>
+          About
+        </button>
+
+        <button onClick={() => navigate("/careers")}>
+          Careers
+        </button>
+
+        <button onClick={() => navigate("/press")}>
+          Press
+        </button>
+
+        <button onClick={() => navigate("/blog")}>
+          Blog
+        </button>
       </div>
 
-    </div>
+    </footer>
   );
 }
 

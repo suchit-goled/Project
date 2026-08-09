@@ -22,6 +22,7 @@ import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess"; 
 import MyOrders from "./pages/MyOrders";
 import EditProfile from "./pages/EditProfile";
+import Contact from "./pages/Contact";
 function App() {
     return (
         <BrowserRouter>
@@ -33,6 +34,7 @@ function App() {
                 <Route path="/" element={<Home />} />
 
                 <Route path="/products" element={<Products />} />
+                <Route path="/contact" element={<Contact />} />
 
                 <Route
                     path="/products/:id"

@@ -16,7 +16,12 @@ const Wishlist = () => {
         );
     }
 
-    if (wishlist.length === 0) {
+   
+    const validWishlist = wishlist.filter(
+        (item) => item.productId !== null
+    );
+
+    if (validWishlist.length === 0) {
         return <EmptyWishlist />;
     }
 
@@ -30,7 +35,7 @@ const Wishlist = () => {
 
             <div className="wishlist-grid">
 
-                {wishlist.map(item => (
+                {validWishlist.map((item) => (
 
                     <WishlistCard
                         key={item._id}
@@ -44,7 +49,6 @@ const Wishlist = () => {
         </section>
 
     );
-
 };
 
 export default Wishlist;

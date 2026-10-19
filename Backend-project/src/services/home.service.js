@@ -1,9 +1,8 @@
-import api from "../api/axios";
+import homeRepository from "../repositories/home.repository.js";
 
 class HomeService {
-    async getHomePage() {
-        const response = await api.get("/home");
-        return response.data.data;
+    async getHomePageData() {
+        return await homeRepository.getHomeSettings();
     }
 }
 

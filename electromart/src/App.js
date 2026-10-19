@@ -19,10 +19,11 @@ import Admin from "./pages/Admin";
 import AdminOrders from "./pages/AdminOrders";
 import Wishlist from "./pages/Wishlist";
 import Checkout from "./pages/Checkout";
-import OrderSuccess from "./pages/OrderSuccess"; 
+import OrderSuccess from "./pages/OrderSuccess";
 import MyOrders from "./pages/MyOrders";
 import EditProfile from "./pages/EditProfile";
 import Contact from "./pages/Contact";
+import OrderDetails from "./pages/OrderDetails";
 function App() {
     return (
         <BrowserRouter>
@@ -61,7 +62,7 @@ function App() {
 
                 <Route path="/profile" element={<Profile />} />
 
-                
+
 
                 <Route path="/admin" element={<Admin />} />
 
@@ -70,23 +71,20 @@ function App() {
                     element={<AdminOrders />}
                 />
                 <Route
-    path="/wishlist"
-    element={<Wishlist />}
-/>
- <Route
-    path="/checkout"
-    element={<Checkout />}
-/>
+                    path="/wishlist"
+                    element={<Wishlist />}
+                />
 
-<Route path="/order-success" element={<OrderSuccess />} />
- <Route path="/orders" element={<MyOrders />} />
- <Route
-    path="/profile/edit"
-    element={<EditProfile />}
-/>
+                <Route path="/order-success" element={<OrderSuccess />} />
+                <Route path="/orders" element={<MyOrders />} />
+                <Route path="/orders/:orderId" element={<OrderDetails />} />
+                <Route
+                    path="/profile/edit"
+                    element={<EditProfile />}
+                />
             </Routes>
-           
-           
+
+
 
         </BrowserRouter>
     );

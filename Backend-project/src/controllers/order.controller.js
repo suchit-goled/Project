@@ -7,8 +7,11 @@ import ApiResponse from "../utils/apiResponse.js";
 
 export const createOrder = async (req, res, next) => {
     try {
+        const { shippingAddress, paymentMethod = "Cash On Delivery" } = req.body;
 
-        const { shippingAddress, paymentMethod } = req.body;
+        if (!shippingAddress || !shippingAddress.address || !shippingAddress.city) {
+            return ApiResponse.error(res, "Complete shipping address is required", 400);
+        }
 
         const userId = req.user._id.toString();
 
@@ -25,9 +28,7 @@ export const createOrder = async (req, res, next) => {
         let subtotal = 0;
 
         const products = cartItems.map(item => {
-
             subtotal += item.price * item.quantity;
-
             return {
                 productId: item.productId,
                 title: item.title,
@@ -35,7 +36,6 @@ export const createOrder = async (req, res, next) => {
                 quantity: item.quantity,
                 price: item.price
             };
-
         });
 
         const shippingCharge = subtotal > 1000 ? 0 : 99;
@@ -51,32 +51,25 @@ export const createOrder = async (req, res, next) => {
             shippingCharge,
             tax,
             total,
-            paymentStatus: paymentMethod === "Cash On Delivery"
-                ? "Pending"
-                : "Pending",
+            paymentStatus: "Pending",
             orderStatus: "Pending"
         });
 
         const user = await User.findById(userId);
 
-        try {
-
-            await sendEmail({
-                email: user.email,
-                subject: `Order Confirmed - ${order._id}`,
-                html: orderConfirmationTemplate(order, user),
-            });
-
-            console.log("✅ Order confirmation email sent");
-
-        } catch (emailError) {
-
-            console.error("❌ Failed to send order confirmation email:", emailError);
-
+        if (user && user.email) {
+            try {
+                await sendEmail({
+                    email: user.email,
+                    subject: `Order Confirmed - ${order._id}`,
+                    html: orderConfirmationTemplate(order, user),
+                });
+            } catch (emailError) {
+                console.error("Failed to send order confirmation email:", emailError.message);
+            }
         }
 
-        // Clear cart only for Cash On Delivery
-        // For Razorpay, clear the cart after successful payment verification
+        // Clear cart for Cash On Delivery
         if (paymentMethod === "Cash On Delivery") {
             await Cart.deleteMany({ userId });
         }
@@ -92,104 +85,118 @@ export const createOrder = async (req, res, next) => {
         next(error);
     }
 };
-export const getUserOrders = async (req, res) => {
-    try {
 
+export const getUserOrders = async (req, res, next) => {
+    try {
         const { userId } = req.params;
 
-        console.log("Requested User ID:", userId);
+        // Security check: only own orders or admin
+        if (req.user.role !== "admin" && req.user._id.toString() !== userId) {
+            return ApiResponse.error(
+                res,
+                "Access denied. You cannot view other users' orders.",
+                403
+            );
+        }
 
         const orders = await orderModel
             .find({ userId })
             .sort({ createdAt: -1 });
 
-        console.log("Orders Found:", orders);
-
-        return res.status(200).json({
-            success: true,
-            count: orders.length,
-            orders
-        });
+        return ApiResponse.success(
+            res,
+            { orders, count: orders.length },
+            "Orders retrieved successfully"
+        );
 
     } catch (error) {
-
-        return res.status(500).json({
-            success: false,
-            message: error.message
-        });
-
+        next(error);
     }
 };
 
-export const getOrderById = async (req, res) => {
-
+export const getOrderById = async (req, res, next) => {
     try {
-
         const { orderId } = req.params;
 
         const order = await orderModel.findById(orderId);
 
         if (!order) {
-            return res.status(404).json({
-                success: false,
-                message: "Order not found"
-            });
+            return ApiResponse.error(
+                res,
+                "Order not found",
+                404
+            );
         }
 
-        res.status(200).json({
-            success: true,
-            order
-        });
+        // Security check: only own order or admin
+        if (req.user.role !== "admin" && order.userId !== req.user._id.toString()) {
+            return ApiResponse.error(
+                res,
+                "Access denied. You cannot view this order.",
+                403
+            );
+        }
+
+        return ApiResponse.success(
+            res,
+            { order },
+            "Order retrieved successfully"
+        );
 
     } catch (error) {
-
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-
+        next(error);
     }
-
 };
 
-export const cancelOrder = async (req, res) => {
-
+export const cancelOrder = async (req, res, next) => {
     try {
-
         const { orderId } = req.params;
 
         const order = await orderModel.findById(orderId);
 
         if (!order) {
-            return res.status(404).json({
-                success: false,
-                message: "Order not found"
-            });
+            return ApiResponse.error(
+                res,
+                "Order not found",
+                404
+            );
+        }
+
+        // Security check: only own order or admin
+        if (req.user.role !== "admin" && order.userId !== req.user._id.toString()) {
+            return ApiResponse.error(
+                res,
+                "Access denied. You cannot cancel this order.",
+                403
+            );
         }
 
         if (order.orderStatus === "Delivered") {
-            return res.status(400).json({
-                success: false,
-                message: "Delivered orders cannot be cancelled."
-            });
+            return ApiResponse.error(
+                res,
+                "Delivered orders cannot be cancelled.",
+                400
+            );
+        }
+
+        if (order.orderStatus === "Cancelled") {
+            return ApiResponse.error(
+                res,
+                "Order is already cancelled.",
+                400
+            );
         }
 
         order.orderStatus = "Cancelled";
-
         await order.save();
 
-        res.status(200).json({
-            success: true,
-            message: "Order cancelled successfully",
-            order
-        });
+        return ApiResponse.success(
+            res,
+            { order },
+            "Order cancelled successfully"
+        );
 
     } catch (error) {
-
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-
+        next(error);
     }
 };

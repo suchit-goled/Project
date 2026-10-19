@@ -1,6 +1,6 @@
 import { FiSearch } from "react-icons/fi";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useSearch } from "../../../SearchContext.jsx/SearchContext";
+import { useSearch } from "../../../context/SearchContext";
 import "./SearchBar.css";
 
 const SearchBar = () => {

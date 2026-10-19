@@ -2,109 +2,94 @@ import Product from "../models/Product.js";
 
 class ProductRepository {
 
-   async getProducts(query, page, limit) {
+    async getProducts(query, page = 1, limit = 20) {
+        const {
+            search,
+            category,
+            minPrice,
+            maxPrice,
+            rating,
+            sort
+        } = query;
 
-    console.log("Database:", Product.db.name);
-    console.log("Collection:", Product.collection.collectionName);
+        const filter = {};
 
-    const count = await Product.countDocuments({});
-    console.log("Products count:", count);
+        // Escape regex special characters to prevent ReDoS / RegExp injection
+        if (search && typeof search === "string" && search.trim()) {
+            const escapedSearch = search.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            filter.product_title = {
+                $regex: escapedSearch,
+                $options: "i"
+            };
+        }
 
-    const first = await Product.findOne();
-    console.log("First product:", first);
+        // Filter by category
+        if (category && typeof category === "string" && category.trim()) {
+            filter.product_category = category.trim();
+        }
 
-    const {
-      search,
-      category,
-      minPrice,
-      maxPrice,
-      rating,
-      sort
-    } = query;
+        // Filter by price
+        if (minPrice || maxPrice) {
+            filter.discounted_price = {};
+            if (minPrice && !isNaN(Number(minPrice))) {
+                filter.discounted_price.$gte = Number(minPrice);
+            }
+            if (maxPrice && !isNaN(Number(maxPrice))) {
+                filter.discounted_price.$lte = Number(maxPrice);
+            }
+        }
 
-    const filter = {};
-    // Search by product title
-    if (search) {
-        filter.product_title = {
-            $regex: search,
-            $options: "i"
+        // Filter by rating
+        if (rating && !isNaN(Number(rating))) {
+            filter.product_rating = {
+                $gte: Number(rating)
+            };
+        }
+
+        // Sorting
+        let sortOption = {};
+        switch (sort) {
+            case "priceLow":
+                sortOption.discounted_price = 1;
+                break;
+            case "priceHigh":
+                sortOption.discounted_price = -1;
+                break;
+            case "rating":
+                sortOption.product_rating = -1;
+                break;
+            case "latest":
+                sortOption.createdAt = -1;
+                break;
+            default:
+                sortOption.createdAt = -1;
+        }
+
+        const validPage = Math.max(1, Number(page) || 1);
+        const validLimit = Math.max(1, Math.min(100, Number(limit) || 20));
+
+        const total = await Product.countDocuments(filter);
+
+        const products = await Product.find(filter)
+            .sort(sortOption)
+            .skip((validPage - 1) * validLimit)
+            .limit(validLimit);
+
+        return {
+            products,
+            total,
+            page: validPage,
+            totalPages: Math.ceil(total / validLimit)
         };
     }
 
-    // Filter by category
-    if (category) {
-        filter.product_category = category;
-    }
-
-    // Filter by price
-    if (minPrice || maxPrice) {
-        filter.discounted_price = {};
-
-        if (minPrice) {
-            filter.discounted_price.$gte = Number(minPrice);
-        }
-
-        if (maxPrice) {
-            filter.discounted_price.$lte = Number(maxPrice);
-        }
-    }
-
-    // Filter by rating
-    if (rating) {
-        filter.product_rating = {
-            $gte: Number(rating)
-        };
-    }
-
-    // Sorting
-    let sortOption = {};
-
-    switch (sort) {
-
-        case "priceLow":
-            sortOption.discounted_price = 1;
-            break;
-
-        case "priceHigh":
-            sortOption.discounted_price = -1;
-            break;
-
-        case "rating":
-            sortOption.product_rating = -1;
-            break;
-
-        case "latest":
-            sortOption.createdAt = -1;
-            break;
-
-        default:
-            sortOption.createdAt = -1;
-    }
-
-    const total = await Product.countDocuments(filter);
-
-    const products = await Product.find(filter)
-        .sort(sortOption)
-        .skip((page - 1) * limit)
-        .limit(limit);
-
-    return {
-        products,
-        total,
-        page,
-        totalPages: Math.ceil(total / limit)
-    };
-}
-
- 
     async getFeaturedProducts() {
-        return Product.find({ isFeatured: true }).limit(5);
+        return Product.find({ isFeatured: true }).limit(8);
     }
 
     async getProductById(id) {
         return Product.findById(id);
     }
-
 
     async createProduct(productData) {
         return await Product.create(productData);

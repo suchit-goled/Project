@@ -8,4 +8,14 @@ router.post(
     passwordController.forgotPassword
 );
 
+router.post(
+    "/reset-password",
+    passwordController.resetPassword
+);
+
+router.post(
+    "/reset-password/:token",
+    passwordController.resetPassword
+);
+
 export default router;

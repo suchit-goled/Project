@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import "./styles/globals.css";
 import "./styles/animations.css";
-import { SearchProvider } from './SearchContext.jsx/SearchContext';
+import { SearchProvider } from './context/SearchContext';
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 import { WishlistProvider } from './context/WishlistContext';

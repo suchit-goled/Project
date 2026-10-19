@@ -1,246 +1,52 @@
-import bcrypt from "bcryptjs";
-import validator from "validator";
+import authService from "../services/auth.service.js";
+import ApiResponse from "../utils/apiResponse.js";
 
-import User from "../models/user.model.js";
-import generateToken from "../utils/generateToken.js";
-
-import { sendEmail } from "../utils/sendEmail.js";
-import { welcomeEmailTemplate } from "../templates/welcomeEmail.js";
-
-
-// -------------------------
-// Signup
-// -------------------------
-
-export const signup = async (req, res) => {
-
+// Register / Signup Handler
+export const registerUser = async (req, res, next) => {
     try {
+        const result = await authService.register(req.body);
 
-        const { name, email, password } = req.body;
-
-        if (!name || !email || !password) {
-
-            return res.status(400).json({
-                success: false,
-                message: "All fields are required."
-            });
-
-        }
-
-        if (!validator.isEmail(email)) {
-
-            return res.status(400).json({
-                success: false,
-                message: "Invalid email address."
-            });
-
-        }
-
-        if (password.length < 6) {
-
-            return res.status(400).json({
-                success: false,
-                message: "Password must be at least 6 characters."
-            });
-
-        }
-
-        const existingUser = await User.findOne({ email });
-
-        if (existingUser) {
-
-            return res.status(400).json({
-                success: false,
-                message: "Email already exists."
-            });
-
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const user = await User.create({
-
-            name,
-
-            email,
-
-            password: hashedPassword
-
-        });
-
-        const token = generateToken(user._id);
-
-        res.status(201).json({
-
-            success: true,
-
-            message: "Signup successful.",
-
-            token,
-
-            user: {
-
-                _id: user._id,
-
-                name: user.name,
-
-                email: user.email,
-
-                role: user.role
-
-            }
-
-        });
-
+        return ApiResponse.success(
+            res,
+            result,
+            "User registered successfully",
+            201
+        );
     } catch (error) {
-
-        console.error(error);
-
-        res.status(500).json({
-
-            success: false,
-
-            message: "Server Error"
-
-        });
-
+        next(error);
     }
-
 };
 
-// -------------------------
-// Login
-// -------------------------
-export const loginUser = async (req, res) => {
+// Alias for registerUser to support both /signup and /register
+export const signup = registerUser;
+
+// Login Handler
+export const loginUser = async (req, res, next) => {
     try {
+        const result = await authService.login(req.body);
 
-        const { email, password } = req.body;
-
-        if (!email || !password) {
-            return res.status(400).json({
-                success: false,
-                message: "Email and password are required"
-            });
-        }
-
-        const user = await User.findOne({ email });
-
-        if (!user) {
-            return res.status(401).json({
-                success: false,
-                message: "Invalid email or password"
-            });
-        }
-
-        const isPasswordMatch = await bcrypt.compare(
-            password,
-            user.password
-        );
-
-        if (!isPasswordMatch) {
-            return res.status(401).json({
-                success: false,
-                message: "Invalid email or password"
-            });
-        }
-
-        const token = generateToken(user._id);
-
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: "Login successful",
-            token,
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role
-            }
+            token: result.token,
+            user: result.user
         });
-
     } catch (error) {
-
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-
+        next(error);
     }
 };
 
-export const registerUser = async (req, res) => {
-
+// Get Profile Handler
+export const getProfile = async (req, res, next) => {
     try {
+        const user = await authService.getProfile(req.user._id);
 
-        const { name, email, password } = req.body;
-
-        if (!name || !email || !password) {
-            return res.status(400).json({
-                success: false,
-                message: "All fields are required",
-            });
-        }
-
-        const existingUser = await User.findOne({ email });
-
-        if (existingUser) {
-            return res.status(400).json({
-                success: false,
-                message: "Email already exists",
-            });
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const user = await User.create({
-            name,
-            email,
-            password: hashedPassword,
-        });
-        try {
-    console.log("📧 Sending welcome email to:", user.email);
-
-    await sendEmail({
-        email: user.email,
-        subject: "Welcome to ElectroNova 🎉",
-        html: welcomeEmailTemplate(user.name),
-    });
-
-    console.log("✅ Welcome email sent successfully");
-} catch (err) {
-    console.error("❌ Welcome email error:");
-    console.error(err);
-}
-
-        const token = generateToken(user._id);
-
-        res.status(201).json({
-            success: true,
-            message: "User registered successfully",
-            token,
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-            },
-        });
-
+        return ApiResponse.success(
+            res,
+            { user },
+            "Profile retrieved successfully"
+        );
     } catch (error) {
-
-        res.status(500).json({
-            success: false,
-            message: error.message,
-        });
-
+        next(error);
     }
-
-};
-
-
-export const getProfile = async (req, res) => {
-    res.status(200).json({
-        success: true,
-        user: req.user
-    });
 };

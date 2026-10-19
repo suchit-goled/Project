@@ -1,35 +1,22 @@
 import User from "../models/user.model.js";
+import ApiResponse from "../utils/apiResponse.js";
 
-export const getProfile = async (req, res) => {
+export const getProfile = async (req, res, next) => {
     try {
-
-        const user = await User.findById(req.user._id).select("-password");
+        const user = await User.findById(req.user._id).select("-password -resetPasswordToken -resetPasswordExpire");
 
         if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found",
-            });
+            return ApiResponse.error(res, "User not found", 404);
         }
 
-        res.status(200).json({
-            success: true,
-            user,
-        });
-
+        return ApiResponse.success(res, { user }, "Profile fetched successfully");
     } catch (err) {
-
-        res.status(500).json({
-            success: false,
-            message: err.message,
-        });
-
+        next(err);
     }
 };
 
-export const updateProfile = async (req, res) => {
+export const updateProfile = async (req, res, next) => {
     try {
-
         const {
             name,
             phone,
@@ -42,33 +29,26 @@ export const updateProfile = async (req, res) => {
         const user = await User.findById(req.user._id);
 
         if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found",
-            });
+            return ApiResponse.error(res, "User not found", 404);
         }
 
-        user.name = name;
-        user.phone = phone;
-        user.address = address;
-        user.city = city;
-        user.state = state;
-        user.pincode = pincode;
+        if (name !== undefined) user.name = name.trim();
+        if (phone !== undefined) user.phone = phone.trim();
+        if (address !== undefined) user.address = address.trim();
+        if (city !== undefined) user.city = city.trim();
+        if (state !== undefined) user.state = state.trim();
+        if (pincode !== undefined) user.pincode = pincode.trim();
 
         await user.save();
 
-        res.status(200).json({
-            success: true,
-            message: "Profile updated successfully",
-            user,
-        });
+        const safeUser = await User.findById(req.user._id).select("-password -resetPasswordToken -resetPasswordExpire");
 
+        return ApiResponse.success(
+            res,
+            { user: safeUser },
+            "Profile updated successfully"
+        );
     } catch (err) {
-
-        res.status(500).json({
-            success: false,
-            message: err.message,
-        });
-
+        next(err);
     }
 };

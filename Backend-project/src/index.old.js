@@ -20,7 +20,6 @@ app.use(cors());
 // ==============================
 // DATABASE CONNECTION
 // ==============================
-console.log(process.env.MONGO_URI);
 mongoose.connect(process.env.MONGO_URI, {
   dbName: "ElectroNova"
 })
@@ -28,10 +27,6 @@ mongoose.connect(process.env.MONGO_URI, {
   console.log("✅ Atlas Connected");
   console.log("Database:", mongoose.connection.name);
 });
-
-// ==============================
-// PRODUCT SCHEMA
-// ==============================
 
 
 

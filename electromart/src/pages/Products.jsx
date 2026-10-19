@@ -6,8 +6,7 @@ import ProductService from "../services/product.service";
 import FiltersSidebar from "../components/Products/FiltersSidebar";
 import ProductsHeader from "../components/Products/ProductsHeader";
 import ProductGrid from "../components/Products/ProductGrid";
-
-import { useSearch } from "../SearchContext.jsx/SearchContext";
+import { useSearch } from "../context/SearchContext";
 
 const Products = () => {
     const { search } = useSearch();

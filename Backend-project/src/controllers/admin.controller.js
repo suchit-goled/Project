@@ -7,11 +7,6 @@ import adminOrderService from "../services/adminOrder.service.js";
 
 import uploadToCloudinary from "../utils/uploadToCloudinary.js";
 class AdminController {
-
-    async dashboard(req, res, next) {
-
-    }
-
     async getProducts(req, res, next) {
     try {
 

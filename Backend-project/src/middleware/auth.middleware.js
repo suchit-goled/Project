@@ -20,29 +20,70 @@ export const protect = async (req, res, next) => {
             });
         }
 
-        const decoded = jwt.verify(token, env.jwt_secret);
+        let decoded;
+        try {
+            decoded = jwt.verify(token, env.jwt_secret);
+        } catch (jwtError) {
+            if (jwtError.name === "TokenExpiredError") {
+                return res.status(401).json({
+                    success: false,
+                    message: "Token expired. Please log in again."
+                });
+            }
+            return res.status(401).json({
+                success: false,
+                message: "Invalid token. Authorization denied."
+            });
+        }
 
-        const user = await User.findById(decoded.id).select("-password");
+        let user;
+        try {
+            user = await User.findById(decoded.id).select("-password");
+        } catch (dbError) {
+            return res.status(401).json({
+                success: false,
+                message: "Authentication failed. Could not verify user."
+            });
+        }
 
         if (!user) {
             return res.status(401).json({
                 success: false,
-                message: "User not found"
+                message: "User account no longer exists."
             });
         }
 
         req.user = user;
-
-        console.log("Authenticated User:", req.user);
-
         next();
 
     } catch (error) {
-        console.error(error);
-
-        res.status(401).json({
+        return res.status(401).json({
             success: false,
-            message: error.message
+            message: "Authentication error occurred."
         });
+    }
+};
+
+export const optionalProtect = async (req, res, next) => {
+    try {
+        let token;
+        if (
+            req.headers.authorization &&
+            req.headers.authorization.startsWith("Bearer")
+        ) {
+            token = req.headers.authorization.split(" ")[1];
+        }
+
+        if (token) {
+            const decoded = jwt.verify(token, env.jwt_secret);
+            const user = await User.findById(decoded.id).select("-password");
+            if (user) {
+                req.user = user;
+            }
+        }
+        next();
+    } catch {
+        // Continue even if token is invalid or expired
+        next();
     }
 };

@@ -1,676 +1,676 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-
+import React, { useEffect, useState, useCallback } from "react";
+import { Link } from "react-router-dom";
+import {
+    FiPackage,
+    FiShoppingCart,
+    FiUsers,
+    FiDollarSign,
+    FiTrendingUp,
+    FiPlus,
+    FiTrash2,
+    FiSearch,
+    FiShield,
+    FiRefreshCw,
+    FiXCircle
+} from "react-icons/fi";
+import AdminService from "../services/admin.service";
+import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
+import "./Admin.css";
 
 function Admin() {
+    const { user } = useAuth();
 
-    const navigate = useNavigate();
-
-    /* DATABASE STATES */
+    const [activeTab, setActiveTab] = useState("overview"); // overview, products, orders, users
+    const [stats, setStats] = useState(null);
     const [products, setProducts] = useState([]);
-    const [carts, setCarts] = useState([]);
+    const [orders, setOrders] = useState([]);
     const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    /* ADD PRODUCT STATES */
-    const [title, setTitle] = useState("");
-    const [price, setPrice] = useState("");
-    const [category, setCategory] = useState("");
-    const [image, setImage] = useState("");
+    // Product search & Add Form
+    const [productSearch, setProductSearch] = useState("");
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [newProduct, setNewProduct] = useState({
+        product_title: "",
+        product_category: "Smartphones",
+        discounted_price: "",
+        original_price: "",
+        discount_percentage: 0,
+        product_image_url: "",
+        isFeatured: false
+    });
+    const [savingProduct, setSavingProduct] = useState(false);
 
-    /* FETCH DATABASE DATA */
-    useEffect(() => {
+    // Order status filter
+    const [orderStatusFilter, setOrderStatusFilter] = useState("");
 
-        // PRODUCTS
-        axios.get("https://your-render-url.onrender.com/admin/products")
-            .then((res) => {
-                setProducts(res.data);
-            })
-            .catch((err) => console.log(err));
+    const fetchAdminData = useCallback(async () => {
+        try {
+            setLoading(true);
+            const [dashData, prods, ords, usrs] = await Promise.allSettled([
+                AdminService.getDashboard(),
+                AdminService.getProducts(),
+                AdminService.getOrders(),
+                AdminService.getUsers()
+            ]);
 
-        // CARTS
-        axios.get("https://your-render-url.onrender.com/admin/carts")
-            .then((res) => {
-                setCarts(res.data);
-            })
-            .catch((err) => console.log(err));
-
-        // USERS
-        axios.get("https://your-render-url.onrender.com/admin/users")
-            .then((res) => {
-                setUsers(res.data);
-            })
-            .catch((err) => console.log(err));
-
+            if (dashData.status === "fulfilled") setStats(dashData.value);
+            if (prods.status === "fulfilled") setProducts(prods.value || []);
+            if (ords.status === "fulfilled") setOrders(ords.value || []);
+            if (usrs.status === "fulfilled") setUsers(usrs.value || []);
+        } catch (err) {
+            console.error("Failed to load admin data:", err);
+            toast.error("Failed to load administrative data");
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
-    /* LOGOUT */
-    const handleLogout = () => {
-        localStorage.clear();
-        navigate("/");
-    };
+    useEffect(() => {
+        if (user && user.role === "admin") {
+            fetchAdminData();
+        }
+    }, [user, fetchAdminData]);
 
-    /* ADD PRODUCT */
-    const addProduct = async () => {
+    // Role check
+    if (!user || user.role !== "admin") {
+        return (
+            <div className="admin-access-denied container">
+                <FiShield className="denied-icon" />
+                <h2>Administrator Access Required</h2>
+                <p>This management suite is restricted to authorized platform administrators.</p>
+                <div className="denied-actions">
+                    <Link to="/" className="denied-home-btn">Return to Storefront</Link>
+                    {!user && <Link to="/login" className="denied-login-btn">Sign In as Administrator</Link>}
+                </div>
+            </div>
+        );
+    }
 
-        try {
-
-            await axios.post(
-                "https://your-render-url.onrender.com/admin/add-product",
-                {
-                    product_title: title,
-                    discounted_price: price,
-                    product_category: category,
-                    product_image_url: image
-                }
-            );
-
-            alert("Product Added");
-
-            setTitle("");
-            setPrice("");
-            setCategory("");
-            setImage("");
-
-            // refresh products
-            const updated = await axios.get(
-                "https://your-render-url.onrender.com/admin/products"
-            );
-
-            setProducts(updated.data);
-
-        } catch (err) {
-
-            console.log(err);
-
+    // Add Product
+    const handleAddProduct = async (e) => {
+        e.preventDefault();
+        if (!newProduct.product_title || !newProduct.discounted_price) {
+            toast.error("Title and price are required");
+            return;
         }
 
+        try {
+            setSavingProduct(true);
+            const discPrice = Number(newProduct.discounted_price);
+            const origPrice = Number(newProduct.original_price) || discPrice;
+            const discPct = origPrice > discPrice ? Math.round(((origPrice - discPrice) / origPrice) * 100) : 0;
+
+            await AdminService.createProduct({
+                ...newProduct,
+                discounted_price: discPrice,
+                original_price: origPrice,
+                discount_percentage: discPct,
+                product_rating: 4.5,
+                total_reviews: 1,
+            });
+
+            toast.success("Product created successfully!");
+            setShowAddModal(false);
+            setNewProduct({
+                product_title: "",
+                product_category: "Smartphones",
+                discounted_price: "",
+                original_price: "",
+                discount_percentage: 0,
+                product_image_url: "",
+                isFeatured: false
+            });
+            fetchAdminData();
+        } catch (err) {
+            console.error("Create product error:", err);
+            toast.error(err.response?.data?.message || "Failed to create product");
+        } finally {
+            setSavingProduct(false);
+        }
     };
 
-    /* DELETE PRODUCT */
-    const deleteProduct = async (id) => {
+    // Delete Product
+    const handleDeleteProduct = async (id, title) => {
+        if (!window.confirm(`Delete product "${title}" permanently?`)) return;
 
         try {
-
-            await axios.delete(
-                `https://your-render-url.onrender.com/admin/delete-product/${id}`
-            );
-
-            alert("Product Deleted");
-
-            setProducts(
-                products.filter((p) => p._id !== id)
-            );
-
+            await AdminService.deleteProduct(id);
+            toast.success("Product deleted successfully");
+            setProducts(products.filter((p) => p._id !== id));
         } catch (err) {
-
-            console.log(err);
-
+            console.error("Delete product error:", err);
+            toast.error("Failed to delete product");
         }
-
     };
 
-    /* DELETE USER */
-    const deleteUser = async (id) => {
+    // Update Order Status
+    const handleUpdateOrderStatus = async (orderId, newStatus) => {
+        try {
+            await AdminService.updateOrderStatus(orderId, newStatus);
+            toast.success(`Order status updated to ${newStatus}`);
+            setOrders(orders.map((o) => (o._id === orderId ? { ...o, orderStatus: newStatus } : o)));
+        } catch (err) {
+            console.error("Update status error:", err);
+            toast.error("Failed to update order status");
+        }
+    };
+
+    // Update User Role
+    const handleToggleUserRole = async (userId, currentRole) => {
+        const newRole = currentRole === "admin" ? "user" : "admin";
+        if (!window.confirm(`Change role of this user to ${newRole.toUpperCase()}?`)) return;
 
         try {
-
-            await axios.delete(
-                `https://your-render-url.onrender.com/admin/delete-user/${id}`
-            );
-
-            alert("User Deleted");
-
-            setUsers(
-                users.filter((u) => u._id !== id)
-            );
-
+            await AdminService.updateUserRole(userId, newRole);
+            toast.success(`Role updated to ${newRole}`);
+            setUsers(users.map((u) => (u._id === userId ? { ...u, role: newRole } : u)));
         } catch (err) {
-
-            console.log(err);
-
+            console.error("Role update error:", err);
+            toast.error("Failed to update user role");
         }
-
     };
 
-    /* UPDATE ROLE */
-    const updateRole = async (id, role) => {
+    // Delete User
+    const handleDeleteUser = async (userId, userName) => {
+        if (!window.confirm(`Delete user "${userName}" and their associated data?`)) return;
 
         try {
-
-            await axios.put(
-                `https://your-render-url.onrender.com/admin/update-role/${id}`,
-                { role }
-            );
-
-            alert("Role Updated");
-
-            setUsers(
-                users.map((u) =>
-                    u._id === id
-                        ? { ...u, role }
-                        : u
-                )
-            );
-
+            await AdminService.deleteUser(userId);
+            toast.success("User deleted successfully");
+            setUsers(users.filter((u) => u._id !== userId));
         } catch (err) {
-
-            console.log(err);
-
+            console.error("Delete user error:", err);
+            toast.error(err.response?.data?.message || "Failed to delete user");
         }
-
     };
 
-    /* BAN USER */
-    const banUser = async (id) => {
+    const filteredProducts = products.filter((p) =>
+        (p.product_title || "").toLowerCase().includes(productSearch.toLowerCase())
+    );
 
-        try {
-
-            await axios.put(
-                `https://your-render-url.onrender.com/admin/ban-user/${id}`
-            );
-
-            alert("User Banned");
-
-            setUsers(
-                users.map((u) =>
-                    u._id === id
-                        ? { ...u, banned: true }
-                        : u
-                )
-            );
-
-        } catch (err) {
-
-            console.log(err);
-
-        }
-
-    };
-
-
+    const filteredOrders = orderStatusFilter
+        ? orders.filter((o) => o.orderStatus === orderStatusFilter)
+        : orders;
 
     return (
-
-        <div className="admin-page">
-
-            {/* SIDEBAR */}
-            <div className="admin-sidebar">
-
-                <h2>⚡ ElectroNova</h2>
-
-                <button
-                    onClick={() =>
-                        document.getElementById("products")
-                            .scrollIntoView({ behavior: "smooth" })
-                    }
-                >
-                    📦 Manage Products
-                </button>
-
-                <button
-                    className="admin-btn"
-                    onClick={() =>
-                        navigate("/admin-orders")
-                    }
-                >
-                    📦 Manage Orders
-                </button>
-
-                <button
-                    onClick={() =>
-                        document.getElementById("users")
-                            .scrollIntoView({ behavior: "smooth" })
-                    }
-                >
-                    👥 Manage Users
-                </button>
-
-                <button
-                    onClick={() =>
-                        document.getElementById("reports")
-                            .scrollIntoView({ behavior: "smooth" })
-                    }
-                >
-                    📊 Reports
-                </button>
-
+        <div className="admin-portal container">
+            {/* Header */}
+            <div className="admin-portal-header">
+                <div>
+                    <span className="admin-badge">Admin Operations Suite</span>
+                    <h1>ElectroNova Management Portal</h1>
+                    <p>Live inventory control, order fulfillment pipeline, and customer analytics.</p>
+                </div>
+                <div className="header-actions">
+                    <button className="refresh-admin-btn" onClick={fetchAdminData}>
+                        <FiRefreshCw /> Refresh Data
+                    </button>
+                    <button className="add-product-cta" onClick={() => setShowAddModal(true)}>
+                        <FiPlus /> New Product
+                    </button>
+                </div>
             </div>
 
+            {/* Navigation Tabs */}
+            <div className="admin-nav-tabs">
+                <button
+                    className={`admin-tab-item ${activeTab === "overview" ? "active" : ""}`}
+                    onClick={() => setActiveTab("overview")}
+                >
+                    <FiTrendingUp /> Overview
+                </button>
+                <button
+                    className={`admin-tab-item ${activeTab === "products" ? "active" : ""}`}
+                    onClick={() => setActiveTab("products")}
+                >
+                    <FiPackage /> Products ({products.length})
+                </button>
+                <button
+                    className={`admin-tab-item ${activeTab === "orders" ? "active" : ""}`}
+                    onClick={() => setActiveTab("orders")}
+                >
+                    <FiShoppingCart /> Orders ({orders.length})
+                </button>
+                <button
+                    className={`admin-tab-item ${activeTab === "users" ? "active" : ""}`}
+                    onClick={() => setActiveTab("users")}
+                >
+                    <FiUsers /> Customers ({users.length})
+                </button>
+            </div>
 
-            {/* MAIN CONTENT */}
-            <div className="admin-content">
-
-                {/* TOPBAR */}
-                <div className="admin-topbar">
-
-                    <h1>Admin Dashboard</h1>
-
-                    <button
-                        className="logout-btn"
-                        onClick={handleLogout}
-                    >
-                        Logout
-                    </button>
-
+            {loading ? (
+                <div className="admin-loading-state">
+                    <p>Loading platform metrics and database records...</p>
                 </div>
-
-
-                {/* DASHBOARD CARDS */}
-                <div className="dashboard-cards">
-
-                    <div className="dashboard-card">
-                        <h2>{products.length}</h2>
-                        <p>Total Products</p>
-                    </div>
-
-                    <div className="dashboard-card">
-                        <h2>{carts.length}</h2>
-                        <p>Total Cart Items</p>
-                    </div>
-
-                    <div className="dashboard-card">
-                        <h2>{users.length}</h2>
-                        <p>Total Users</p>
-                    </div>
-
-                </div>
-
-
-                {/* ADD PRODUCT */}
-                <div className="add-product-box">
-
-                    <h2>➕ Add Product</h2>
-
-                    <input
-                        type="text"
-                        placeholder="Product Title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
-
-                    <input
-                        type="text"
-                        placeholder="Price"
-                        value={price}
-                        onChange={(e) => setPrice(e.target.value)}
-                    />
-
-                    <input
-                        type="text"
-                        placeholder="Category"
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                    />
-
-                    <input
-                        type="text"
-                        placeholder="Image URL"
-                        value={image}
-                        onChange={(e) => setImage(e.target.value)}
-                    />
-
-                    <button onClick={addProduct}>
-                        Add Product
-                    </button>
-
-                </div>
-
-
-                {/* PRODUCTS */}
-                <div id="products" className="recent-section">
-
-                    <h2>📦 Products ({products.length})</h2>
-
-                    <div className="admin-scroll-box">
-
-                        {products.slice(0, 50).map((p) => (
-
-                            <div key={p._id} className="activity-box">
-
-                                <img
-                                    src={p.product_image_url}
-                                    alt=""
-                                    width="80"
-                                />
-
-                                <div>
-
-                                    <p>
-                                        <b>{p.product_title}</b>
-                                    </p>
-
-                                    <p>
-                                        ₹{p.discounted_price}
-                                    </p>
-
-                                    <p>
-                                        {p.product_category}
-                                    </p>
-
-                                    <div className="admin-product-buttons">
-
-                                        <button className="edit-btn">
-                                            ✏ Edit
-                                        </button>
-
-                                        <button
-                                            className="delete-btn"
-                                            onClick={() =>
-                                                deleteProduct(p._id)
-                                            }
-                                        >
-                                            🗑 Delete
-                                        </button>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        ))}
-
-                    </div>
-
-                </div>
-
-
-                {/* USERS */}
-                <div id="users" className="recent-section">
-
-                    <h2>👥 Users</h2>
-
-                    {users.map((u) => {
-
-                        // FILTER USER CARTS
-                        const userCarts = carts.filter(
-                            (c) => c.userId === u.username
-                        );
-
-                        return (
-
-                            <div
-                                key={u._id}
-                                className="user-card"
-                            >
-
-                                {/* USER DETAILS */}
-                                <div className="user-header">
-
+            ) : (
+                <div className="admin-tab-panel">
+                    {/* TAB 1: OVERVIEW */}
+                    {activeTab === "overview" && (
+                        <div className="admin-overview-section">
+                            <div className="stats-metric-grid">
+                                <div className="stat-metric-card revenue">
+                                    <div className="metric-icon-box"><FiDollarSign /></div>
                                     <div>
-
-                                        <p>
-                                            <b>{u.username}</b>
-                                        </p>
-
-                                        <p>
-                                            Role: {u.role}
-                                        </p>
-
-                                        <p>
-                                            Status:
-                                            {u.banned
-                                                ? " 🚫 Banned"
-                                                : " ✅ Active"}
-                                        </p>
-
+                                        <span className="metric-label">Delivered Revenue</span>
+                                        <h3 className="metric-val">₹{(stats?.totalRevenue || 0).toLocaleString()}</h3>
                                     </div>
-
-
-                                    {/* ACTION BUTTONS */}
-                                    <div className="admin-product-buttons">
-
-                                        <button
-                                            className="edit-btn"
-                                            onClick={() =>
-                                                updateRole(u._id, "admin")
-                                            }
-                                        >
-                                            👑 Make Admin
-                                        </button>
-
-                                        <button
-                                            className="edit-btn"
-                                            onClick={() =>
-                                                updateRole(u._id, "user")
-                                            }
-                                        >
-                                            👤 Make User
-                                        </button>
-
-                                        <button
-                                            className="delete-btn"
-                                            onClick={() =>
-                                                banUser(u._id)
-                                            }
-                                        >
-                                            🚫 Ban
-                                        </button>
-
-                                        <button
-                                            className="delete-btn"
-                                            onClick={() =>
-                                                deleteUser(u._id)
-                                            }
-                                        >
-                                            🗑 Delete
-                                        </button>
-
-                                    </div>
-
                                 </div>
 
-
-                                {/* USER CART ITEMS */}
-                                <div className="user-cart-section">
-
-                                    <h4>
-                                        🛒 Cart Items ({userCarts.length})
-                                    </h4>
-
-                                    {userCarts.length === 0 ? (
-
-                                        <p>No cart items</p>
-
-                                    ) : (
-
-                                        userCarts.map((c) => (
-
-                                            <div
-                                                key={c._id}
-                                                className="cart-item-box"
-                                            >
-
-                                                <img
-                                                    src={c.product?.product_image_url}
-                                                    alt=""
-                                                    width="70"
-                                                />
-
-                                                <div>
-
-                                                    <p>
-                                                        <b>
-                                                            {c.product?.product_title}
-                                                        </b>
-                                                    </p>
-
-                                                    <p>
-                                                        ₹{c.product?.discounted_price}
-                                                    </p>
-
-                                                    <p>
-                                                        Quantity: {c.quantity}
-                                                    </p>
-
-                                                </div>
-
-                                            </div>
-
-                                        ))
-
-                                    )}
-
+                                <div className="stat-metric-card orders">
+                                    <div className="metric-icon-box"><FiShoppingCart /></div>
+                                    <div>
+                                        <span className="metric-label">Total Orders</span>
+                                        <h3 className="metric-val">{stats?.totalOrders || orders.length}</h3>
+                                        <span className="metric-sub">{stats?.pendingOrders || 0} pending</span>
+                                    </div>
                                 </div>
 
+                                <div className="stat-metric-card products">
+                                    <div className="metric-icon-box"><FiPackage /></div>
+                                    <div>
+                                        <span className="metric-label">Live Catalogue</span>
+                                        <h3 className="metric-val">{stats?.totalProducts || products.length}</h3>
+                                        <span className="metric-sub">Active electronics</span>
+                                    </div>
+                                </div>
+
+                                <div className="stat-metric-card users">
+                                    <div className="metric-icon-box"><FiUsers /></div>
+                                    <div>
+                                        <span className="metric-label">Registered Accounts</span>
+                                        <h3 className="metric-val">{stats?.totalUsers || users.length}</h3>
+                                        <span className="metric-sub">Customers & staff</span>
+                                    </div>
+                                </div>
                             </div>
 
-                        );
-
-                    })}
-
-                </div>
-
-
-                {/* REPORTS */}
-                {/* REPORTS */}
-                <div id="reports" className="recent-section">
-
-                    <h2>📊 Sales Reports & Analytics</h2>
-
-                    {/* REPORT CARDS */}
-                    <div className="report-cards">
-
-                        <div className="report-card">
-                            <h3>Total Products</h3>
-                            <p>{products.length}</p>
-                        </div>
-
-                        <div className="report-card">
-                            <h3>Total Users</h3>
-                            <p>{users.length}</p>
-                        </div>
-
-                        <div className="report-card">
-                            <h3>Total Cart Items</h3>
-                            <p>{carts.length}</p>
-                        </div>
-
-                        <div className="report-card">
-                            <h3>Total Revenue</h3>
-
-                            <p>
-                                ₹{
-                                    carts.reduce(
-                                        (total, item) =>
-                                            total +
-                                            (
-                                                Number(
-                                                    item.product?.discounted_price ||
-                                                    item.discounted_price ||
-                                                    0
-                                                ) *
-                                                Number(item.quantity || 1)
-                                            ),
-                                        0
-                                    )
-                                }
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    {/* RECENT SALES */}
-                    <div className="sales-table">
-
-                        <h3>🛒 Recent Sales</h3>
-
-                        <table>
-
-                            <thead>
-
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>User</th>
-                                </tr>
-
-                            </thead>
-
-                            <tbody>
-
-                                {carts.slice(0, 10).map((item) => (
-
-                                    <tr key={item._id}>
-
-                                        <td>
-                                            {
-                                                item.product?.product_title ||
-                                                item.product_title
-                                            }
-                                        </td>
-
-                                        <td>
-                                            ₹{
-                                                item.product?.discounted_price ||
-                                                item.discounted_price
-                                            }
-                                        </td>
-
-                                        <td>
-                                            {item.quantity}
-                                        </td>
-
-                                        <td>
-                                            {item.userId}
-                                        </td>
-
-                                    </tr>
-
-                                ))}
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-
-                    {/* TOP PRODUCTS */}
-                    <div className="top-products">
-
-                        <h3>🔥 Top Products</h3>
-
-                        <div className="top-products-grid">
-
-                            {products.slice(0, 6).map((p) => (
-
-                                <div
-                                    key={p._id}
-                                    className="top-product-card"
-                                >
-
-                                    <img
-                                        src={p.product_image_url}
-                                        alt=""
-                                    />
-
-                                    <h4>
-                                        {p.product_title}
-                                    </h4>
-
-                                    <p>
-                                        ₹{p.discounted_price}
-                                    </p>
-
+                            {/* Recent Orders Preview */}
+                            <div className="admin-card-table-box">
+                                <div className="card-box-header">
+                                    <h3>Recent Order Dispatches</h3>
+                                    <button onClick={() => setActiveTab("orders")} className="view-all-table-btn">
+                                        View All Orders →
+                                    </button>
                                 </div>
 
-                            ))}
+                                <div className="table-responsive">
+                                    <table className="admin-data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Order ID</th>
+                                                <th>Customer</th>
+                                                <th>Amount</th>
+                                                <th>Payment Method</th>
+                                                <th>Order Status</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {orders.slice(0, 5).map((ord) => (
+                                                <tr key={ord._id}>
+                                                    <td><strong>#{ord._id.slice(-6).toUpperCase()}</strong></td>
+                                                    <td>{ord.shippingAddress?.fullName || "Guest Customer"}</td>
+                                                    <td>₹{(ord.total || 0).toLocaleString()}</td>
+                                                    <td>{ord.paymentMethod}</td>
+                                                    <td>
+                                                        <span className={`status-pill ${ord.orderStatus.toLowerCase()}`}>
+                                                            {ord.orderStatus}
+                                                        </span>
+                                                    </td>
+                                                    <td>{new Date(ord.createdAt).toLocaleDateString()}</td>
+                                                </tr>
+                                            ))}
+                                            {orders.length === 0 && (
+                                                <tr>
+                                                    <td colSpan="6" style={{ textAlign: "center", padding: "24px" }}>
+                                                        No orders placed yet.
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
+                    {/* TAB 2: PRODUCTS */}
+                    {activeTab === "products" && (
+                        <div className="admin-products-section">
+                            <div className="section-toolbar">
+                                <div className="table-search-box">
+                                    <FiSearch />
+                                    <input
+                                        type="text"
+                                        placeholder="Search products by title..."
+                                        value={productSearch}
+                                        onChange={(e) => setProductSearch(e.target.value)}
+                                    />
+                                </div>
+                                <span className="toolbar-count">
+                                    Showing {filteredProducts.length} items
+                                </span>
+                            </div>
+
+                            <div className="table-responsive">
+                                <table className="admin-data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Category</th>
+                                            <th>Offer Price</th>
+                                            <th>Original Price</th>
+                                            <th>Discount</th>
+                                            <th>Rating</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {filteredProducts.slice(0, 50).map((prod) => (
+                                            <tr key={prod._id}>
+                                                <td>
+                                                    <div className="product-table-item">
+                                                        <img
+                                                            src={prod.product_image_url || "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=80"}
+                                                            alt={prod.product_title}
+                                                            className="table-item-thumb"
+                                                        />
+                                                        <div>
+                                                            <strong className="table-item-title">{prod.product_title}</strong>
+                                                            <span className="table-item-id">ID: {prod._id.slice(-6)}</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td><span className="category-chip">{prod.product_category}</span></td>
+                                                <td><strong>₹{(prod.discounted_price || 0).toLocaleString()}</strong></td>
+                                                <td>₹{(prod.original_price || 0).toLocaleString()}</td>
+                                                <td>{prod.discount_percentage}% OFF</td>
+                                                <td>⭐ {prod.product_rating || 4.5}</td>
+                                                <td>
+                                                    <div className="table-row-actions">
+                                                        <Link
+                                                            to={`/products/${prod._id}`}
+                                                            target="_blank"
+                                                            className="view-link-btn"
+                                                            title="View product page"
+                                                        >
+                                                            View
+                                                        </Link>
+                                                        <button
+                                                            className="delete-icon-btn"
+                                                            onClick={() => handleDeleteProduct(prod._id, prod.product_title)}
+                                                            title="Delete product"
+                                                        >
+                                                            <FiTrash2 />
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* TAB 3: ORDERS */}
+                    {activeTab === "orders" && (
+                        <div className="admin-orders-section">
+                            <div className="section-toolbar">
+                                <div className="status-filter-pills">
+                                    {["", "Pending", "Confirmed", "Shipped", "Delivered", "Cancelled"].map((st) => (
+                                        <button
+                                            key={st}
+                                            className={`status-filter-pill ${orderStatusFilter === st ? "active" : ""}`}
+                                            onClick={() => setOrderStatusFilter(st)}
+                                        >
+                                            {st || "All Statuses"}
+                                        </button>
+                                    ))}
+                                </div>
+                                <span className="toolbar-count">
+                                    {filteredOrders.length} {filteredOrders.length === 1 ? "Order" : "Orders"}
+                                </span>
+                            </div>
+
+                            <div className="table-responsive">
+                                <table className="admin-data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>Customer & Address</th>
+                                            <th>Items</th>
+                                            <th>Total</th>
+                                            <th>Payment</th>
+                                            <th>Update Status</th>
+                                            <th>Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {filteredOrders.map((ord) => (
+                                            <tr key={ord._id}>
+                                                <td>
+                                                    <strong>#{ord._id.slice(-8).toUpperCase()}</strong>
+                                                    <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
+                                                        {new Date(ord.createdAt).toLocaleDateString()}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div><strong>{ord.shippingAddress?.fullName}</strong></div>
+                                                    <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
+                                                        {ord.shippingAddress?.city}, {ord.shippingAddress?.state} - {ord.shippingAddress?.pincode}
+                                                    </div>
+                                                    <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
+                                                        Ph: {ord.shippingAddress?.phone}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span className="items-count-badge">
+                                                        {(ord.products || []).length} items
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <strong style={{ color: "var(--primary)" }}>
+                                                        ₹{(ord.total || 0).toLocaleString()}
+                                                    </strong>
+                                                </td>
+                                                <td>
+                                                    <span className={`status-pill ${(ord.paymentStatus || "pending").toLowerCase()}`}>
+                                                        {ord.paymentStatus || "Pending"}
+                                                    </span>
+                                                    <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "4px" }}>
+                                                        {ord.paymentMethod}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <select
+                                                        className="status-select-input"
+                                                        value={ord.orderStatus}
+                                                        onChange={(e) => handleUpdateOrderStatus(ord._id, e.target.value)}
+                                                    >
+                                                        <option value="Pending">Pending</option>
+                                                        <option value="Confirmed">Confirmed</option>
+                                                        <option value="Shipped">Shipped</option>
+                                                        <option value="Delivered">Delivered</option>
+                                                        <option value="Cancelled">Cancelled</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <Link to={`/orders/${ord._id}`} className="view-link-btn">
+                                                        Inspect
+                                                    </Link>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* TAB 4: USERS */}
+                    {activeTab === "users" && (
+                        <div className="admin-users-section">
+                            <div className="section-toolbar">
+                                <h3>Registered Customer Directory</h3>
+                                <span className="toolbar-count">{users.length} total users</span>
+                            </div>
+
+                            <div className="table-responsive">
+                                <table className="admin-data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Customer Name</th>
+                                            <th>Email Address</th>
+                                            <th>Phone</th>
+                                            <th>City / State</th>
+                                            <th>Role</th>
+                                            <th>Joined Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {users.map((usr) => (
+                                            <tr key={usr._id}>
+                                                <td>
+                                                    <div className="user-table-cell">
+                                                        <div className="user-cell-avatar">
+                                                            {usr.name ? usr.name[0].toUpperCase() : "U"}
+                                                        </div>
+                                                        <strong>{usr.name}</strong>
+                                                    </div>
+                                                </td>
+                                                <td>{usr.email}</td>
+                                                <td>{usr.phone || "—"}</td>
+                                                <td>{usr.city ? `${usr.city}, ${usr.state || ""}` : "—"}</td>
+                                                <td>
+                                                    <button
+                                                        className={`role-toggle-btn ${usr.role}`}
+                                                        onClick={() => handleToggleUserRole(usr._id, usr.role)}
+                                                        title="Click to toggle role"
+                                                    >
+                                                        {usr.role === "admin" ? "Admin" : "Customer"}
+                                                    </button>
+                                                </td>
+                                                <td>{new Date(usr.createdAt || Date.now()).toLocaleDateString()}</td>
+                                                <td>
+                                                    {usr._id !== user._id && (
+                                                        <button
+                                                            className="delete-icon-btn"
+                                                            onClick={() => handleDeleteUser(usr._id, usr.name)}
+                                                            title="Delete user account"
+                                                        >
+                                                            <FiTrash2 />
+                                                        </button>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {/* ADD PRODUCT MODAL */}
+            {showAddModal && (
+                <div className="admin-modal-backdrop" onClick={() => setShowAddModal(false)}>
+                    <div className="admin-modal-card" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h3>Add New Catalogue Product</h3>
+                            <button className="modal-close-btn" onClick={() => setShowAddModal(false)}>
+                                <FiXCircle />
+                            </button>
                         </div>
 
+                        <form onSubmit={handleAddProduct} className="modal-form">
+                            <div className="form-group">
+                                <label>Product Title *</label>
+                                <input
+                                    type="text"
+                                    placeholder="e.g. Sony WH-1000XM5 Wireless Headphones"
+                                    value={newProduct.product_title}
+                                    onChange={(e) => setNewProduct({ ...newProduct, product_title: e.target.value })}
+                                    required
+                                />
+                            </div>
+
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label>Category *</label>
+                                    <select
+                                        value={newProduct.product_category}
+                                        onChange={(e) => setNewProduct({ ...newProduct, product_category: e.target.value })}
+                                    >
+                                        <option value="Smartphones">Smartphones</option>
+                                        <option value="Laptops">Laptops</option>
+                                        <option value="Audio">Audio</option>
+                                        <option value="Wearables">Wearables</option>
+                                        <option value="Gaming">Gaming</option>
+                                        <option value="Cameras">Cameras</option>
+                                        <option value="Speakers">Speakers</option>
+                                        <option value="Smart Home">Smart Home</option>
+                                    </select>
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Offer Price (₹) *</label>
+                                    <input
+                                        type="number"
+                                        placeholder="e.g. 29990"
+                                        value={newProduct.discounted_price}
+                                        onChange={(e) => setNewProduct({ ...newProduct, discounted_price: e.target.value })}
+                                        required
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Original Price (₹)</label>
+                                    <input
+                                        type="number"
+                                        placeholder="e.g. 34990"
+                                        value={newProduct.original_price}
+                                        onChange={(e) => setNewProduct({ ...newProduct, original_price: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <label>Image URL *</label>
+                                <input
+                                    type="url"
+                                    placeholder="https://... image link"
+                                    value={newProduct.product_image_url}
+                                    onChange={(e) => setNewProduct({ ...newProduct, product_image_url: e.target.value })}
+                                />
+                            </div>
+
+                            <div className="modal-actions">
+                                <button
+                                    type="button"
+                                    className="modal-cancel-btn"
+                                    onClick={() => setShowAddModal(false)}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="modal-submit-btn"
+                                    disabled={savingProduct}
+                                >
+                                    {savingProduct ? "Creating..." : "Save Product"}
+                                </button>
+                            </div>
+                        </form>
                     </div>
-
                 </div>
-
-            </div>
-
+            )}
         </div>
-
     );
 }
 

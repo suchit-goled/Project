@@ -1,18 +1,21 @@
 import { useCallback, useEffect, useState } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 import "./Products.css";
 
 import ProductService from "../services/product.service";
-
 import FiltersSidebar from "../components/Products/FiltersSidebar";
 import ProductsHeader from "../components/Products/ProductsHeader";
 import ProductGrid from "../components/Products/ProductGrid";
 import { useSearch } from "../context/SearchContext";
 
 const Products = () => {
-    const { search } = useSearch();
+    const { category: paramCategory, key: paramKey } = useParams();
+    const [searchParams] = useSearchParams();
+    const { search, setSearch } = useSearch();
 
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [totalProducts, setTotalProducts] = useState(0);
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -21,76 +24,164 @@ const Products = () => {
     const [totalPages, setTotalPages] = useState(1);
 
     const [sort, setSort] = useState("newest");
-    const [category, setCategory] = useState("");
+    const [category, setCategory] = useState(paramCategory || searchParams.get("category") || "");
     const [rating, setRating] = useState(0);
     const [maxPrice, setMaxPrice] = useState(200000);
+    const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
+    // Sync from URL params
+    useEffect(() => {
+        if (paramCategory) {
+            setCategory(paramCategory);
+            setPage(1);
+        } else if (searchParams.get("category")) {
+            setCategory(searchParams.get("category"));
+            setPage(1);
+        }
+
+        if (paramKey) {
+            setSearch(paramKey);
+            setPage(1);
+        } else if (searchParams.get("search")) {
+            setSearch(searchParams.get("search"));
+            setPage(1);
+        }
+    }, [paramCategory, paramKey, searchParams, setSearch]);
+
+    // Fetch categories list from backend
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const cats = await ProductService.getCategories();
+                if (cats && cats.length > 0) {
+                    setCategories(cats);
+                }
+            } catch (err) {
+                console.error("Failed to load categories:", err);
+            }
+        };
+        fetchCategories();
+    }, []);
+
+    // Fetch products from server with all query parameters
     const fetchProducts = useCallback(async () => {
         try {
             setLoading(true);
             setError("");
 
-            const response = await ProductService.getProducts({
+            const params = {
                 page,
-            });
+                limit: 16,
+                sort,
+            };
 
-            setProducts(response.data.products);
-            setTotalPages(response.data.totalPages);
+            if (category && category.trim()) {
+                params.category = category.trim();
+            }
 
-            const uniqueCategories = [
-                ...new Set(
-                    response.data.products.map(
-                        (product) => product.product_category
-                    )
-                ),
-            ];
+            if (search && search.trim()) {
+                params.search = search.trim();
+            }
 
-            setCategories(uniqueCategories);
+            if (rating > 0) {
+                params.rating = rating;
+            }
+
+            if (maxPrice < 200000) {
+                params.maxPrice = maxPrice;
+            }
+
+            const response = await ProductService.getProducts(params);
+
+            setProducts(response.data.products || []);
+            setTotalPages(response.data.totalPages || 1);
+            setTotalProducts(response.data.total || 0);
+
         } catch (err) {
-            console.error(err);
-            setError("Failed to load products.");
+            console.error("Error fetching catalogue:", err);
+            setError("Failed to load products. Please check your connection.");
         } finally {
             setLoading(false);
         }
-    }, [page]);
+    }, [page, category, search, rating, maxPrice, sort]);
 
     useEffect(() => {
         fetchProducts();
     }, [fetchProducts]);
 
+    const handleCategoryChange = (newCat) => {
+        setCategory(newCat);
+        setPage(1);
+    };
+
+    const handleRatingChange = (newRating) => {
+        setRating(newRating);
+        setPage(1);
+    };
+
+    const handleMaxPriceChange = (newPrice) => {
+        setMaxPrice(newPrice);
+        setPage(1);
+    };
+
+    const handleSortChange = (newSort) => {
+        setSort(newSort);
+        setPage(1);
+    };
+
+    const handleResetAll = () => {
+        setCategory("");
+        setRating(0);
+        setMaxPrice(200000);
+        setSort("newest");
+        setPage(1);
+        if (setSearch) setSearch("");
+    };
+
     return (
         <section className="products-page">
             <div className="container">
                 <ProductsHeader
-                    search={search}
+                    total={totalProducts}
                     sort={sort}
-                    setSort={setSort}
+                    setSort={handleSortChange}
+                    category={category}
+                    search={search}
+                    onToggleMobileFilters={() => setMobileFiltersOpen(!mobileFiltersOpen)}
                 />
 
                 <div className="products-layout">
-                    <FiltersSidebar
-                        categories={categories}
-                        category={category}
-                        setCategory={setCategory}
-                        rating={rating}
-                        setRating={setRating}
-                        maxPrice={maxPrice}
-                        setMaxPrice={setMaxPrice}
-                    />
+                    <div className={`products-sidebar-col ${mobileFiltersOpen ? "open" : ""}`}>
+                        <FiltersSidebar
+                            categories={categories}
+                            category={category}
+                            setCategory={handleCategoryChange}
+                            rating={rating}
+                            setRating={handleRatingChange}
+                            maxPrice={maxPrice}
+                            setMaxPrice={handleMaxPriceChange}
+                            onReset={handleResetAll}
+                        />
+                    </div>
 
                     <div className="products-content">
                         <ProductGrid
                             products={products}
                             loading={loading}
                             error={error}
-                            search={search}
-                            sort={sort}
-                            category={category}
-                            rating={rating}
-                            maxPrice={maxPrice}
                             page={page}
                             totalPages={totalPages}
                             setPage={setPage}
+                            category={category}
+                            setCategory={handleCategoryChange}
+                            rating={rating}
+                            setRating={handleRatingChange}
+                            maxPrice={maxPrice}
+                            setMaxPrice={handleMaxPriceChange}
+                            search={search}
+                            setSearch={setSearch}
+                            onReset={handleResetAll}
+                            onRetry={fetchProducts}
                         />
                     </div>
                 </div>

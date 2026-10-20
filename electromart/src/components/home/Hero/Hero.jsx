@@ -1,5 +1,6 @@
 import "./Hero.css";
 import { useNavigate } from "react-router-dom";
+import { FiArrowRight, FiTag, FiShield, FiTruck, FiAward } from "react-icons/fi";
 
 import macbook from "../../../assets/products/macbook.png";
 import iphone from "../../../assets/products/iphone.png";
@@ -10,107 +11,91 @@ const Hero = () => {
 
   return (
     <section className="hero">
-
       <div className="hero-bg-circle hero-bg-circle-1"></div>
       <div className="hero-bg-circle hero-bg-circle-2"></div>
 
-      <div className="hero__container">
-
+      <div className="container hero__container">
         {/* LEFT */}
-
         <div className="hero__left">
-
           <span className="hero__badge">
-            ⚡ Premium Electronics Store
+            ⚡ Engineered for Performance
           </span>
 
-          <h1>
-            Upgrade Your
-            <br />
-            Tech Experience
+          <h1 className="hero__title">
+            Upgrade Your <br />
+            <span className="hero__title-gradient">Tech Experience</span>
           </h1>
 
-          <h2>
-            Built for
-            <br />
-            Everyday Excellence
-          </h2>
-
-          <p>
-            Discover premium laptops, smartphones, smartwatches and
-            accessories from the world's leading brands with lightning
-            fast delivery and secure shopping.
+          <p className="hero__description">
+            Discover curated smartphones, high-performance laptops, noise-cancelling audio, and smart devices from the world's leading brands. 100% genuine products with official manufacturer warranty.
           </p>
 
           <div className="hero__buttons">
-
             <button
-              className="primary"
+              className="hero__btn-primary"
               onClick={() => navigate("/products")}
             >
-              Shop Now
+              <span>Explore Catalogue</span>
+              <FiArrowRight />
             </button>
 
             <button
-              className="secondary"
-              onClick={() => navigate("/products")}
+              className="hero__btn-secondary"
+              onClick={() => navigate("/deals")}
             >
-              Explore
+              <FiTag />
+              <span>Limited Flash Deals</span>
             </button>
-
           </div>
 
           <div className="hero__stats">
-
             <div className="stat-card">
-              <h3>50K+</h3>
-              <span>Happy Customers</span>
+              <div className="stat-icon"><FiAward /></div>
+              <div>
+                <h3>8,800+</h3>
+                <span>Curated Products</span>
+              </div>
             </div>
 
             <div className="stat-card">
-              <h3>2K+</h3>
-              <span>Premium Products</span>
+              <div className="stat-icon"><FiShield /></div>
+              <div>
+                <h3>100%</h3>
+                <span>Genuine Warranty</span>
+              </div>
             </div>
 
             <div className="stat-card">
-              <h3>24/7</h3>
-              <span>Support</span>
+              <div className="stat-icon"><FiTruck /></div>
+              <div>
+                <h3>2–4 Days</h3>
+                <span>Express Delivery</span>
+              </div>
             </div>
-
           </div>
-
         </div>
 
         {/* RIGHT */}
-
         <div className="hero__right">
-
           <div className="showcase">
-
             <img
               src={macbook}
-              alt="MacBook"
+              alt="MacBook Pro"
               className="hero-image macbook"
             />
-
             <img
               src={iphone}
-              alt="iPhone"
+              alt="iPhone Flagship"
               className="hero-image iphone"
             />
-
             <img
               src={watch}
-              alt="Apple Watch"
+              alt="Smart Watch"
               className="hero-image watch"
             />
-
           </div>
-
         </div>
-
       </div>
-
     </section>
   );
 };

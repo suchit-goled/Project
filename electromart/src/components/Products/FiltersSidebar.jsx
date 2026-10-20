@@ -1,94 +1,98 @@
+import React from "react";
+import { FiFilter, FiRotateCcw, FiCheck } from "react-icons/fi";
 import "./FiltersSidebar.css";
 
 const FiltersSidebar = ({
     categories = [],
-    category,
+    category = "",
     setCategory,
-    rating,
+    rating = 0,
     setRating,
-    maxPrice,
+    maxPrice = 200000,
     setMaxPrice,
+    onReset,
 }) => {
     return (
         <aside className="filters-sidebar">
-
-            <h2>Filters</h2>
+            <div className="filters-header">
+                <div className="filters-title">
+                    <FiFilter />
+                    <h3>Filter Catalogue</h3>
+                </div>
+                {(category || rating > 0 || maxPrice < 200000) && (
+                    <button className="reset-filters-link" onClick={onReset} title="Reset all filters">
+                        <FiRotateCcw /> Reset
+                    </button>
+                )}
+            </div>
 
             {/* Categories */}
-            <div className="filter-section">
-
-                <h3>Categories</h3>
-
-                {categories.length > 0 ? (
-                    categories.map((item) => (
-                        <label key={item}>
-                            <input
-                                type="radio"
-                                name="category"
-                                checked={category === item}
-                                onChange={() => setCategory(item)}
-                            />
-                            {item}
-                        </label>
-                    ))
-                ) : (
-                    <p>No Categories</p>
-                )}
-
+            <div className="filter-group">
+                <h4>Category</h4>
+                <div className="filter-options-list">
+                    <button
+                        className={`filter-category-btn ${!category ? "active" : ""}`}
+                        onClick={() => setCategory("")}
+                    >
+                        <span>All Categories</span>
+                        {!category && <FiCheck className="filter-check" />}
+                    </button>
+                    {categories.map((cat) => (
+                        <button
+                            key={cat}
+                            className={`filter-category-btn ${category.toLowerCase() === cat.toLowerCase() ? "active" : ""}`}
+                            onClick={() => setCategory(category.toLowerCase() === cat.toLowerCase() ? "" : cat)}
+                        >
+                            <span>{cat}</span>
+                            {category.toLowerCase() === cat.toLowerCase() && <FiCheck className="filter-check" />}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {/* Price Filter */}
-            <div className="filter-section">
-
-                <h3>Maximum Price</h3>
-
+            <div className="filter-group">
+                <div className="filter-group-header">
+                    <h4>Max Price</h4>
+                    <span className="price-tag">₹{maxPrice.toLocaleString()}</span>
+                </div>
                 <input
                     type="range"
-                    min="0"
+                    min="500"
                     max="200000"
-                    step="1000"
+                    step="2500"
                     value={maxPrice}
-                    onChange={(e) =>
-                        setMaxPrice(Number(e.target.value))
-                    }
+                    onChange={(e) => setMaxPrice(Number(e.target.value))}
+                    className="price-range-slider"
                 />
-
-                <p>₹ {maxPrice.toLocaleString()}</p>
-
+                <div className="price-range-labels">
+                    <span>₹500</span>
+                    <span>₹2,00,000</span>
+                </div>
             </div>
 
             {/* Rating Filter */}
-            <div className="filter-section">
-
-                <h3>Minimum Rating</h3>
-
-                <select
-                    value={rating}
-                    onChange={(e) =>
-                        setRating(Number(e.target.value))
-                    }
-                >
-                    <option value={0}>All</option>
-                    <option value={4}>4★ & Above</option>
-                    <option value={3}>3★ & Above</option>
-                    <option value={2}>2★ & Above</option>
-                    <option value={1}>1★ & Above</option>
-                </select>
-
+            <div className="filter-group">
+                <h4>Customer Rating</h4>
+                <div className="rating-options">
+                    {[
+                        { label: "All Ratings", val: 0 },
+                        { label: "4.5★ & Above", val: 4.5 },
+                        { label: "4.0★ & Above", val: 4.0 },
+                        { label: "3.5★ & Above", val: 3.5 },
+                    ].map((opt) => (
+                        <label key={opt.val} className={`rating-radio-label ${rating === opt.val ? "selected" : ""}`}>
+                            <input
+                                type="radio"
+                                name="rating-filter"
+                                checked={rating === opt.val}
+                                onChange={() => setRating(opt.val)}
+                            />
+                            <span>{opt.label}</span>
+                        </label>
+                    ))}
+                </div>
             </div>
-
-            {/* Clear Filters */}
-            <button
-                className="clear-btn"
-                onClick={() => {
-                    setCategory("");
-                    setRating(0);
-                    setMaxPrice(200000);
-                }}
-            >
-                Clear Filters
-            </button>
-
         </aside>
     );
 };

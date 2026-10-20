@@ -1,9 +1,9 @@
 import Address from "../models/address.model.js";
+import ApiResponse from "../utils/apiResponse.js";
 
 // Add Address
-export const addAddress = async (req, res) => {
+export const addAddress = async (req, res, next) => {
     try {
-
         const {
             fullName,
             phone,
@@ -13,6 +13,10 @@ export const addAddress = async (req, res) => {
             pincode,
             country
         } = req.body;
+
+        if (!fullName || !addressLine || !city || !pincode) {
+            return ApiResponse.error(res, "Full name, address, city, and pincode are required.", 400);
+        }
 
         // Check if user already has a default address
         const existingDefault = await Address.findOne({
@@ -32,28 +36,15 @@ export const addAddress = async (req, res) => {
             isDefault: existingDefault ? false : true
         });
 
-        res.status(201).json({
-            success: true,
-            message: "Address added successfully",
-            address
-        });
-
+        return ApiResponse.success(res, address, "Address added successfully", 201);
     } catch (error) {
-
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-
+        next(error);
     }
 };
 
-
 // Get All Addresses
-export const getAddresses = async (req, res) => {
-
+export const getAddresses = async (req, res, next) => {
     try {
-
         const addresses = await Address.find({
             userId: req.user._id
         }).sort({
@@ -61,29 +52,15 @@ export const getAddresses = async (req, res) => {
             createdAt: -1
         });
 
-        res.status(200).json({
-            success: true,
-            count: addresses.length,
-            addresses
-        });
-
+        return ApiResponse.success(res, { addresses, count: addresses.length }, "Addresses retrieved successfully");
     } catch (error) {
-
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-
+        next(error);
     }
-
 };
 
-
-//update address 
 // Update Address
-export const updateAddress = async (req, res) => {
+export const updateAddress = async (req, res, next) => {
     try {
-
         const address = await Address.findOneAndUpdate(
             {
                 _id: req.params.id,
@@ -97,53 +74,32 @@ export const updateAddress = async (req, res) => {
         );
 
         if (!address) {
-            return res.status(404).json({
-                success: false,
-                message: "Address not found"
-            });
+            return ApiResponse.error(res, "Address not found or unauthorized", 404);
         }
 
-        res.status(200).json({
-            success: true,
-            message: "Address updated successfully",
-            address
-        });
-
+        return ApiResponse.success(res, address, "Address updated successfully");
     } catch (error) {
-
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-
+        next(error);
     }
 };
 
-
-// deleting address 
 // Delete Address
-export const deleteAddress = async (req, res) => {
+export const deleteAddress = async (req, res, next) => {
     try {
-
         const address = await Address.findOne({
             _id: req.params.id,
             userId: req.user._id
         });
 
         if (!address) {
-            return res.status(404).json({
-                success: false,
-                message: "Address not found"
-            });
+            return ApiResponse.error(res, "Address not found or unauthorized", 404);
         }
 
         const wasDefault = address.isDefault;
-
         await address.deleteOne();
 
         // If deleted address was default, make another one default
         if (wasDefault) {
-
             const anotherAddress = await Address.findOne({
                 userId: req.user._id
             }).sort({ createdAt: 1 });
@@ -152,44 +108,27 @@ export const deleteAddress = async (req, res) => {
                 anotherAddress.isDefault = true;
                 await anotherAddress.save();
             }
-
         }
 
-        res.status(200).json({
-            success: true,
-            message: "Address deleted successfully"
-        });
-
+        return ApiResponse.success(res, null, "Address deleted successfully");
     } catch (error) {
-
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-
+        next(error);
     }
 };
 
-
-
-//default address
 // Set Default Address
-export const setDefaultAddress = async (req, res) => {
+export const setDefaultAddress = async (req, res, next) => {
     try {
-
         const address = await Address.findOne({
             _id: req.params.id,
             userId: req.user._id
         });
 
         if (!address) {
-            return res.status(404).json({
-                success: false,
-                message: "Address not found"
-            });
+            return ApiResponse.error(res, "Address not found or unauthorized", 404);
         }
 
-        // Remove default from all addresses
+        // Remove default from all user's addresses
         await Address.updateMany(
             { userId: req.user._id },
             { isDefault: false }
@@ -199,18 +138,8 @@ export const setDefaultAddress = async (req, res) => {
         address.isDefault = true;
         await address.save();
 
-        res.status(200).json({
-            success: true,
-            message: "Default address updated",
-            address
-        });
-
+        return ApiResponse.success(res, address, "Default address updated");
     } catch (error) {
-
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-
+        next(error);
     }
 };

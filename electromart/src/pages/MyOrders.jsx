@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 
 import OrderService from "../services/order.service";
@@ -11,42 +11,48 @@ const MyOrders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        fetchOrders();
-    }, []);
-
-    const fetchOrders = async () => {
+    const fetchOrders = useCallback(async () => {
         try {
-            const user = JSON.parse(localStorage.getItem("user"));
-
-            console.log("Logged User:", user);
-
-            if (!user || !user.id) {
-                console.error("User not found");
+            const userStr = localStorage.getItem("user");
+            if (!userStr) {
+                setOrders([]);
                 setLoading(false);
                 return;
             }
 
-            const response = await OrderService.getOrders(user.id);
+            const user = JSON.parse(userStr);
+            const userId = user?.id || user?._id;
 
-            console.log("API Response:", response);
+            if (!userId) {
+                setOrders([]);
+                setLoading(false);
+                return;
+            }
 
-            if (response.success) {
-                console.log("Orders:", response.orders);
-                console.log("Orders Count:", response.orders.length);
+            const response = await OrderService.getOrders(userId);
 
-                setOrders(response.orders);
+            if (response && response.success) {
+                const ordersList = response.data?.orders || response.orders || [];
+                setOrders(ordersList);
             } else {
-                console.error("API returned success=false");
+                setOrders([]);
             }
         } catch (error) {
             console.error("Fetch Orders Error:", error);
+            setOrders([]);
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    console.log("Orders State:", orders);
+    useEffect(() => {
+        fetchOrders();
+    }, [fetchOrders]);
+
+    const handleCancelOrder = async (orderId) => {
+        await OrderService.cancelOrder(orderId);
+        await fetchOrders();
+    };
 
     if (loading) {
         return (
@@ -65,12 +71,13 @@ const MyOrders = () => {
         >
             <h1>My Orders</h1>
 
-            {orders.length > 0 ? (
+            {orders && orders.length > 0 ? (
                 <div className="orders-grid">
                     {orders.map((order) => (
                         <OrderCard
                             key={order._id}
                             order={order}
+                            onCancel={handleCancelOrder}
                         />
                     ))}
                 </div>

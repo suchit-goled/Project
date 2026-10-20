@@ -9,7 +9,8 @@ class ProductRepository {
             minPrice,
             maxPrice,
             rating,
-            sort
+            sort,
+            minDiscount
         } = query;
 
         const filter = {};
@@ -23,12 +24,16 @@ class ProductRepository {
             };
         }
 
-        // Filter by category
-        if (category && typeof category === "string" && category.trim()) {
-            filter.product_category = category.trim();
+        // Case-insensitive Category matching
+        if (category && typeof category === "string" && category.trim() && category.trim().toLowerCase() !== "all") {
+            const escapedCategory = category.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            filter.product_category = {
+                $regex: `^${escapedCategory}$`,
+                $options: "i"
+            };
         }
 
-        // Filter by price
+        // Price Filter
         if (minPrice || maxPrice) {
             filter.discounted_price = {};
             if (minPrice && !isNaN(Number(minPrice))) {
@@ -39,10 +44,17 @@ class ProductRepository {
             }
         }
 
-        // Filter by rating
-        if (rating && !isNaN(Number(rating))) {
+        // Rating Filter
+        if (rating && !isNaN(Number(rating)) && Number(rating) > 0) {
             filter.product_rating = {
                 $gte: Number(rating)
+            };
+        }
+
+        // Minimum Discount Filter
+        if (minDiscount && !isNaN(Number(minDiscount)) && Number(minDiscount) > 0) {
+            filter.discount_percentage = {
+                $gte: Number(minDiscount)
             };
         }
 
@@ -50,19 +62,23 @@ class ProductRepository {
         let sortOption = {};
         switch (sort) {
             case "priceLow":
+            case "low":
                 sortOption.discounted_price = 1;
                 break;
             case "priceHigh":
+            case "high":
                 sortOption.discounted_price = -1;
                 break;
             case "rating":
                 sortOption.product_rating = -1;
                 break;
-            case "latest":
-                sortOption.createdAt = -1;
+            case "discount":
+                sortOption.discount_percentage = -1;
                 break;
+            case "newest":
+            case "latest":
             default:
-                sortOption.createdAt = -1;
+                sortOption._id = -1;
         }
 
         const validPage = Math.max(1, Number(page) || 1);
@@ -84,11 +100,40 @@ class ProductRepository {
     }
 
     async getFeaturedProducts() {
-        return Product.find({ isFeatured: true }).limit(8);
+        return Product.find({ isFeatured: true }).limit(10);
     }
 
     async getProductById(id) {
         return Product.findById(id);
+    }
+
+    async getCategories() {
+        const rawCats = await Product.distinct("product_category");
+        // Filter out empty or null, clean and deduplicate case-insensitively
+        const cleanMap = new Map();
+        for (const cat of rawCats) {
+            if (cat && typeof cat === "string" && cat.trim()) {
+                const trimmed = cat.trim();
+                const lower = trimmed.toLowerCase();
+                if (!cleanMap.has(lower)) {
+                    // Standardize display name (capitalize first letter)
+                    const formatted = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+                    cleanMap.set(lower, formatted);
+                }
+            }
+        }
+        return Array.from(cleanMap.values()).sort();
+    }
+
+    async getRelatedProducts(productId, limit = 4) {
+        const current = await Product.findById(productId);
+        if (!current) return [];
+
+        return Product.find({
+            product_category: current.product_category,
+            _id: { $ne: current._id }
+        })
+        .limit(limit);
     }
 
     async createProduct(productData) {
@@ -99,10 +144,7 @@ class ProductRepository {
         return await Product.findByIdAndUpdate(
             id,
             productData,
-            {
-                new: true,
-                runValidators: true,
-            }
+            { new: true, runValidators: true }
         );
     }
 
@@ -111,7 +153,7 @@ class ProductRepository {
     }
 
     async getAllProducts() {
-        return await Product.find().sort({ createdAt: -1 });
+        return await Product.find().sort({ _id: -1 }).limit(100);
     }
 }
 

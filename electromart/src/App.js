@@ -1,91 +1,119 @@
 import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+
 import "./App.css";
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+// Layout
 import Navbar from "./components/layout/Navbar/Navbar";
+import Footer from "./components/layout/Footer";
+import ScrollToTop from "./components/common/ScrollToTop";
 
+// Core Store Pages
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
-
+import Deals from "./pages/Deals";
 import Cart from "./pages/Cart";
-
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Profile from "./pages/Profile";
-
-import Admin from "./pages/Admin";
-import AdminOrders from "./pages/AdminOrders";
-import Wishlist from "./pages/Wishlist";
 import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess";
 import MyOrders from "./pages/MyOrders";
-import EditProfile from "./pages/EditProfile";
-import Contact from "./pages/Contact";
 import OrderDetails from "./pages/OrderDetails";
+import Wishlist from "./pages/Wishlist";
+
+// Auth & Customer Account
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Profile from "./pages/Profile";
+import EditProfile from "./pages/EditProfile";
+
+// Admin Management
+import Admin from "./pages/Admin";
+import AdminOrders from "./pages/AdminOrders";
+
+// Informational & Support Pages
+import Contact from "./pages/Contact";
+import ShippingPolicy from "./pages/ShippingPolicy";
+import ReturnsPolicy from "./pages/ReturnsPolicy";
+import WarrantyGuide from "./pages/WarrantyGuide";
+import About from "./pages/About";
+import NotFound from "./pages/NotFound";
+
 function App() {
     return (
         <BrowserRouter>
+            <ScrollToTop />
+            <Toaster
+                position="top-right"
+                toastOptions={{
+                    duration: 3200,
+                    style: {
+                        background: "#0f172a",
+                        color: "#f8fafc",
+                        border: "1px solid rgba(255, 255, 255, 0.12)",
+                        borderRadius: "12px",
+                        fontSize: "0.9rem",
+                        boxShadow: "0 10px 30px rgba(0, 0, 0, 0.4)",
+                    },
+                    success: {
+                        iconTheme: {
+                            primary: "#ff6e26",
+                            secondary: "#ffffff",
+                        },
+                    },
+                    error: {
+                        iconTheme: {
+                            primary: "#ef4444",
+                            secondary: "#ffffff",
+                        },
+                    },
+                }}
+            />
 
             <Navbar />
 
-            <Routes>
+            <div className="app-main-content">
+                <Routes>
+                    {/* Storefront */}
+                    <Route path="/" element={<Home />} />
+                    <Route path="/products" element={<Products />} />
+                    <Route path="/products/:id" element={<ProductDetails />} />
+                    <Route path="/products/category/:category" element={<Products />} />
+                    <Route path="/products/search/:key" element={<Products />} />
+                    <Route path="/deals" element={<Deals />} />
 
-                <Route path="/" element={<Home />} />
+                    {/* Cart & Checkout */}
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/order-success" element={<OrderSuccess />} />
 
-                <Route path="/products" element={<Products />} />
-                <Route path="/contact" element={<Contact />} />
+                    {/* Customer Account & Orders */}
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Signup />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/profile/edit" element={<EditProfile />} />
+                    <Route path="/orders" element={<MyOrders />} />
+                    <Route path="/orders/:orderId" element={<OrderDetails />} />
+                    <Route path="/orders/details/:orderId" element={<OrderDetails />} />
+                    <Route path="/wishlist" element={<Wishlist />} />
 
-                <Route
-                    path="/products/:id"
-                    element={<ProductDetails />}
-                />
+                    {/* Admin Dashboard */}
+                    <Route path="/admin" element={<Admin />} />
+                    <Route path="/admin-orders" element={<AdminOrders />} />
 
-                <Route
-                    path="/products/category/:category"
-                    element={<Products />}
-                />
+                    {/* Support & Policies */}
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/shipping" element={<ShippingPolicy />} />
+                    <Route path="/returns" element={<ReturnsPolicy />} />
+                    <Route path="/warranty" element={<WarrantyGuide />} />
+                    <Route path="/about" element={<About />} />
 
-                <Route
-                    path="/products/search/:key"
-                    element={<Products />}
-                />
+                    {/* 404 Fallback */}
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
+            </div>
 
-                <Route path="/cart" element={<Cart />} />
-
-                <Route path="/checkout" element={<Checkout />} />
-
-                <Route path="/login" element={<Login />} />
-
-                <Route path="/register" element={<Signup />} />
-
-                <Route path="/profile" element={<Profile />} />
-
-
-
-                <Route path="/admin" element={<Admin />} />
-
-                <Route
-                    path="/admin-orders"
-                    element={<AdminOrders />}
-                />
-                <Route
-                    path="/wishlist"
-                    element={<Wishlist />}
-                />
-
-                <Route path="/order-success" element={<OrderSuccess />} />
-                <Route path="/orders" element={<MyOrders />} />
-                <Route path="/orders/:orderId" element={<OrderDetails />} />
-                <Route
-                    path="/profile/edit"
-                    element={<EditProfile />}
-                />
-            </Routes>
-
-
-
+            <Footer />
         </BrowserRouter>
     );
 }

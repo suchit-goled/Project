@@ -1,63 +1,95 @@
-.address-card{
-
-    background:white;
-
-    border-radius:18px;
-
-    padding:35px;
-
-    box-shadow:0 5px 18px rgba(0,0,0,.08);
-
+.address-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 32px;
 }
 
-.address-card h2{
-
-    margin-bottom:25px;
-
-    color:#111827;
-
+.address-card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-subtle);
 }
 
-.address-grid{
-
-    display:grid;
-
-    gap:18px;
-
+.address-header-icon {
+    font-size: 1.4rem;
+    color: var(--primary);
+    margin-top: 2px;
 }
 
-.address-grid input,
-.address-grid textarea{
-
-    width:100%;
-
-    border:1px solid #d1d5db;
-
-    border-radius:10px;
-
-    padding:14px 16px;
-
-    font-size:15px;
-
-    transition:.3s;
-
+.address-card-header h2 {
+    font-size: 1.3rem;
+    margin: 0 0 4px;
+    color: var(--text-primary);
 }
 
-.address-grid textarea{
-
-    min-height:110px;
-
-    resize:none;
-
+.address-card-header p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0;
 }
 
-.address-grid input:focus,
-.address-grid textarea:focus{
+.address-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
 
-    outline:none;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
 
-    border-color:#ff6b35;
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
 
-    box-shadow:0 0 0 3px rgba(255,107,53,.2);
+.form-group label {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
 
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-icon svg {
+    position: absolute;
+    left: 14px;
+    color: var(--text-muted);
+    font-size: 1rem;
+    pointer-events: none;
+}
+
+.input-with-icon input {
+    padding-left: 40px !important;
+}
+
+.address-grid input {
+    width: 100%;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 11px 14px;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    transition: all var(--transition-fast);
+}
+
+.address-grid input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--primary-glow);
+}
+
+@media (max-width: 640px) {
+    .address-grid {
+        grid-template-columns: 1fr;
+    }
 }

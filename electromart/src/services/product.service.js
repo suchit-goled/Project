@@ -13,7 +13,8 @@ const mapProduct = (p) => {
         discountPrice: p.discounted_price ?? p.discountPrice ?? p.price ?? 0,
         discountPercentage: p.discount_percentage ?? p.discountPercentage ?? 0,
         category: p.product_category || p.category || "",
-        brand: p.product_category || p.brand || "",
+        brand: p.brand || p.product_category || "",
+        countInStock: p.countInStock ?? 25,
     };
 };
 
@@ -27,7 +28,7 @@ const ProductService = {
         return items.map(mapProduct);
     },
 
-    // All Products
+    // All Products with full query params
     async getProducts(params = {}) {
         const response = await api.get("/products", {
             params,
@@ -48,6 +49,9 @@ const ProductService = {
             data: {
                 ...payload,
                 products: mappedProducts,
+                total: payload.total || mappedProducts.length,
+                page: payload.page || 1,
+                totalPages: payload.totalPages || 1,
             },
         };
     },
@@ -57,6 +61,17 @@ const ProductService = {
         const response = await api.get(`/products/${id}`);
         const payload = response.data?.data?.product || response.data?.data || response.data?.product || response.data;
         return mapProduct(payload);
+    },
+
+    // Related Products
+    async getRelatedProducts(id) {
+        try {
+            const response = await api.get(`/products/${id}/related`);
+            const payload = response.data?.data || [];
+            return Array.isArray(payload) ? payload.map(mapProduct) : [];
+        } catch {
+            return [];
+        }
     },
 
     // Search Products
@@ -69,8 +84,12 @@ const ProductService = {
 
     // Categories
     async getCategories() {
-        const response = await api.get("/products/categories");
-        return response.data?.data || [];
+        try {
+            const response = await api.get("/products/categories");
+            return response.data?.data || [];
+        } catch {
+            return [];
+        }
     },
 
 };

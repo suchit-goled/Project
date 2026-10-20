@@ -1,1 +1,0 @@
-export { SearchProvider, useSearch, default } from "../context/SearchContext";

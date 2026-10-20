@@ -1,75 +1,79 @@
 .cart-page {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 30px;
-
-    padding: 40px 0 60px;
-
-    align-items: start;
-
-    min-height: 80vh;
+    padding-top: 36px;
+    padding-bottom: 70px;
 }
 
-.cart-left h1 {
-    color: #F8FAFC;
-
-    font-size: 2rem;
-
-    font-weight: 700;
-
-    margin-bottom: 30px;
-}
-
-.cart-right {
-    width: 100%;
-}
-
-.cart-loading {
-    min-height: 70vh;
-
+.cart-header-row {
     display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    color: #F8FAFC;
-
-    font-size: 1.4rem;
-
-    font-weight: 600;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    gap: 16px;
+    flex-wrap: wrap;
 }
 
-/* Tablet */
+.cart-header-row h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.cart-items-subtitle {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+}
+
+.cart-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.continue-shopping-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: color var(--transition-fast);
+}
+
+.continue-shopping-link:hover {
+    color: var(--primary);
+}
+
+.clear-cart-text-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    transition: color var(--transition-fast);
+}
+
+.clear-cart-text-btn:hover {
+    color: var(--error);
+}
+
+.cart-layout {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr;
+    gap: 32px;
+    align-items: flex-start;
+}
+
+.cart-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
 
 @media (max-width: 992px) {
-
-    .cart-page {
-
+    .cart-layout {
         grid-template-columns: 1fr;
-
     }
-
-}
-
-/* Mobile */
-
-@media (max-width: 768px) {
-
-    .cart-page {
-
-        padding: 25px 0 40px;
-
-        gap: 25px;
-
-    }
-
-    .cart-left h1 {
-
-        font-size: 1.6rem;
-
-        text-align: center;
-
-    }
-
 }

@@ -1,10 +1,14 @@
 import Wishlist from "../models/wishlist.model.js";
+import ApiResponse from "../utils/apiResponse.js";
 
 // Add Product to Wishlist
-export const addToWishlist = async (req, res) => {
+export const addToWishlist = async (req, res, next) => {
     try {
-
         const { productId } = req.body;
+
+        if (!productId) {
+            return ApiResponse.error(res, "Product ID is required", 400);
+        }
 
         const existingItem = await Wishlist.findOne({
             userId: req.user._id,
@@ -12,10 +16,7 @@ export const addToWishlist = async (req, res) => {
         });
 
         if (existingItem) {
-            return res.status(400).json({
-                success: false,
-                message: "Product already exists in wishlist"
-            });
+            return ApiResponse.error(res, "Product already exists in wishlist", 400);
         }
 
         const wishlistItem = await Wishlist.create({
@@ -23,28 +24,20 @@ export const addToWishlist = async (req, res) => {
             productId
         });
 
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
             message: "Product added to wishlist",
-            wishlistItem
+            wishlistItem,
+            data: { wishlistItem }
         });
-
     } catch (error) {
-
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-
+        next(error);
     }
 };
 
-
-// get wishlist 
 // Get Wishlist
-export const getWishlist = async (req, res) => {
+export const getWishlist = async (req, res, next) => {
     try {
-
         const wishlist = await Wishlist.find({
             userId: req.user._id
         })
@@ -54,53 +47,34 @@ export const getWishlist = async (req, res) => {
         )
         .sort({ createdAt: -1 });
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             count: wishlist.length,
-            wishlist
+            wishlist,
+            data: { wishlist, count: wishlist.length }
         });
-
     } catch (error) {
-
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-
+        next(error);
     }
 };
 
-
-
-
-
 // Remove Product from Wishlist
-export const removeFromWishlist = async (req, res) => {
+export const removeFromWishlist = async (req, res, next) => {
     try {
-
         const wishlistItem = await Wishlist.findOneAndDelete({
             userId: req.user._id,
             productId: req.params.productId
         });
 
         if (!wishlistItem) {
-            return res.status(404).json({
-                success: false,
-                message: "Product not found in wishlist"
-            });
+            return ApiResponse.error(res, "Product not found in wishlist", 404);
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: "Product removed from wishlist"
         });
-
     } catch (error) {
-
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-
+        next(error);
     }
 };

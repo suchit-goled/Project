@@ -6,16 +6,28 @@ const useHome = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        let isMounted = true;
+
         const fetchHome = async () => {
             try {
                 const data = await HomeService.getHomePage();
-                setHome(data);
+                if (isMounted) {
+                    setHome(data);
+                }
+            } catch (err) {
+                console.error("Home fetch error:", err);
             } finally {
-                setLoading(false);
+                if (isMounted) {
+                    setLoading(false);
+                }
             }
         };
 
         fetchHome();
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     return { home, loading };

@@ -1,84 +1,89 @@
-import { FiTrash2 } from "react-icons/fi";
+import React from "react";
+import { FiTrash2, FiClock } from "react-icons/fi";
+import { Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import "./CartItem.css";
 
 const CartItem = ({ item }) => {
     const { updateQuantity, removeItem } = useCart();
 
-    const product = item.productId;
+    const product = item.productId || {};
+    const productId = product._id || item.productId;
+    const title = product.product_title || item.title || "Electronics Item";
+    const image = product.product_image_url || item.image || "";
+    const price = product.discounted_price ?? item.price ?? 0;
+    const originalPrice = product.original_price;
+    const discount = product.discount_percentage;
 
-    if (!product) {
+    if (!productId) {
         return null;
     }
 
     return (
         <div className="cart-item">
-            <div className="cart-image">
+            <Link to={`/products/${productId}`} className="cart-image">
                 <img
-                    src={product.product_image_url}
-                    alt={product.product_title}
+                    src={image}
+                    alt={title}
                 />
-            </div>
+            </Link>
 
             <div className="cart-details">
-                <h3>{product.product_title}</h3>
+                <Link to={`/products/${productId}`} className="cart-item-title-link">
+                    <h3>{title}</h3>
+                </Link>
 
-                <div className="rating">
-                    ⭐ {product.product_rating}
-                    <span> ({product.total_reviews} Reviews)</span>
-                </div>
+                {product.product_category && (
+                    <span className="cart-item-category">{product.product_category}</span>
+                )}
 
                 <div className="price-box">
                     <span className="current-price">
-                        ₹{product.discounted_price}
+                        ₹{Number(price).toLocaleString()}
                     </span>
 
-                    <span className="original-price">
-                        ₹{product.original_price}
-                    </span>
+                    {originalPrice && originalPrice > price && (
+                        <span className="original-price">
+                            ₹{Number(originalPrice).toLocaleString()}
+                        </span>
+                    )}
 
-                    <span className="discount">
-                        {product.discount_percentage}% OFF
-                    </span>
+                    {discount > 0 && (
+                        <span className="discount">
+                            {discount}% OFF
+                        </span>
+                    )}
                 </div>
 
-                <p className="delivery">
-                    🚚 Delivery by Tomorrow
-                </p>
+                <div className="cart-delivery-status">
+                    <FiClock /> <span>Dispatches in 24 hrs • Free Delivery eligible</span>
+                </div>
 
                 <div className="cart-actions">
                     <div className="quantity-box">
-
                         <button
-                            onClick={() =>
-                                updateQuantity(
-                                    product._id,
-                                    item.quantity - 1
-                                )
-                            }
-                            disabled={item.quantity <= 1}
+                            onClick={() => updateQuantity(productId, (item.quantity || 1) - 1)}
+                            disabled={(item.quantity || 1) <= 1}
+                            aria-label="Decrease quantity"
                         >
                             −
                         </button>
 
-                        <span>{item.quantity}</span>
+                        <span>{item.quantity || 1}</span>
 
                         <button
-                            onClick={() =>
-                                updateQuantity(
-                                    product._id,
-                                    item.quantity + 1
-                                )
-                            }
+                            onClick={() => updateQuantity(productId, (item.quantity || 1) + 1)}
+                            disabled={(item.quantity || 1) >= 10}
+                            aria-label="Increase quantity"
                         >
                             +
                         </button>
-
                     </div>
 
                     <button
                         className="remove-btn"
-                        onClick={() => removeItem(product._id)}
+                        onClick={() => removeItem(productId)}
+                        aria-label="Remove item"
                     >
                         <FiTrash2 />
                         <span>Remove</span>

@@ -15,6 +15,7 @@ import adminRoutes from "./routes/admin.routes.js";
 import passwordRoutes from "./routes/password.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import homeRoutes from "./routes/home.routes.js";
+import contactRoutes from "./routes/contact.routes.js";
 
 import errorMiddleware from "./middleware/error.middleware.js";
 import env from "./config/env.js";
@@ -111,6 +112,7 @@ app.use("/api/payment", paymentRoutes);
 app.use("/api/password", passwordRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/home", homeRoutes);
+app.use("/api/contact", contactRoutes);
 
 // 7. 404 Handler for Unmatched API Routes
 app.use((req, res, next) => {

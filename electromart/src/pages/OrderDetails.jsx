@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import toast from "react-hot-toast";
 import api from "../api/axios";
 import Loader from "../components/ui/Loader/Loader";
 import Badge from "../components/ui/Badge/Badge";
@@ -38,8 +39,9 @@ const OrderDetails = () => {
             setCancelling(true);
             await api.put(`/orders/cancel/${orderId}`);
             setOrder(prev => ({ ...prev, orderStatus: "Cancelled" }));
+            toast.success("Order cancelled successfully");
         } catch (err) {
-            alert(err.response?.data?.message || "Could not cancel order");
+            toast.error(err.response?.data?.message || "Could not cancel order");
         } finally {
             setCancelling(false);
         }

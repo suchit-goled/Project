@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import api from "../../api/axios";
+import toast from "react-hot-toast";
 import "./PasswordSection.css";
 
 const PasswordSection = () => {
@@ -7,6 +9,8 @@ const PasswordSection = () => {
     newPassword: "",
     confirmPassword: "",
   });
+
+  const [loading, setLoading] = useState(false);
 
   const [showPassword, setShowPassword] = useState({
     current: false,
@@ -28,37 +32,62 @@ const PasswordSection = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (passwords.newPassword !== passwords.confirmPassword) {
-      alert("Passwords do not match");
+    if (!passwords.currentPassword) {
+      toast.error("Please enter your current password");
       return;
     }
 
-    console.log(passwords);
+    if (passwords.newPassword.length < 6) {
+      toast.error("New password must be at least 6 characters long");
+      return;
+    }
 
-    // Call Change Password API
+    if (passwords.newPassword !== passwords.confirmPassword) {
+      toast.error("New passwords do not match");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await api.put("/users/change-password", {
+        currentPassword: passwords.currentPassword,
+        newPassword: passwords.newPassword,
+      });
+
+      toast.success("Password updated successfully!");
+      setPasswords({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to update password. Please check your current password."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="password-card">
-
       <h2>Change Password</h2>
 
       <form onSubmit={handleSubmit}>
-
         <div className="password-group">
           <label>Current Password</label>
 
           <div className="password-input">
-
             <input
               type={showPassword.current ? "text" : "password"}
               name="currentPassword"
               value={passwords.currentPassword}
               onChange={handleChange}
-              placeholder="Current Password"
+              placeholder="Enter current password"
+              required
             />
 
             <button
@@ -67,7 +96,6 @@ const PasswordSection = () => {
             >
               {showPassword.current ? "Hide" : "Show"}
             </button>
-
           </div>
         </div>
 
@@ -75,13 +103,13 @@ const PasswordSection = () => {
           <label>New Password</label>
 
           <div className="password-input">
-
             <input
               type={showPassword.new ? "text" : "password"}
               name="newPassword"
               value={passwords.newPassword}
               onChange={handleChange}
-              placeholder="New Password"
+              placeholder="Enter new password (min. 6 characters)"
+              required
             />
 
             <button
@@ -90,7 +118,6 @@ const PasswordSection = () => {
             >
               {showPassword.new ? "Hide" : "Show"}
             </button>
-
           </div>
         </div>
 
@@ -98,13 +125,13 @@ const PasswordSection = () => {
           <label>Confirm Password</label>
 
           <div className="password-input">
-
             <input
               type={showPassword.confirm ? "text" : "password"}
               name="confirmPassword"
               value={passwords.confirmPassword}
               onChange={handleChange}
-              placeholder="Confirm Password"
+              placeholder="Confirm new password"
+              required
             />
 
             <button
@@ -113,19 +140,17 @@ const PasswordSection = () => {
             >
               {showPassword.confirm ? "Hide" : "Show"}
             </button>
-
           </div>
         </div>
 
         <button
           type="submit"
           className="change-password-btn"
+          disabled={loading}
         >
-          Update Password
+          {loading ? "Updating..." : "Update Password"}
         </button>
-
       </form>
-
     </div>
   );
 };

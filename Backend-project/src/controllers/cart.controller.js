@@ -4,7 +4,7 @@ import ApiResponse from "../utils/apiResponse.js";
 
 // Helper to check user authorization
 const checkCartAuthorization = (req, targetUserId) => {
-    if (!req.user) return true;
+    if (!req.user) return false;
     if (req.user.role === "admin") return true;
     return req.user._id.toString() === targetUserId.toString();
 };

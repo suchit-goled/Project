@@ -4,13 +4,11 @@ import crypto from "crypto";
 class PaymentRepository {
 
     async createOrder(amount) {
-
         return await razorpay.orders.create({
             amount: amount * 100,
             currency: "INR",
             receipt: `receipt_${Date.now()}`
         });
-
     }
 
     async verifyPayment(
@@ -18,13 +16,24 @@ class PaymentRepository {
         razorpay_payment_id,
         razorpay_signature
     ) {
+        if (!razorpay_signature || typeof razorpay_signature !== "string") {
+            return false;
+        }
 
+        const secret = process.env.RAZORPAY_KEY_SECRET || "";
         const generatedSignature = crypto
-            .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+            .createHmac("sha256", secret)
             .update(`${razorpay_order_id}|${razorpay_payment_id}`)
             .digest("hex");
 
-        return generatedSignature === razorpay_signature;
+        if (generatedSignature.length !== razorpay_signature.length) {
+            return false;
+        }
+
+        return crypto.timingSafeEqual(
+            Buffer.from(generatedSignature),
+            Buffer.from(razorpay_signature)
+        );
     }
 
 }

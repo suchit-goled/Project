@@ -163,11 +163,19 @@ export const cancelOrder = async (req, res, next) => {
         }
 
         // Security check: only own order or admin
-        if (req.user.role !== "admin" && order.userId !== req.user._id.toString()) {
+        if (req.user.role !== "admin" && order.userId.toString() !== req.user._id.toString()) {
             return ApiResponse.error(
                 res,
                 "Access denied. You cannot cancel this order.",
                 403
+            );
+        }
+
+        if (order.orderStatus === "Shipped") {
+            return ApiResponse.error(
+                res,
+                "Shipped orders cannot be cancelled directly. Please initiate a return upon delivery.",
+                400
             );
         }
 

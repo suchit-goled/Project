@@ -3,15 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 const AccountMenu = () => {
-
     const navigate = useNavigate();
-
     const { logout } = useAuth();
 
     return (
-
         <div className="account-menu">
-
             <button onClick={() => navigate("/orders")}>
                 My Orders
             </button>
@@ -20,29 +16,22 @@ const AccountMenu = () => {
                 Wishlist
             </button>
 
-            <button onClick={() => navigate("/settings")}>
+            <button onClick={() => navigate("/profile/edit")}>
                 Settings
             </button>
 
             <button
                 className="logout-btn"
                 onClick={() => {
-
                     logout();
-
                     navigate("/");
-
                 }}
             >
                 <FiLogOut />
-
                 Logout
             </button>
-
         </div>
-
     );
-
 };
 
 export default AccountMenu;

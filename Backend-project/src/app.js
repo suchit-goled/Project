@@ -18,6 +18,7 @@ import homeRoutes from "./routes/home.routes.js";
 import contactRoutes from "./routes/contact.routes.js";
 
 import errorMiddleware from "./middleware/error.middleware.js";
+import mongoSanitize from "./middleware/sanitize.middleware.js";
 import env from "./config/env.js";
 import ApiResponse from "./utils/apiResponse.js";
 
@@ -50,9 +51,10 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-// 3. Body Parsing with safe size limit
+// 3. Body Parsing with safe size limit & NoSQL Injection Sanitization
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true, limit: "5mb" }));
+app.use(mongoSanitize);
 
 // 4. Rate Limiting
 const globalLimiter = rateLimit({
@@ -60,6 +62,7 @@ const globalLimiter = rateLimit({
     max: 1000, // Limit each IP to 1000 requests per window
     standardHeaders: true,
     legacyHeaders: false,
+    skip: () => process.env.NODE_ENV === "test",
     message: {
         success: false,
         message: "Too many requests from this IP, please try again after 15 minutes"
@@ -73,6 +76,7 @@ const authLimiter = rateLimit({
     max: 50, // 50 attempts per 15 mins
     standardHeaders: true,
     legacyHeaders: false,
+    skip: () => process.env.NODE_ENV === "test",
     message: {
         success: false,
         message: "Too many authentication attempts, please try again after 15 minutes"

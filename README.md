@@ -83,6 +83,10 @@ ElectroNova/
 │   │   └── setupTests.js    # Jest test environment & polyfills
 │   └── package.json
 │
+├── .github/
+│   └── workflows/
+│       └── ci.yml           # Automated CI/CD (lint, security audit, unit & component tests, production build)
+├── package.json             # Root unified automation commands
 ├── .gitignore               # Multi-tier secret and dependency protection
 └── README.md
 ```
@@ -136,20 +140,56 @@ npm start
 
 ---
 
-## 🧪 Testing
+## ⚡ Automation & Monorepo Commands
 
-### Run Backend Automated Test Suite
-```bash
-cd Backend-project
-npm test
-```
-*Executes health checks, Helmet security baseline, auth rate-limiting, and IDOR access control tests.*
+From the root `Project/` directory, execute unified automation scripts:
 
-### Run Frontend Jest Test Suite
 ```bash
-cd electromart
-npm test -- --watchAll=false
+# Run both Backend & Frontend automated test suites
+npm run test
+
+# Run backend unit, integration & security test suite (40/40 tests)
+npm run test:backend
+
+# Run frontend Jest component test suite (9/9 tests)
+npm run test:frontend
+
+# Run zero-vulnerability security audit
+npm run security:audit
+
+# Build optimized frontend production bundle
+npm run build:frontend
+
+# Install dependencies across all packages
+npm run install:all
 ```
+
+---
+
+## 🤖 CI/CD Automation Pipeline
+
+Automated with **GitHub Actions** (`.github/workflows/ci.yml`):
+* **Backend Security & Testing**: Checks out code, provisions Node 22, executes `npm run security:audit` (fails on vulnerabilities), and runs all 40 automated unit & IDOR integration tests.
+* **Frontend Verification & Production Build**: Runs component Jest test suites in headless CI mode and builds production bundles (`npm run build`) ensuring zero build-time warnings or bundle breakages.
+
+---
+
+## 🧪 Testing Coverage Summary
+
+### Backend Automated Test Suite (`npm run test:backend`)
+* 5 suites, 40 automated tests passing with 0 failures:
+  - `health.test.js`: Service status, health uptime, Helmet HTTP headers, unmatched route 404 JSON fallback.
+  - `security.test.js`: Tiered route protection, invalid/expired JWT rejection, auth rate-limiting headers.
+  - `cart_and_orders.test.js`: Empty cart guards, order address validation, IDOR authorization access controls.
+  - `contact_and_admin.test.js`: Contact payload sanitization, admin route guards, ReDoS regex search resilience.
+  - `user_and_security_deep.test.js`: NoSQL injection key stripping, change-password authentication, address mass-assignment prevention, shipped order cancellation constraints, timing-safe Razorpay HMAC comparison, admin order status transitions.
+
+### Frontend Automated Component Tests (`npm run test:frontend`)
+* 4 suites, 9 automated tests passing with 0 failures:
+  - `App.test.js`: Global layout mounting, branding, navigation links.
+  - `OrderCard.test.js`: Order card status badges, receipt summary, product thumbnails.
+  - `CartSummary.test.js`: Subtotal, GST, free shipping thresholds, promo code discount calculation (ELECTRO10), checkout CTA.
+  - `PasswordSection.test.js`: Password input rendering, password visibility toggle (Show/Hide), validation constraints.
 
 ---
 

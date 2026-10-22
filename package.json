@@ -1,0 +1,26 @@
+{
+  "name": "electronova-monorepo",
+  "version": "2.1.0",
+  "description": "ElectroNova Full-Stack Enterprise Electronics E-Commerce Platform",
+  "private": true,
+  "scripts": {
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "npm --prefix Backend-project test",
+    "test:frontend": "npm --prefix electromart run test:ci",
+    "security:audit": "npm --prefix Backend-project run security:audit",
+    "build:frontend": "npm --prefix electromart run build",
+    "install:all": "npm --prefix Backend-project install && npm --prefix electromart install",
+    "start:backend": "npm --prefix Backend-project start",
+    "start:frontend": "npm --prefix electromart start"
+  },
+  "keywords": [
+    "ecommerce",
+    "mern",
+    "react",
+    "express",
+    "mongodb",
+    "razorpay"
+  ],
+  "author": "Suchit Goled",
+  "license": "ISC"
+}

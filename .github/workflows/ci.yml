@@ -1,0 +1,73 @@
+name: ElectroNova CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  backend-test-and-security:
+    name: Backend Security, Tests & Quality Gates
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Backend-project
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: Backend-project/package-lock.json
+
+      - name: Install Backend Dependencies
+        run: npm ci
+
+      - name: Security Vulnerability Audit
+        run: npm run security:audit
+
+      - name: Execute Automated Backend Test Suite
+        env:
+          NODE_ENV: test
+          PORT: 8000
+          MONGO_URI: mongodb://localhost:27017/test_db
+          JWT_SECRET: ci_test_super_secret_jwt_key_value_12345
+          JWT_EXPIRES_IN: 7d
+          FRONTEND_URL: http://localhost:3000
+          RAZORPAY_KEY_ID: rzp_test_dummy
+          RAZORPAY_KEY_SECRET: rzp_sec_dummy
+        run: npm test
+
+  frontend-test-and-build:
+    name: Frontend Tests & Production Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: electromart
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: electromart/package-lock.json
+
+      - name: Install Frontend Dependencies
+        run: npm ci
+
+      - name: Execute Automated Frontend Component Tests
+        env:
+          CI: true
+        run: npm run test:ci
+
+      - name: Build Optimized Production Bundle
+        run: npm run build

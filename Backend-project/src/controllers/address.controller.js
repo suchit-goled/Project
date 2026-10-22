@@ -61,12 +61,33 @@ export const getAddresses = async (req, res, next) => {
 // Update Address
 export const updateAddress = async (req, res, next) => {
     try {
+        const {
+            fullName,
+            phone,
+            addressLine,
+            city,
+            state,
+            pincode,
+            country,
+            isDefault
+        } = req.body;
+
+        const updateData = {};
+        if (fullName !== undefined) updateData.fullName = fullName;
+        if (phone !== undefined) updateData.phone = phone;
+        if (addressLine !== undefined) updateData.addressLine = addressLine;
+        if (city !== undefined) updateData.city = city;
+        if (state !== undefined) updateData.state = state;
+        if (pincode !== undefined) updateData.pincode = pincode;
+        if (country !== undefined) updateData.country = country;
+        if (isDefault !== undefined) updateData.isDefault = Boolean(isDefault);
+
         const address = await Address.findOneAndUpdate(
             {
                 _id: req.params.id,
                 userId: req.user._id
             },
-            req.body,
+            updateData,
             {
                 new: true,
                 runValidators: true

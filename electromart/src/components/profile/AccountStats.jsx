@@ -26,28 +26,31 @@ const AccountStats = () => {
 
   const fetchStats = async () => {
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
+      const userStr = localStorage.getItem("user");
+      if (!userStr) return;
 
-      if (!user) return;
-
-      const userId = user.id;
+      const user = JSON.parse(userStr);
+      const userId = user.id || user._id;
+      if (!userId) return;
 
       const [ordersRes, wishlistRes, cartRes] = await Promise.all([
-        OrderService.getOrders(userId),
-        WishlistService.getWishlist(userId),
-        CartService.getCart(userId),
+        OrderService.getOrders(userId).catch(() => null),
+        WishlistService.getWishlist(userId).catch(() => null),
+        CartService.getCart(userId).catch(() => null),
       ]);
 
+      const ordersList = ordersRes?.data?.orders || ordersRes?.orders || [];
+      const wishlistList = wishlistRes?.data?.wishlist || wishlistRes?.wishlist || [];
+      const cartList = cartRes?.data?.cart || cartRes?.cart || [];
+
       setStats({
-        orders: ordersRes.success ? ordersRes.orders.length : 0,
-        wishlist: wishlistRes.success
-          ? wishlistRes.wishlist.length
-          : 0,
-        cart: cartRes.success ? cartRes.cart.length : 0,
+        orders: ordersList.length,
+        wishlist: wishlistList.length,
+        cart: cartList.length,
         address: 1,
       });
     } catch (err) {
-      console.error(err);
+      console.error("fetchStats error:", err);
     }
   };
 

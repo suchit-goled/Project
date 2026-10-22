@@ -1,4 +1,5 @@
 import adminOrderRepository from "../repositories/adminOrder.repository.js";
+import AppError from "../utils/AppError.js";
 
 class AdminOrderService {
 
@@ -19,7 +20,7 @@ class AdminOrderService {
         ];
 
         if (!validStatus.includes(orderStatus)) {
-            throw new Error("Invalid order status");
+            throw new AppError("Invalid order status provided", 400);
         }
 
         return await adminOrderRepository.updateOrderStatus(

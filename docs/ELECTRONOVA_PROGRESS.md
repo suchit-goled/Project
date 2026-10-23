@@ -1,7 +1,7 @@
 # ELECTRONOVA — OVERNIGHT AUTONOMOUS ENGINEERING PROGRESS & AUDIT REPORT
 
-**Last Updated:** 2026-10-20  
-**Status:** COMPLETED & VERIFIED — Full E-Commerce Transformation & Production Hardening  
+**Last Updated:** 2026-10-23  
+**Status:** COMPLETED & VERIFIED — Full E-Commerce Transformation, Monorepo Orchestration & Production Security Hardening  
 
 ---
 
@@ -81,62 +81,57 @@ ElectroNova has undergone a complete, production-grade transformation from an in
   - Orders Manager (Filter by Pending/Confirmed/Shipped/Delivered/Cancelled, update status).
   - Customers List (Registered users, roles, registration dates).
 
-### Phase 7: Automated Testing, Security & Verification
+### Phase 7: Initial Testing & Baseline Verification
 - [x] Backend test suite: 27/27 automated unit & integration tests passing with 0 failures (`npm test`).
 - [x] Backend security audit: 0 vulnerabilities found (`npm audit`).
-- [x] Frontend test suite: 4/4 tests passing across all suites (`npm run test:ci`).
-- [x] Frontend production build: compiled cleanly with 0 warnings and 0 errors (`npm run build`).
+- [x] Frontend test suite: 4/4 tests passing across initial suites (`npm run test:ci`).
+- [x] Frontend production build: compiled cleanly (`npm run build`).
+
+### Phase 8: Monorepo Orchestration, Advanced Security Hardening, Deep Testing & CI/CD Pipeline
+- [x] **Monorepo Automation**: Root `package.json` with unified workspace scripts (`npm test`, `npm run test:backend`, `npm run test:frontend`, `npm run security:audit`, `npm run build:frontend`).
+- [x] **Advanced Security Hardening**:
+  - NoSQL Injection protection (`sanitize.middleware.js`) stripping `$` operators and dots.
+  - Timing-safe HMAC signature verification (`crypto.timingSafeEqual`) for Razorpay payments.
+  - Strict BOLA/IDOR authorization guards across user profiles, addresses, carts, and order cancellations.
+  - Mass assignment defenses on profile and address updates.
+- [x] **User Account & Password Reset Lifecycles**:
+  - Fully wired Forgot Password & Tokenized Reset Password pages with UI feedback and timer transitions.
+  - Dynamic personal profile forms, secure password update forms with show/hide toggles, and live order statistics.
+- [x] **Comprehensive Test Suite Expansion**:
+  - Backend: expanded to 40/40 passing unit and security integration tests across 5 test suites.
+  - Frontend: expanded to 9/9 passing component tests across 4 test suites.
+- [x] **CI/CD Pipeline**: GitHub Actions workflow (`.github/workflows/ci.yml`) automating dependency caching, security audits, backend tests, frontend tests, and production bundle builds on every push/PR.
 
 ---
 
 ## 3. Automated Test Verification Summary
 
-### Backend Unit & Integration Tests (`npm test`)
+### Backend Unit & Integration Tests (`npm test` / `npm run test:backend`)
 ```
 TAP version 13
-# Subtest: Cart, Order, and Review Business Logic Validation Tests
-  ok 1 - Order creation rejects request when cart is empty
-  ok 2 - Order creation rejects requests with missing or empty shippingAddress
-  ok 3 - Cart update rejects request with missing productId or quantity
-  ok 4 - Review creation validates that rating must be between 1 and 5
-  ok 5 - User cannot access another user's cart without admin privilege (IDOR protection)
-  ok 6 - User cannot access another user's orders without admin privilege (IDOR protection)
-ok 1 - Cart, Order, and Review Business Logic Validation Tests
+# Subtest: Cart, Order, and Review Business Logic Validation Tests (6 tests) - PASS
+# Subtest: Contact, Admin & Product Endpoint Tests (8 tests) - PASS
+# Subtest: Backend Health & Security Baseline Tests (4 tests) - PASS
+# Subtest: Backend Security & Authorization Gate Tests (9 tests) - PASS
+# Subtest: User, Security & Business Logic Hardening Tests (13 tests) - PASS
+  ok 1 - NoSQL injection keys starting with $ or containing . are stripped from request body
+  ok 2 - Change password rejects empty or missing fields
+  ok 3 - Change password rejects new password shorter than 6 characters
+  ok 4 - Change password rejects incorrect current password
+  ok 5 - Change password accepts correct current password and updates hash
+  ok 6 - Update profile rejects empty name
+  ok 7 - Update profile accepts valid fields
+  ok 8 - Address creation validates required fields
+  ok 9 - Address update ignores injected userId in body (Mass Assignment defense)
+  ok 10 - Order cancellation rejects cancellation of shipped orders
+  ok 11 - Order cancellation rejects unauthorized cancel attempt (IDOR protection)
+  ok 12 - Timing-safe Razorpay verification handles invalid or empty signature safely
+  ok 13 - Admin order status update rejects invalid status with 400
 
-# Subtest: Contact, Admin & Product Endpoint Tests
-  ok 1 - POST /api/contact rejects request with missing fields
-  ok 2 - POST /api/contact rejects invalid email format
-  ok 3 - POST /api/contact rejects message shorter than 5 characters
-  ok 4 - POST /api/contact accepts valid submission
-  ok 5 - GET /api/admin/users blocked with 401 when no token is provided
-  ok 6 - GET /api/admin/carts blocked with 401 when no token is provided
-  ok 7 - GET /api/products/categories returns 200 array
-  ok 8 - GET /api/products handles regex characters in search without server crash
-ok 2 - Contact, Admin & Product Endpoint Tests
-
-# Subtest: Backend Health & Security Baseline Tests
-  ok 1 - GET / should return 200 with service status and metadata
-  ok 2 - GET /api/health should return healthy status
-  ok 3 - Helmet security headers should be set on responses
-  ok 4 - Unmatched API route should return 404 JSON response instead of HTML
-ok 3 - Backend Health & Security Baseline Tests
-
-# Subtest: Backend Security & Authorization Gate Tests
-  ok 1 - Unauthenticated request to /api/cart should be blocked with 401
-  ok 2 - Unauthenticated request to /api/orders should be blocked with 401
-  ok 3 - Unauthenticated request to /api/wishlist should be blocked with 401
-  ok 4 - Unauthenticated request to /api/admin/dashboard should be blocked with 401
-  ok 5 - Forged or invalid JWT token is rejected with 401
-  ok 6 - Expired JWT token is rejected with 401 and specific expiry message
-  ok 7 - Auth rate limiting headers are mounted on /api/auth and /api/password
-  ok 8 - Auth registration input validation rejects missing fields
-  ok 9 - Password reset input validation rejects empty body
-ok 4 - Backend Security & Authorization Gate Tests
-
-# tests 27 | suites 4 | pass 27 | fail 0
+# tests 40 | suites 5 | pass 40 | fail 0
 ```
 
-### Backend Security Vulnerability Audit (`npm audit`)
+### Backend Security Vulnerability Audit (`npm audit` / `npm run security:audit`)
 ```
 > electronova-backend@2.0.0 security:audit
 > npm audit
@@ -144,22 +139,23 @@ ok 4 - Backend Security & Authorization Gate Tests
 found 0 vulnerabilities
 ```
 
-### Frontend Automated Component Tests (`npm run test:ci`)
+### Frontend Automated Component Tests (`npm run test:ci` / `npm run test:frontend`)
 ```
 > electromart@0.1.0 test:ci
 > react-scripts test --watchAll=false
 
+PASS src/components/profile/PasswordSection.test.js
+PASS src/components/cart/CartSummary.test.js
 PASS src/components/OrderCard.test.js
 PASS src/App.test.js
 
-Test Suites: 2 passed, 2 total
-Tests:       4 passed, 4 total
+Test Suites: 4 passed, 4 total
+Tests:       9 passed, 9 total
 Snapshots:   0 total
-Time:        6.314 s
 Ran all test suites.
 ```
 
-### Frontend Production Build (`npm run build`)
+### Frontend Production Build (`npm run build` / `npm run build:frontend`)
 ```
 > electromart@0.1.0 build
 > react-scripts build
@@ -168,8 +164,9 @@ Creating an optimized production build...
 Compiled successfully.
 
 File sizes after gzip:
-  204.81 kB  build\static\js\main.js
-  21.20 kB   build\static\css\main.css
+  206.41 kB  build\static\js\main.f12d4274.js
+  21.20 kB   build\static\css\main.b3add2de.css
+  1.76 kB    build\static\js\453.584002af.chunk.js
 
 The build folder is ready to be deployed.
 ```

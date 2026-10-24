@@ -3,6 +3,16 @@ import ApiResponse from "../utils/apiResponse.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import env from "../config/env.js";
 
+const escapeHtml = (str) => {
+    if (!str || typeof str !== "string") return "";
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+};
+
 export const handleContactMessage = async (req, res, next) => {
     try {
         const { name, email, phone, subject, message } = req.body;
@@ -28,18 +38,23 @@ export const handleContactMessage = async (req, res, next) => {
         // Try to dispatch an admin notification email if configured
         if (env.email_user && env.email_pass) {
             try {
+                const safeName = escapeHtml(trimmedName);
+                const safeSubject = escapeHtml(trimmedSubject);
+                const safePhone = escapeHtml(trimmedPhone);
+                const safeMessage = escapeHtml(trimmedMessage).replace(/\n/g, "<br/>");
+
                 await sendEmail({
                     email: env.email_user,
-                    subject: `[ElectroNova Contact] ${trimmedSubject} - ${trimmedName}`,
+                    subject: `[ElectroNova Contact] ${safeSubject} - ${safeName}`,
                     html: `
                         <h2>New Customer Contact Message</h2>
-                        <p><strong>Name:</strong> ${trimmedName}</p>
-                        <p><strong>Email:</strong> ${normalizedEmail}</p>
-                        <p><strong>Phone:</strong> ${trimmedPhone}</p>
-                        <p><strong>Subject:</strong> ${trimmedSubject}</p>
+                        <p><strong>Name:</strong> ${safeName}</p>
+                        <p><strong>Email:</strong> ${escapeHtml(normalizedEmail)}</p>
+                        <p><strong>Phone:</strong> ${safePhone}</p>
+                        <p><strong>Subject:</strong> ${safeSubject}</p>
                         <hr />
                         <p><strong>Message:</strong></p>
-                        <p>${trimmedMessage.replace(/\n/g, "<br/>")}</p>
+                        <p>${safeMessage}</p>
                     `
                 });
             } catch (emailErr) {

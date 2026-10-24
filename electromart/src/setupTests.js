@@ -39,6 +39,26 @@ jest.mock('swiper/css', () => ({}), { virtual: true });
 jest.mock('swiper/css/navigation', () => ({}), { virtual: true });
 jest.mock('swiper/css/pagination', () => ({}), { virtual: true });
 
+// Mock react-confetti to prevent canvas animation loops in JSDOM
+jest.mock('react-confetti', () => () => null);
+
+// Mock framer-motion to prevent infinite requestAnimationFrame animation loops during tests
+jest.mock('framer-motion', () => {
+    const actual = jest.requireActual('framer-motion');
+    return {
+        ...actual,
+        AnimatePresence: ({ children }) => <>{children}</>,
+        motion: new Proxy(actual.motion, {
+            get: (target, prop) => {
+                return ({ children, animate, initial, exit, variants, transition, whileHover, whileTap, whileInView, viewport, ...domProps }) => {
+                    const Component = prop;
+                    return <Component {...domProps}>{children}</Component>;
+                };
+            }
+        })
+    };
+});
+
 // Mock axios instance to prevent unhandled network timeouts during tests
 jest.mock('./api/axios', () => {
     const mockAxiosInstance = {

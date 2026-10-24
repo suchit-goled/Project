@@ -90,16 +90,23 @@ ElectroNova has undergone a complete, production-grade transformation from an in
 ### Phase 8: Monorepo Orchestration, Advanced Security Hardening, Deep Testing & CI/CD Pipeline
 - [x] **Monorepo Automation**: Root `package.json` with unified workspace scripts (`npm test`, `npm run test:backend`, `npm run test:frontend`, `npm run security:audit`, `npm run build:frontend`).
 - [x] **Advanced Security Hardening**:
+  - Zero-vulnerability dependency audit in `Backend-project` (fixed `multer` and `body-parser` vulnerabilities via `npm audit fix`).
   - NoSQL Injection protection (`sanitize.middleware.js`) stripping `$` operators and dots.
+  - Multipart upload security hardening (`upload.middleware.js`): enforced 5MB file size limit and strict image MIME type validation (`image/jpeg`, `image/jpg`, `image/png`, `image/webp`, `image/gif`, `image/avif`).
+  - Multer error handling in `error.middleware.js` returning friendly 400 status codes.
+  - Contact form HTML sanitization & entity escaping in `contact.controller.js` to protect against HTML/email injection in notifications.
   - Timing-safe HMAC signature verification (`crypto.timingSafeEqual`) for Razorpay payments.
   - Strict BOLA/IDOR authorization guards across user profiles, addresses, carts, and order cancellations.
   - Mass assignment defenses on profile and address updates.
+- [x] **Frontend Bug Fixes & Resiliency**:
+  - Resolved `undefined` exceptions in `WishlistCard.jsx` with defensive null-coalescing on `total_reviews`, `discounted_price`, and `original_price`.
+  - Added Jest mocks for `react-confetti` and `framer-motion` in `setupTests.js` to eliminate infinite `requestAnimationFrame` canvas loops, fixing worker leak warnings and speeding up test runs from 130s+ down to ~26s.
 - [x] **User Account & Password Reset Lifecycles**:
   - Fully wired Forgot Password & Tokenized Reset Password pages with UI feedback and timer transitions.
   - Dynamic personal profile forms, secure password update forms with show/hide toggles, and live order statistics.
 - [x] **Comprehensive Test Suite Expansion**:
-  - Backend: expanded to 40/40 passing unit and security integration tests across 5 test suites.
-  - Frontend: expanded to 9/9 passing component tests across 4 test suites.
+  - Backend: expanded to 51/51 passing unit and security integration tests across 6 test suites (added `products_and_reviews.test.js`).
+  - Frontend: expanded to 16/16 passing component tests across 7 test suites (added `ProductCard.test.js`, `EmptyCart.test.js`, `WishlistCard.test.js`).
 - [x] **CI/CD Pipeline**: GitHub Actions workflow (`.github/workflows/ci.yml`) automating dependency caching, security audits, backend tests, frontend tests, and production bundle builds on every push/PR.
 
 ---
@@ -112,23 +119,11 @@ TAP version 13
 # Subtest: Cart, Order, and Review Business Logic Validation Tests (6 tests) - PASS
 # Subtest: Contact, Admin & Product Endpoint Tests (8 tests) - PASS
 # Subtest: Backend Health & Security Baseline Tests (4 tests) - PASS
+# Subtest: Product, Review & Catalog Deep Tests (11 tests) - PASS
 # Subtest: Backend Security & Authorization Gate Tests (9 tests) - PASS
 # Subtest: User, Security & Business Logic Hardening Tests (13 tests) - PASS
-  ok 1 - NoSQL injection keys starting with $ or containing . are stripped from request body
-  ok 2 - Change password rejects empty or missing fields
-  ok 3 - Change password rejects new password shorter than 6 characters
-  ok 4 - Change password rejects incorrect current password
-  ok 5 - Change password accepts correct current password and updates hash
-  ok 6 - Update profile rejects empty name
-  ok 7 - Update profile accepts valid fields
-  ok 8 - Address creation validates required fields
-  ok 9 - Address update ignores injected userId in body (Mass Assignment defense)
-  ok 10 - Order cancellation rejects cancellation of shipped orders
-  ok 11 - Order cancellation rejects unauthorized cancel attempt (IDOR protection)
-  ok 12 - Timing-safe Razorpay verification handles invalid or empty signature safely
-  ok 13 - Admin order status update rejects invalid status with 400
 
-# tests 40 | suites 5 | pass 40 | fail 0
+# tests 51 | suites 6 | pass 51 | fail 0
 ```
 
 ### Backend Security Vulnerability Audit (`npm audit` / `npm run security:audit`)
@@ -144,13 +139,16 @@ found 0 vulnerabilities
 > electromart@0.1.0 test:ci
 > react-scripts test --watchAll=false
 
-PASS src/components/profile/PasswordSection.test.js
-PASS src/components/cart/CartSummary.test.js
 PASS src/components/OrderCard.test.js
+PASS src/components/profile/PasswordSection.test.js
+PASS src/components/cart/EmptyCart.test.js
+PASS src/components/common/Card/ProductCard.test.js
+PASS src/components/wishlist/WishlistCard.test.js
+PASS src/components/cart/CartSummary.test.js
 PASS src/App.test.js
 
-Test Suites: 4 passed, 4 total
-Tests:       9 passed, 9 total
+Test Suites: 7 passed, 7 total
+Tests:       16 passed, 16 total
 Snapshots:   0 total
 Ran all test suites.
 ```
@@ -164,7 +162,7 @@ Creating an optimized production build...
 Compiled successfully.
 
 File sizes after gzip:
-  206.41 kB  build\static\js\main.f12d4274.js
+  206.45 kB  build\static\js\main.36332e2a.js
   21.20 kB   build\static\css\main.b3add2de.css
   1.76 kB    build\static\js\453.584002af.chunk.js
 

@@ -37,6 +37,16 @@ const errorMiddleware = (err, req, res, next) => {
         message = "Token expired. Please log in again.";
     }
 
+    // Multer Upload Errors
+    if (err.name === "MulterError") {
+        statusCode = 400;
+        if (err.code === "LIMIT_FILE_SIZE") {
+            message = "File size exceeds 5MB limit. Please upload a smaller image.";
+        } else {
+            message = `Upload error: ${err.message}`;
+        }
+    }
+
     // In production, sanitize 500 internal errors
     if (statusCode === 500 && env.node_env === "production") {
         message = "Internal Server Error";

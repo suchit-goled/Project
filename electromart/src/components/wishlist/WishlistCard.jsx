@@ -14,99 +14,73 @@ const WishlistCard = ({ product }) => {
     const { addToCart } = useCart();
 
     const moveToCart = async () => {
-
         await addToCart(product._id);
-
         await removeFromWishlist(product._id);
-
     };
 
     return (
-
         <article
             className="wishlist-card"
             onClick={() => navigate(`/products/${product._id}`)}
         >
-
             <button
                 className="wishlist-remove"
                 onClick={(e) => {
-
                     e.stopPropagation();
-
                     removeFromWishlist(product._id);
-
                 }}
             >
-
                 <FaHeart />
-
             </button>
 
             <div className="wishlist-image">
-
                 <img
                     src={product.product_image_url}
                     alt={product.product_title}
                 />
-
             </div>
 
             <div className="wishlist-content">
-
                 <h3>
                     {product.product_title}
                 </h3>
 
                 <div className="rating">
-
                     <FaStar />
-
-                    {product.product_rating}
-
+                    {product.product_rating ?? 0}
                     <span>
-                        ({product.total_reviews.toLocaleString()} Reviews)
+                        ({(product.total_reviews ?? 0).toLocaleString()} Reviews)
                     </span>
-
                 </div>
 
                 <div className="price">
-
                     <span className="current">
-                        ₹{product.discounted_price.toLocaleString()}
+                        ₹{(product.discounted_price ?? 0).toLocaleString()}
                     </span>
 
                     <span className="old">
-                        ₹{product.original_price.toLocaleString()}
+                        ₹{(product.original_price ?? 0).toLocaleString()}
                     </span>
-
                 </div>
 
-                <span className="discount">
-    {product.discount_percentage}% OFF
-</span>
+                {product.discount_percentage > 0 && (
+                    <span className="discount">
+                        {product.discount_percentage}% OFF
+                    </span>
+                )}
 
                 <button
                     className="move-cart-btn"
                     onClick={(e) => {
-
                         e.stopPropagation();
-
                         moveToCart();
-
                     }}
                 >
-
                     Move To Cart
-
                 </button>
-
             </div>
-
         </article>
-
     );
-
 };
 
 export default WishlistCard;

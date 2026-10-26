@@ -1,119 +1,71 @@
-.showcase{
-
-    position:relative;
-
-    width:620px;
-
-    height:620px;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
+.showcase {
+    position: relative;
+    width: 620px;
+    height: 620px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.ambient{
-
-    position:absolute;
-
-    width:420px;
-
-    height:420px;
-
-    border-radius:50%;
-
-    background:
-    radial-gradient(circle,
-    rgba(37,99,235,.25),
-    transparent 70%);
-
-    filter:blur(70px);
-
-    animation:glow 5s ease infinite;
+.ambient {
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.22), transparent 70%);
+    filter: blur(70px);
+    animation: glow 5s ease infinite;
 }
 
-.macbook{
-
-    position:absolute;
-
-    width:470px;
-
-    z-index:5;
-
-    animation:float 6s ease-in-out infinite;
+.macbook {
+    position: absolute;
+    width: 470px;
+    z-index: 5;
+    animation: float 6s ease-in-out infinite;
 }
 
-.iphone{
-
-    position:absolute;
-
-    width:160px;
-
-    left:20px;
-
-    bottom:70px;
-
-    z-index:8;
-
-    transform:rotate(-18deg);
-
-    animation:floatSmall 5s ease-in-out infinite;
+.iphone {
+    position: absolute;
+    width: 160px;
+    left: 20px;
+    bottom: 70px;
+    z-index: 8;
+    transform: rotate(-18deg);
+    animation: floatSmall 5s ease-in-out infinite;
 }
 
-.watch{
-
-    position:absolute;
-
-    width:120px;
-
-    right:40px;
-
-    top:120px;
-
-    z-index:8;
-
-    animation:floatSmall 4s ease-in-out infinite;
+.watch {
+    position: absolute;
+    width: 120px;
+    right: 40px;
+    top: 120px;
+    z-index: 8;
+    animation: floatSmall 4s ease-in-out infinite;
 }
 
-@keyframes float{
-
-    0%,100%{
-
-        transform:translateY(0);
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
     }
-
-    50%{
-
-        transform:translateY(-18px);
+    50% {
+        transform: translateY(-18px);
     }
-
 }
 
-@keyframes floatSmall{
-
-    0%,100%{
-
-        transform:translateY(0);
+@keyframes floatSmall {
+    0%, 100% {
+        transform: translateY(0);
     }
-
-    50%{
-
-        transform:translateY(-12px);
+    50% {
+        transform: translateY(-12px);
     }
-
 }
 
-@keyframes glow{
-
-    0%,100%{
-
-        opacity:.8;
+@keyframes glow {
+    0%, 100% {
+        opacity: .8;
     }
-
-    50%{
-
-        opacity:1;
+    50% {
+        opacity: 1;
     }
-
 }

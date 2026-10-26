@@ -32,6 +32,7 @@ ElectroNova is a full-stack, enterprise-grade e-commerce platform for electronic
 
 ### Frontend (`electromart`)
 * **React 19**
+* **Clean Sky Blue & White UI Design System** (responsive, accessible, high contrast)
 * **React Router 7**
 * **Axios** (with Bearer interceptors & 401 token refresh handling)
 * **Framer Motion** & **Swiper**

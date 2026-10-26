@@ -1,35 +1,24 @@
-.related-products{
-
-    margin-top:100px;
-
+.related-products {
+    margin-top: 80px;
 }
 
-.related-products h2{
-
-    color:white;
-
-    font-size:34px;
-
-    margin-bottom:35px;
-
+.related-products h2 {
+    color: #0f172a;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 28px;
 }
 
-.related-products .swiper{
-
-    padding:10px 5px 40px;
-
+.related-products .swiper {
+    padding: 10px 5px 40px;
 }
 
 .related-products .swiper-button-prev,
-.related-products .swiper-button-next{
-
-    color:#FF8A3D;
-
+.related-products .swiper-button-next {
+    color: #0284c7;
 }
 
 .related-products .swiper-button-prev:hover,
-.related-products .swiper-button-next:hover{
-
-    transform:scale(1.1);
-
+.related-products .swiper-button-next:hover {
+    transform: scale(1.1);
 }

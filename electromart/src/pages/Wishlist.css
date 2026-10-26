@@ -1,18 +1,15 @@
 .wishlist-page {
     padding: 40px 0 80px;
     min-height: 100vh;
+    background: var(--bg-primary);
 }
-
-
 
 .wishlist-title {
     font-size: 2rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 35px;
 }
-
-
 
 .wishlist-grid {
     display: grid;
@@ -20,13 +17,11 @@
     gap: 25px;
 }
 
-
-
 .wishlist-loading {
     height: 80vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: var(--text-muted);
     font-size: 1.3rem;
 }

@@ -88,7 +88,7 @@
 }
 
 .filter-category-btn.active {
-  background: rgba(255, 110, 38, 0.12);
+  background: #e0f2fe;
   color: var(--primary);
   font-weight: 600;
 }
@@ -160,7 +160,7 @@
 .rating-radio-label.selected {
   color: var(--primary);
   font-weight: 600;
-  background: rgba(255, 110, 38, 0.08);
+  background: #e0f2fe;
 }
 
 .rating-radio-label input {

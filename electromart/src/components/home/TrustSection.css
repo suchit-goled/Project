@@ -21,7 +21,7 @@
   width: 42px;
   height: 42px;
   border-radius: var(--radius-sm);
-  background: rgba(255, 110, 38, 0.12);
+  background: #e0f2fe;
   color: var(--primary);
   display: flex;
   align-items: center;

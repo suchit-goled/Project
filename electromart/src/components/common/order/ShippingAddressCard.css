@@ -2,50 +2,53 @@
     max-width: 900px;
     margin: 30px auto;
     background: #ffffff;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 15px 40px rgba(0,0,0,.08);
+    border-radius: 16px;
+    padding: 28px;
+    border: 1px solid #e0f2fe;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.05);
 }
 
 .shipping-card h2 {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #222;
-    margin-bottom: 25px;
+    color: #0f172a;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 22px;
 }
 
 .shipping-content {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 16px;
 }
 
 .shipping-row {
     display: flex;
     align-items: center;
     gap: 12px;
-    color: #555;
-    font-size: 16px;
+    color: #475569;
+    font-size: 15px;
 }
 
 .shipping-address {
     margin-top: 10px;
-    padding: 18px;
-    background: #f8f9fa;
-    border-radius: 12px;
-    line-height: 1.8;
-    color: #444;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #e0f2fe;
+    border-radius: 10px;
+    line-height: 1.7;
+    color: #0f172a;
+    font-size: 14px;
 }
 
-@media (max-width:768px){
+@media (max-width: 768px) {
+    .shipping-card {
+        padding: 20px;
+    }
 
-.shipping-card{
-    padding:20px;
-}
-
-.shipping-card h2{
-    font-size:22px;
-}
-
+    .shipping-card h2 {
+        font-size: 18px;
+    }
 }

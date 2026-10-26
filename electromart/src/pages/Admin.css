@@ -135,7 +135,7 @@
 
 .admin-tab-item.active {
     color: var(--primary);
-    background: rgba(255, 110, 38, 0.12);
+    background: #e0f2fe;
     font-weight: 600;
 }
 
@@ -180,7 +180,7 @@
 }
 
 .stat-metric-card.orders .metric-icon-box {
-    background: rgba(255, 110, 38, 0.15);
+    background: #e0f2fe;
     color: var(--primary);
 }
 

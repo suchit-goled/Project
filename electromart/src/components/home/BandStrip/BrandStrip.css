@@ -1,7 +1,8 @@
 .brand-strip {
-    padding: 70px 0;
-    border-top: 1px solid rgba(255,255,255,.05);
-    border-bottom: 1px solid rgba(255,255,255,.05);
+    padding: 60px 0;
+    background: #ffffff;
+    border-top: 1px solid #e0f2fe;
+    border-bottom: 1px solid #e0f2fe;
 }
 
 .brand-strip__container {
@@ -11,11 +12,12 @@
 
 .brand-title {
     text-align: center;
-    color: #94A3B8;
-    margin-bottom: 40px;
+    color: #64748b;
+    margin-bottom: 36px;
     letter-spacing: 1px;
     text-transform: uppercase;
     font-size: 13px;
+    font-weight: 600;
 }
 
 .brand-list {
@@ -28,24 +30,21 @@
 .brand-item {
     font-size: clamp(20px, 2vw, 24px);
     font-weight: 700;
-    color: #E2E8F0;
-    opacity: .6;
+    color: #475569;
+    opacity: 0.75;
     cursor: pointer;
-    transition:
-        transform .3s ease,
-        opacity .3s ease,
-        color .3s ease;
+    transition: transform .3s ease, opacity .3s ease, color .3s ease;
 }
 
 .brand-item:hover {
     opacity: 1;
-    color: #FFFFFF;
+    color: #0284c7;
     transform: translateY(-3px);
 }
 
 @media (max-width: 768px) {
     .brand-strip {
-        padding: 50px 0;
+        padding: 40px 0;
     }
 
     .brand-list {

@@ -68,7 +68,7 @@ html {
 .category-icon {
   font-size: 32px;
   margin-bottom: 10px;
-  color: #7c3aed;
+  color: #0284c7;
 }
 
 /* NAME */
@@ -85,11 +85,11 @@ html {
   background: #eef2ff;
   padding: 10px;
   border-radius: 10px;
-  color: #7c3aed;
+  color: #0284c7;
 }
 
 .hero {
-  background: linear-gradient(135deg, #0f172a, #312e81, #06b6d4);
+  background: linear-gradient(135deg, #0f172a, #312e81, #0284c7);
   color: white;
   padding: 80px 40px;
   height: 400px;
@@ -112,7 +112,7 @@ html {
   color: white;
 }
 .hero h1 span {
-  color: #67e8f9;
+  color: #0ea5e9;
 }
 
 /* Subtitle */
@@ -129,7 +129,7 @@ html {
 
 .btn-primary {
   padding: 12px 20px;
-  background: #7c3aed;
+  background: #0284c7;
   border: none;
   color: white;
   margin-right: 10px;
@@ -173,7 +173,7 @@ html {
 
 .search-box button {
   border: none;
-  background: #7c3aed;
+  background: #0284c7;
   padding: 6px 10px;
   cursor: pointer;
   color: white;
@@ -244,7 +244,7 @@ html {
 
 /* Rating */
 .rating {
-  color: #7c3aed;
+  color: #0284c7;
   margin: 5px 0;
 }
 
@@ -265,7 +265,7 @@ html {
   margin-bottom: 20px;
   padding: 8px 12px;
   cursor: pointer;
-  background: #7c3aed;
+  background: #0284c7;
   color: white;
   border: none;
   border-radius: 6px;
@@ -313,7 +313,7 @@ html {
 }
 
 .thumb.active {
-  border: 2px solid #7c3aed;
+  border: 2px solid #0284c7;
 }
 
 /* RIGHT SIDE */
@@ -325,7 +325,7 @@ html {
 .cart-btn {
   margin-top: 15px;
   padding: 10px;
-  background: #7c3aed;
+  background: #0284c7;
   color: white;
   border: none;
   cursor: pointer;
@@ -380,7 +380,7 @@ html {
   margin-bottom: 20px;
   padding: 6px 12px;
   cursor: pointer;
-  background: #7c3aed;
+  background: #0284c7;
   color: white;
   border: none;
   border-radius: 6px;
@@ -419,7 +419,7 @@ html {
 }
 
 .rating {
-  color: #7c3aed;
+  color: #0284c7;
   margin: 10px 0;
 }
 
@@ -434,7 +434,7 @@ html {
 
 /* BUTTONS */
 .cart-btn {
-  background: #7c3aed;
+  background: #0284c7;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -494,7 +494,7 @@ html {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #0f172a, #312e81, #06b6d4);
+  background: linear-gradient(135deg, #0f172a, #312e81, #0284c7);
 }
 
 /* CARD */
@@ -537,14 +537,14 @@ html {
 }
 
 .active-btn{
-  background:#7c3aed !important;
+  background:#0284c7 !important;
   color:white;
 }
 
 .login-btn-main{
   width:100%;
   padding:14px;
-  background:#7c3aed;
+  background:#0284c7;
   border:none;
   border-radius:10px;
   color:white;
@@ -565,7 +565,7 @@ html {
 }
 
 .login-card input:focus {
-  border-color: #7c3aed;
+  border-color: #0284c7;
   box-shadow: 0 0 5px rgba(124, 58, 237, 0.5);
 }
 
@@ -574,7 +574,7 @@ html {
   width: 100%;
   padding: 12px;
   border: none;
-  background: #7c3aed;
+  background: #0284c7;
   color: white;
   font-weight: bold;
   border-radius: 10px;
@@ -600,7 +600,7 @@ html {
   width: 30px;
   height: 30px;
   border: none;
-  background: #7c3aed;
+  background: #0284c7;
   color: white;
   border-radius: 6px;
   cursor: pointer;
@@ -641,7 +641,7 @@ html {
 .profile-header .avatar {
   width: 70px;
   height: 70px;
-  background: linear-gradient(135deg, #7c3aed, #06b6d4);
+  background: linear-gradient(135deg, #0284c7, #0284c7);
   color: white;
   font-size: 28px;
   font-weight: bold;
@@ -726,7 +726,7 @@ html {
   padding: 0 18px;
   border-radius: 10px;
 
-  background: linear-gradient(135deg, #7c3aed, #06b6d4);
+  background: linear-gradient(135deg, #0284c7, #0284c7);
   color: white;
   border: none;
   font-weight: 500;
@@ -762,7 +762,7 @@ html {
   gap: 18px;
 }
 .admin-sidebar h2 {
-  color: #7c3aed;
+  color: #0284c7;
   margin-bottom: 25px;
   text-align: center;
 }
@@ -781,7 +781,7 @@ html {
 }
 
 .admin-sidebar button:hover {
-  background: #7c3aed;
+  background: #0284c7;
   transform: translateX(5px);
 }
 
@@ -844,7 +844,7 @@ html {
 
 .dashboard-card h2 {
   font-size: 35px;
-  color: #7c3aed;
+  color: #0284c7;
   margin-bottom: 10px;
 }
 
@@ -932,7 +932,7 @@ html {
 }
 
 .admin-scroll-box::-webkit-scrollbar-thumb {
-  background: #7c3aed;
+  background: #0284c7;
   border-radius: 10px;
 }
 
@@ -956,7 +956,7 @@ html {
 }
 
 .add-product-box button {
-  background: #7c3aed;
+  background: #0284c7;
   color: white;
   border: none;
   padding: 14px;
@@ -971,7 +971,7 @@ html {
 }
 
 .edit-btn {
-  background: #06b6d4;
+  background: #0284c7;
   color: white;
   border: none;
   padding: 8px 14px;
@@ -997,7 +997,7 @@ html {
 }
 
 .edit-btn {
-  background: #06b6d4;
+  background: #0284c7;
   color: white;
   border: none;
   padding: 8px 14px;
@@ -1069,7 +1069,7 @@ html {
 .report-card p {
   font-size: 28px;
   font-weight: bold;
-  color: #7c3aed;
+  color: #0284c7;
 }
 
 .sales-table {
@@ -1131,7 +1131,7 @@ html {
 }
 
 .top-product-card p {
-  color: #7c3aed;
+  color: #0284c7;
   font-weight: bold;
 }
 
@@ -1196,7 +1196,7 @@ html {
   border-radius:50%;
   cursor:pointer;
   font-size:18px;
-  background:#7c3aed;
+  background:#0284c7;
   color:white;
 }
 
@@ -1240,7 +1240,7 @@ html {
   padding:15px;
   margin-top:20px;
   border:none;
-  background:#7c3aed;
+  background:#0284c7;
   color:white;
   font-size:18px;
   border-radius:10px;
@@ -1350,7 +1350,7 @@ html {
   height:35px;
   border:none;
   border-radius:50%;
-  background:#7c3aed;
+  background:#0284c7;
   color:white;
   font-size:20px;
   font-weight:bold;
@@ -1398,7 +1398,7 @@ html {
   margin-top:20px;
   padding:15px;
   border:none;
-  background:#7c3aed;
+  background:#0284c7;
   color:white;
   font-size:18px;
   font-weight:bold;
@@ -1727,12 +1727,12 @@ html {
 /* BUTTON COLORS */
 
 .packed-btn{
-  background:#7c3aed;
+  background:#0284c7;
   color:white;
 }
 
 .shipped-btn{
-  background:#06b6d4;
+  background:#0284c7;
   color:white;
 }
 
@@ -1806,7 +1806,7 @@ html {
   padding:14px 30px;
   border:none;
   border-radius:15px;
-  background:#7c3aed;
+  background:#0284c7;
   color:white;
   font-size:20px;
   cursor:pointer;
@@ -1822,7 +1822,7 @@ html {
   height:40px;
   border:none;
   border-radius:15px;
-  background:#7c3aed;
+  background:#0284c7;
   color:white;
   font-size:30px;
   cursor:pointer;
@@ -1878,7 +1878,7 @@ html {
 
 .search-box button{
   border:none;
-  background:#7c3aed;
+  background:#0284c7;
   color:white;
   padding:14px 22px;
   cursor:pointer;

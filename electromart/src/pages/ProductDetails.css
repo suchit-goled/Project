@@ -113,7 +113,7 @@
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    background: rgba(10, 15, 29, 0.75);
+    background: #ffffff;
     border: 1px solid var(--border-medium);
     color: var(--text-primary);
     display: flex;
@@ -184,7 +184,7 @@
     text-transform: uppercase;
     color: var(--primary);
     background: var(--primary-light);
-    border: 1px solid rgba(255, 110, 38, 0.25);
+    border: 1px solid var(--border-medium);
     padding: 3px 10px;
     border-radius: var(--radius-pill);
     letter-spacing: 0.05em;

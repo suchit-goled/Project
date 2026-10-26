@@ -1,10 +1,10 @@
 .announcement-bar {
-  background: linear-gradient(90deg, #131b2e 0%, #1e293b 50%, #131b2e 100%);
-  border-bottom: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  font-size: 0.78rem;
+  background: #0284c7;
+  border-bottom: 1px solid #0369a1;
+  color: #ffffff;
+  font-size: 0.8rem;
   font-weight: 500;
-  padding: 6px 0;
+  padding: 8px 0;
   letter-spacing: 0.02em;
 }
 
@@ -22,8 +22,8 @@
 }
 
 .announcement-icon {
-  color: var(--primary);
-  font-size: 0.9rem;
+  color: #e0f2fe;
+  font-size: 0.95rem;
 }
 
 @media (max-width: 900px) {

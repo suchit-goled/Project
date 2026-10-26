@@ -6,36 +6,37 @@
 
 .section-header__badge {
   display: inline-block;
-  padding: 8px 16px;
+  padding: 6px 16px;
   border-radius: 999px;
-  background: rgba(255, 138, 61, 0.12);
-  color: #ff8a3d;
+  background: #e0f2fe;
+  border: 1px solid #bae6fd;
+  color: #0284c7;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
-  margin-bottom: 18px;
-}
-
-.section-header__title {
-  font-size: clamp(32px, 5vw, 48px);
-  font-weight: 800;
-  color: #f8fafc;
   margin-bottom: 16px;
 }
 
+.section-header__title {
+  font-size: clamp(30px, 4.5vw, 44px);
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 14px;
+}
+
 .section-header__subtitle {
-  font-size: 18px;
-  line-height: 1.8;
-  color: #94a3b8;
+  font-size: 17px;
+  line-height: 1.7;
+  color: #475569;
 }
 
 @media (max-width: 768px) {
   .section-header__title {
-    font-size: 32px;
+    font-size: 28px;
   }
 
   .section-header__subtitle {
-    font-size: 16px;
+    font-size: 15px;
   }
 }

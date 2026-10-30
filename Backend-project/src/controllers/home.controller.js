@@ -6,11 +6,11 @@ class HomeController {
         try {
             const homeData = await homeService.getHomePageData();
 
-            ApiResponse.success(
-    res,
-    homeData,
-    "Home page loaded successfully."
-);
+            return ApiResponse.success(
+                res,
+                homeData,
+                "Home page loaded successfully."
+            );
         } catch (error) {
             next(error);
         }

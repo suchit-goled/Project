@@ -18,7 +18,7 @@ class PaymentController {
                 return ApiResponse.error(res, "Order not found", 404);
             }
 
-            if (order.userId !== req.user._id.toString() && req.user.role !== "admin") {
+            if (String(order.userId) !== req.user._id.toString() && req.user.role !== "admin") {
                 return ApiResponse.error(res, "Access denied", 403);
             }
 
@@ -52,7 +52,7 @@ class PaymentController {
                 return ApiResponse.error(res, "Order not found.", 404);
             }
 
-            if (existingOrder.userId !== req.user._id.toString() && req.user.role !== "admin") {
+            if (String(existingOrder.userId) !== req.user._id.toString() && req.user.role !== "admin") {
                 return ApiResponse.error(res, "Access denied.", 403);
             }
 

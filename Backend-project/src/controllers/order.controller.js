@@ -129,7 +129,7 @@ export const getOrderById = async (req, res, next) => {
         }
 
         // Security check: only own order or admin
-        if (req.user.role !== "admin" && order.userId !== req.user._id.toString()) {
+        if (req.user.role !== "admin" && String(order.userId) !== req.user._id.toString()) {
             return ApiResponse.error(
                 res,
                 "Access denied. You cannot view this order.",

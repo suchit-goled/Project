@@ -2,6 +2,9 @@ import paymentService from "../services/payment.service.js";
 import ApiResponse from "../utils/apiResponse.js";
 import orderModel from "../models/order.model.js";
 import Cart from "../models/Cart.js";
+import User from "../models/user.model.js";
+import { sendEmail } from "../utils/sendEmail.js";
+import { orderConfirmationTemplate } from "../templates/orderConfirmationEmail.js";
 
 class PaymentController {
 
@@ -76,6 +79,22 @@ class PaymentController {
             );
 
             await Cart.deleteMany({ userId: order.userId });
+
+            // Asynchronously dispatch payment confirmation email in the background without blocking client response
+            (async () => {
+                try {
+                    const user = await User.findById(order.userId);
+                    if (user && user.email) {
+                        await sendEmail({
+                            email: user.email,
+                            subject: `Payment Confirmed - Order #${order._id}`,
+                            html: orderConfirmationTemplate(order, user),
+                        });
+                    }
+                } catch (emailError) {
+                    console.error("Failed to send payment confirmation email:", emailError.message);
+                }
+            })();
 
             return ApiResponse.success(
                 res,

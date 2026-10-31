@@ -201,16 +201,21 @@ export const CartProvider = ({ children }) => {
     // ============================
     // Clear Cart
     // ============================
-    const clearCart = async () => {
-        if (!userId) {
+    const clearCart = async (skipServerSync = false) => {
+        // Immediately clear local state and guest storage so the UI updates instantaneously
+        setCart([]);
+        try {
             localStorage.removeItem(GUEST_CART_KEY);
-            setCart([]);
+        } catch (e) {
+            console.error("Failed to remove guest cart storage:", e);
+        }
+
+        if (!userId || skipServerSync) {
             return;
         }
 
         try {
             await CartService.clearCart(userId);
-            setCart([]);
         } catch (error) {
             console.error("Clear Cart Error:", error);
         }

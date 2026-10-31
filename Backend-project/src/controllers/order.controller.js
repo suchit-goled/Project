@@ -55,24 +55,26 @@ export const createOrder = async (req, res, next) => {
             orderStatus: "Pending"
         });
 
-        const user = await User.findById(userId);
-
-        if (user && user.email) {
-            try {
-                await sendEmail({
-                    email: user.email,
-                    subject: `Order Confirmed - ${order._id}`,
-                    html: orderConfirmationTemplate(order, user),
-                });
-            } catch (emailError) {
-                console.error("Failed to send order confirmation email:", emailError.message);
-            }
-        }
-
-        // Clear cart for Cash On Delivery
+        // Clear cart immediately for Cash On Delivery
         if (paymentMethod === "Cash On Delivery") {
             await Cart.deleteMany({ userId });
         }
+
+        // Asynchronously dispatch order confirmation email in the background without blocking client response
+        (async () => {
+            try {
+                const user = await User.findById(userId);
+                if (user && user.email) {
+                    await sendEmail({
+                        email: user.email,
+                        subject: `Order Confirmed - ${order._id}`,
+                        html: orderConfirmationTemplate(order, user),
+                    });
+                }
+            } catch (emailError) {
+                console.error("Failed to send order confirmation email:", emailError.message);
+            }
+        })();
 
         return ApiResponse.success(
             res,

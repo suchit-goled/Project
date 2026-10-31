@@ -1,8 +1,10 @@
 .address-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
-    padding: 32px;
+    background: #ffffff;
+    border: 1px solid #bae6fd;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(2, 132, 199, 0.06), 0 1px 3px rgba(15, 23, 42, 0.05);
+    padding: 28px 32px;
+    transition: box-shadow 0.2s ease;
 }
 
 .address-card-header {
@@ -10,32 +12,68 @@
     align-items: flex-start;
     gap: 14px;
     margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0f2fe;
 }
 
-.address-header-icon {
-    font-size: 1.4rem;
-    color: var(--primary);
-    margin-top: 2px;
+.address-card .header-icon-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    color: #0284c7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.header-text-block {
+    flex: 1;
+}
+
+.header-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 4px;
 }
 
 .address-card-header h2 {
-    font-size: 1.3rem;
-    margin: 0 0 4px;
-    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+    color: #0f172a;
 }
 
 .address-card-header p {
     font-size: 0.85rem;
-    color: var(--text-muted);
+    color: #64748b;
     margin: 0;
 }
 
+.address-prefilled-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+    padding: 3px 10px;
+    border-radius: 9999px;
+}
+
+/* 6-Column Responsive Grid */
 .address-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 18px 16px;
 }
 
 .form-group {
@@ -44,52 +82,90 @@
     gap: 6px;
 }
 
+.form-group.col-half {
+    grid-column: span 3;
+}
+
+.form-group.col-third {
+    grid-column: span 2;
+}
+
 .form-group.full-width {
     grid-column: 1 / -1;
 }
 
 .form-group label {
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: var(--text-secondary);
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.required-star {
+    color: #ef4444;
+    font-weight: 700;
 }
 
 .input-with-icon {
     position: relative;
     display: flex;
     align-items: center;
+    width: 100%;
 }
 
-.input-with-icon svg {
+.input-with-icon .field-icon {
     position: absolute;
     left: 14px;
-    color: var(--text-muted);
-    font-size: 1rem;
+    color: #0284c7;
+    font-size: 1.1rem;
     pointer-events: none;
+    transition: color 0.2s ease;
+    z-index: 2;
 }
 
 .input-with-icon input {
-    padding-left: 40px !important;
-}
-
-.address-grid input {
     width: 100%;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-sm);
-    padding: 11px 14px;
-    font-size: 0.9rem;
-    color: var(--text-primary);
-    transition: all var(--transition-fast);
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1; /* Sharp Slate 300 visible border */
+    border-radius: 8px;
+    padding: 12px 14px 12px 42px !important;
+    font-size: 0.95rem;
+    color: #0f172a;
+    font-weight: 500;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
-.address-grid input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 2px var(--primary-glow);
+.input-with-icon input::placeholder {
+    color: #94a3b8;
+    font-weight: 400;
 }
 
-@media (max-width: 640px) {
+.input-with-icon input:hover {
+    border-color: #94a3b8;
+}
+
+.input-with-icon input:focus {
+    border-color: #0284c7;
+    box-shadow: 0 0 0 3.5px rgba(2, 132, 199, 0.16);
+    background: #ffffff;
+    outline: none;
+}
+
+@media (max-width: 768px) {
+    .address-card {
+        padding: 20px 18px;
+    }
+
     .address-grid {
         grid-template-columns: 1fr;
+    }
+
+    .form-group.col-half,
+    .form-group.col-third,
+    .form-group.full-width {
+        grid-column: 1 / -1;
     }
 }

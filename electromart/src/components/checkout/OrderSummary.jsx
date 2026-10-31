@@ -23,7 +23,7 @@ const OrderSummary = ({ address }) => {
             const rzpData = razorpayOrder.data || razorpayOrder;
 
             const options = {
-                key: process.env.REACT_APP_RAZORPAY_KEY_ID || "rzp_test_ElectroNova",
+                key: process.env.REACT_APP_RAZORPAY_KEY_ID || "rzp_test_TFlDYqRuVCPLrc",
                 amount: rzpData.amount,
                 currency: rzpData.currency || "INR",
                 name: "ElectroNova Tech Store",
@@ -35,7 +35,7 @@ const OrderSummary = ({ address }) => {
                     email: user?.email || "",
                 },
                 theme: {
-                    color: "#ff6e26",
+                    color: "#0284c7",
                 },
                 modal: {
                     ondismiss: function () {
@@ -55,7 +55,8 @@ const OrderSummary = ({ address }) => {
                         });
 
                         if (verifyRes.success) {
-                            await clearCart();
+                            // Immediate local wipe without waiting on server deletion roundtrip
+                            clearCart(true);
                             toast.success("Payment verified! Order placed successfully.");
                             navigate("/order-success", {
                                 state: { order: verifyRes.data || order },
@@ -124,7 +125,8 @@ const OrderSummary = ({ address }) => {
                 const order = response.data;
 
                 if (paymentMethod === "Cash On Delivery") {
-                    await clearCart();
+                    // Immediate state wipe; backend already purged cart items from DB
+                    clearCart(true);
                     toast.success("Order placed successfully via Cash on Delivery!");
                     navigate("/order-success", {
                         state: { order },
@@ -146,7 +148,12 @@ const OrderSummary = ({ address }) => {
 
     return (
         <div className="order-summary-card">
-            <h2>Order Review</h2>
+            <div className="order-summary-header">
+                <h2>Order Summary</h2>
+                <span className="summary-item-count">
+                    {cart.length} {cart.length === 1 ? "item" : "items"}
+                </span>
+            </div>
 
             {/* Cart Items Preview */}
             <div className="summary-items-scroll">
@@ -154,18 +161,33 @@ const OrderSummary = ({ address }) => {
                     const product = item.productId || {};
                     const title = product.product_title || item.title || "Product";
                     const image = product.product_image_url || item.image || "";
-                    const price = product.discounted_price ?? item.price ?? 0;
+                    const unitPrice = item.price ?? product.discounted_price ?? product.price ?? 0;
+                    const qty = item.quantity || 1;
+                    const lineTotal = unitPrice * qty;
                     const key = product._id || item.productId || idx;
 
                     return (
                         <div className="summary-item-row" key={key}>
-                            <img src={image} alt={title} className="summary-item-thumb" />
+                            <img
+                                src={image}
+                                alt={title}
+                                className="summary-item-thumb"
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&q=80";
+                                }}
+                            />
                             <div className="summary-item-meta">
-                                <span className="summary-item-title">{title}</span>
-                                <span className="summary-item-qty">Qty: {item.quantity || 1}</span>
+                                <span className="summary-item-title" title={title}>
+                                    {title}
+                                </span>
+                                <div className="summary-item-qty-row">
+                                    <span className="summary-item-qty-badge">Qty: {qty}</span>
+                                    <span className="summary-item-unit-rate">₹{unitPrice.toLocaleString()} each</span>
+                                </div>
                             </div>
                             <span className="summary-item-price">
-                                ₹{(price * (item.quantity || 1)).toLocaleString()}
+                                ₹{lineTotal.toLocaleString()}
                             </span>
                         </div>
                     );
@@ -211,18 +233,25 @@ const OrderSummary = ({ address }) => {
 
             {/* Place Order CTA */}
             <button
-                className="place-order-btn"
+                className={`place-order-btn ${isSubmitting ? "loading" : ""}`}
                 onClick={handleCheckout}
                 disabled={isSubmitting || cart.length === 0}
             >
-                <FiLock />
-                <span>
-                    {isSubmitting
-                        ? "Processing Order..."
-                        : paymentMethod === "Cash On Delivery"
-                        ? "Confirm & Place Order"
-                        : `Pay ₹${grandTotal.toLocaleString()} via Razorpay`}
-                </span>
+                {isSubmitting ? (
+                    <>
+                        <span className="btn-spinner"></span>
+                        <span>Placing Your Order...</span>
+                    </>
+                ) : (
+                    <>
+                        <FiLock />
+                        <span>
+                            {paymentMethod === "Cash On Delivery"
+                                ? "Confirm & Place Order"
+                                : `Pay ₹${grandTotal.toLocaleString()} via Razorpay`}
+                        </span>
+                    </>
+                )}
             </button>
 
             <div className="checkout-trust-notice">

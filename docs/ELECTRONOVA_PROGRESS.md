@@ -128,6 +128,25 @@ ElectroNova has undergone a complete, production-grade transformation from an in
 - [x] **Test Expansion**:
   - Added `AddressForm.test.js` (3 tests) and `CheckoutItemsReview.test.js` (2 tests). Total passing tests expanded from 67 to 72 tests across 15 test suites.
 
+### Phase 10: Advanced Security Hardening, Monorepo Bridge & Test Suite Expansion (76 Passing Tests)
+- [x] **Prototype Pollution & Array Sanitization**:
+  - Upgraded `sanitize.middleware.js` to strip `__proto__`, `constructor`, and `prototype` keys from all incoming requests.
+  - Added recursive deep sanitization for nested array payloads.
+- [x] **Dedicated Contact Route Throttling**:
+  - Mounted a dedicated IP rate limiter (`contactLimiter`: 20 requests per 15 minutes) on `/api/contact` in `app.js` to eliminate automated form spam and email exhaustion attacks.
+- [x] **Admin Privileges Guardrail**:
+  - Enforced a security check in `admin.controller.js` preventing an active administrator from accidentally demoting their own admin account.
+- [x] **Stored XSS Sanitization in Product Reviews**:
+  - Implemented `sanitizeComment` in `review.controller.js` to escape `<` and `>` characters on review submissions and updates.
+- [x] **Defensive IDOR String Coercion**:
+  - Hardened `order.controller.js` order cancellation with defensive `String(order.userId)` check, and protected `cart.controller.js` authorization checks against undefined references.
+- [x] **Root Monorepo Orchestration**:
+  - Created root `package.json` at `c:\ElectroNova\package.json` bridging top-level developer commands (`npm test`, `npm run build`, `npm run start`) seamlessly into `Project`.
+- [x] **Comprehensive Test Expansion**:
+  - Backend: Added 2 tests in `user_and_security_deep.test.js` (admin self-demotion prevention, prototype pollution & array sanitization), expanding backend coverage to 53 tests across 6 suites.
+  - Frontend: Added `EmptyWishlist.test.js` and `EmptyOrders.test.js`, expanding frontend coverage to 23 tests across 11 suites.
+  - Total passing tests expanded to **76 automated tests across 17 suites with 0 failures**.
+
 ---
 
 ## 3. Automated Test Verification Summary
@@ -140,9 +159,9 @@ TAP version 13
 # Subtest: Backend Health & Security Baseline Tests (4 tests) - PASS
 # Subtest: Product, Review & Catalog Deep Tests (11 tests) - PASS
 # Subtest: Backend Security & Authorization Gate Tests (9 tests) - PASS
-# Subtest: User, Security & Business Logic Hardening Tests (13 tests) - PASS
+# Subtest: User, Security & Business Logic Hardening Tests (15 tests) - PASS
 
-# tests 51 | suites 6 | pass 51 | fail 0
+# tests 53 | suites 6 | pass 53 | fail 0
 ```
 
 ### Backend Security Vulnerability Audit (`npm audit` / `npm run security:audit`)
@@ -160,16 +179,18 @@ found 0 vulnerabilities
 
 PASS src/components/cart/EmptyCart.test.js
 PASS src/components/profile/PasswordSection.test.js
-PASS src/components/OrderCard.test.js
-PASS src/components/wishlist/WishlistCard.test.js
-PASS src/components/common/Card/ProductCard.test.js
-PASS src/components/cart/CartSummary.test.js
-PASS src/components/checkout/AddressForm.test.js
 PASS src/components/checkout/CheckoutItemsReview.test.js
+PASS src/components/checkout/AddressForm.test.js
+PASS src/components/OrderCard.test.js
+PASS src/components/cart/CartSummary.test.js
+PASS src/components/common/Card/ProductCard.test.js
+PASS src/components/wishlist/WishlistCard.test.js
 PASS src/App.test.js
+PASS src/components/wishlist/EmptyWishlist.test.js
+PASS src/components/EmptyOrders.test.js
 
-Test Suites: 9 passed, 9 total
-Tests:       21 passed, 21 total
+Test Suites: 11 passed, 11 total
+Tests:       23 passed, 23 total
 Snapshots:   0 total
 Ran all test suites.
 ```

@@ -2,6 +2,14 @@ import Review from "../models/review.model.js";
 import Product from "../models/Product.js";
 import ApiResponse from "../utils/apiResponse.js";
 
+const sanitizeComment = (str) => {
+    if (!str || typeof str !== "string") return "";
+    return str
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .trim();
+};
+
 const updateProductRating = async (productId) => {
     const reviews = await Review.find({ productId });
     const totalReviews = reviews.length;
@@ -48,7 +56,7 @@ export const addReview = async (req, res, next) => {
             userId: req.user._id,
             productId,
             rating: numRating,
-            comment: (comment || "").trim()
+            comment: sanitizeComment(comment)
         });
 
         await updateProductRating(productId);
@@ -106,7 +114,7 @@ export const updateReview = async (req, res, next) => {
         }
 
         if (comment !== undefined) {
-            review.comment = comment.trim();
+            review.comment = sanitizeComment(comment);
         }
 
         await review.save();

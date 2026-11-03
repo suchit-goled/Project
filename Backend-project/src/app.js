@@ -85,6 +85,20 @@ const authLimiter = rateLimit({
 app.use("/api/auth", authLimiter);
 app.use("/api/password", authLimiter);
 
+// Dedicated rate limit for contact form to mitigate automated spam
+const contactLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 20, // 20 submissions per 15 mins
+    standardHeaders: true,
+    legacyHeaders: false,
+    skip: () => process.env.NODE_ENV === "test",
+    message: {
+        success: false,
+        message: "Too many contact submissions from this IP, please try again later."
+    }
+});
+app.use("/api/contact", contactLimiter);
+
 // 5. Health Check
 app.get("/", (req, res) => {
     res.status(200).json({

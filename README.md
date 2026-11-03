@@ -170,31 +170,35 @@ npm run install:all
 ## 🤖 CI/CD Automation Pipeline
 
 Automated with **GitHub Actions** (`.github/workflows/ci.yml`):
-* **Backend Security & Testing**: Checks out code, provisions Node 22, executes `npm run security:audit` (fails on vulnerabilities), and runs all 51 automated unit & IDOR integration tests.
-* **Frontend Verification & Production Build**: Runs component Jest test suites in headless CI mode (16 tests across 7 suites) and builds production bundles (`npm run build`) ensuring zero build-time warnings or bundle breakages.
+* **Backend Security & Testing**: Checks out code, provisions Node 22, executes `npm run security:audit` (fails on vulnerabilities), and runs all 53 automated unit & IDOR integration tests.
+* **Frontend Verification & Production Build**: Runs component Jest test suites in headless CI mode (23 tests across 11 suites) and builds production bundles (`npm run build`) ensuring zero build-time warnings or bundle breakages.
 
 ---
 
 ## 🧪 Testing Coverage Summary
 
 ### Backend Automated Test Suite (`npm run test:backend`)
-* 6 suites, 51 automated tests passing with 0 failures:
+* 6 suites, 53 automated tests passing with 0 failures:
   - `health.test.js`: Service status, health uptime, Helmet HTTP headers, unmatched route 404 JSON fallback.
   - `security.test.js`: Tiered route protection, invalid/expired JWT rejection, auth rate-limiting headers.
   - `cart_and_orders.test.js`: Empty cart guards, order address validation, IDOR authorization access controls.
   - `contact_and_admin.test.js`: Contact payload sanitization, admin route guards, ReDoS regex search resilience.
-  - `user_and_security_deep.test.js`: NoSQL injection key stripping, change-password authentication, address mass-assignment prevention, shipped order cancellation constraints, timing-safe Razorpay HMAC comparison, admin order status transitions.
-  - `products_and_reviews.test.js`: Product pagination metadata, single product 200/404 handling, featured products query, related products, product reviews retrieval & rating bounds validation (1-5), home layout payload, and image upload MIME-type validation.
+  - `user_and_security_deep.test.js`: NoSQL injection key stripping, change-password authentication, address mass-assignment prevention, shipped order cancellation constraints, timing-safe Razorpay HMAC comparison, admin order status transitions, admin self-demotion prevention, and prototype pollution / array sanitization.
+  - `products_and_reviews.test.js`: Product pagination metadata, single product 200/404 handling, featured products query, related products, product reviews retrieval & rating bounds validation (1-5), review HTML sanitization, home layout payload, and image upload MIME-type validation.
 
 ### Frontend Automated Component Tests (`npm run test:frontend`)
-* 7 suites, 16 automated tests passing with 0 failures:
+* 11 suites, 23 automated tests passing with 0 failures:
   - `App.test.js`: Global layout mounting, branding, navigation links.
   - `OrderCard.test.js`: Order card status badges, receipt summary, product thumbnails.
   - `CartSummary.test.js`: Subtotal, GST, free shipping thresholds, promo code discount calculation (ELECTRO10), checkout CTA.
   - `PasswordSection.test.js`: Password input rendering, password visibility toggle (Show/Hide), validation constraints.
   - `ProductCard.test.js`: Product cards rendering title, category, discount badge, formatted currency, rating review counts, Add to Cart click handlers, and wishlist toggling.
   - `EmptyCart.test.js`: Empty cart illustration, helpful prompt text, and Continue Shopping navigation link.
+  - `EmptyWishlist.test.js`: Empty wishlist icon, supportive prompt text, and Explore Products navigation link.
+  - `EmptyOrders.test.js`: Empty orders box icon, prompt text, and Start Shopping navigation action.
   - `WishlistCard.test.js`: Wishlist item details, ratings, discount calculation, Move To Cart transaction, and item removal.
+  - `AddressForm.test.js`: Address form inputs, high-contrast borders, profile prefill, and validation feedback.
+  - `CheckoutItemsReview.test.js`: Checkout item line-rate review, unshrinkable thumbnails, and alignment integrity.
 
 ---
 

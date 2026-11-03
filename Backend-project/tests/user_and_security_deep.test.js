@@ -257,4 +257,36 @@ describe("User, Security & Business Logic Hardening Tests", () => {
         assert.equal(res.body.success, false);
         assert.ok(res.body.message.includes("Invalid order status"));
     });
+
+    // 8. Admin Self-Demotion Prevention Gate
+    test("Admin cannot demote their own admin account", async () => {
+        const res = await request(app)
+            .put("/api/admin/users/60d0fe4f5311236168a109cc/role")
+            .set("Authorization", `Bearer ${adminToken}`)
+            .send({ role: "user" });
+
+        assert.equal(res.status, 400);
+        assert.equal(res.body.success, false);
+        assert.ok(res.body.message.includes("Cannot demote your own admin account"));
+    });
+
+    // 9. Advanced Prototype Pollution & Array Sanitization
+    test("Prototype pollution keys and nested array objects are sanitized", async () => {
+        const res = await request(app)
+            .post("/api/contact")
+            .send({
+                name: "Security Tester",
+                email: "security@electronova.com",
+                message: "Sanitization test payload",
+                __proto__: { injected: true },
+                constructor: { evil: true },
+                prototype: { bad: true },
+                nestedList: [
+                    { $badOp: "fail", clean: "ok" }
+                ]
+            });
+
+        assert.equal(res.status, 200);
+        assert.equal(res.body.success, true);
+    });
 });

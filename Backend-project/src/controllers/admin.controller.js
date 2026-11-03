@@ -161,6 +161,11 @@ class AdminController {
                 return ApiResponse.error(res, "Valid role ('user' or 'admin') is required.", 400);
             }
 
+            // Prevent an admin from demoting their own admin account
+            if (req.user._id.toString() === id.toString() && role !== "admin") {
+                return ApiResponse.error(res, "Cannot demote your own admin account.", 400);
+            }
+
             const user = await User.findByIdAndUpdate(
                 id,
                 { role },

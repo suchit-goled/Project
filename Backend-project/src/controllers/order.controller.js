@@ -165,7 +165,7 @@ export const cancelOrder = async (req, res, next) => {
         }
 
         // Security check: only own order or admin
-        if (req.user.role !== "admin" && order.userId.toString() !== req.user._id.toString()) {
+        if (req.user.role !== "admin" && String(order.userId) !== String(req.user._id)) {
             return ApiResponse.error(
                 res,
                 "Access denied. You cannot cancel this order.",

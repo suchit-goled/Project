@@ -502,6 +502,18 @@
     font-size: 0.9rem;
 }
 
+.key-highlights-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.highlight-check {
+    color: #0284c7;
+    flex-shrink: 0;
+    font-size: 1rem;
+}
+
 /* Specs Table */
 .specs-table {
     width: 100%;

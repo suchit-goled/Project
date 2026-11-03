@@ -58,7 +58,7 @@ const ResetPassword = () => {
     return (
         <div className="auth-page">
             <div className="auth-card">
-                <h1>Set New Password 🔐</h1>
+                <h1>Set a New Password</h1>
                 <p>Enter your new password below to secure your account.</p>
 
                 <form onSubmit={handleSubmit}>

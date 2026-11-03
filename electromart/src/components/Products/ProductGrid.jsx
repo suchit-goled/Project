@@ -3,6 +3,7 @@ import ProductCard from "../common/Card/ProductCard";
 import ProductSkeleton from "../common/Skeleton/ProductSkeleton";
 import Pagination from "./Pagination";
 import { FiX, FiInbox, FiRefreshCw } from "react-icons/fi";
+import { FaStar } from "react-icons/fa";
 import "./ProductGrid.css";
 
 const ProductGrid = ({
@@ -52,7 +53,8 @@ const ProductGrid = ({
                         )}
                         {rating > 0 && (
                             <span className="filter-chip">
-                                {rating}★ & Above
+                                <FaStar color="#f59e0b" size={11} style={{ marginRight: "4px" }} />
+                                {rating} & Above
                                 <button onClick={() => setRating(0)} aria-label="Remove rating filter">
                                     <FiX />
                                 </button>

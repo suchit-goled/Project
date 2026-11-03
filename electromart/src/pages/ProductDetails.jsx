@@ -8,6 +8,7 @@ import {
     FiShield,
     FiRotateCcw,
     FiCheck,
+    FiCheckCircle,
     FiClock,
     FiChevronRight,
     FiShare2,
@@ -445,9 +446,9 @@ const ProductDetails = () => {
                             <div className="key-highlights-list">
                                 <h4>Key Highlights:</h4>
                                 <ul>
-                                    <li>✓ Official Brand New Sealed Packaging with verified serial numbers.</li>
-                                    <li>✓ Nationwide warranty service at all brand-authorised repair hubs.</li>
-                                    <li>✓ Prioritized dispatch from climate-controlled warehouse centers.</li>
+                                    <li><FiCheckCircle className="highlight-check" /> Official Brand New Sealed Packaging with verified serial numbers.</li>
+                                    <li><FiCheckCircle className="highlight-check" /> Nationwide warranty service at all brand-authorised repair hubs.</li>
+                                    <li><FiCheckCircle className="highlight-check" /> Prioritized dispatch from climate-controlled warehouse centers.</li>
                                 </ul>
                             </div>
                         </div>
@@ -577,7 +578,7 @@ const ProductDetails = () => {
                                                     </div>
                                                     <div>
                                                         <strong>{rev.userId?.name || "Verified Customer"}</strong>
-                                                        <span className="verified-buyer-tag">✓ Verified Purchase</span>
+                                                        <span className="verified-buyer-tag"><FiCheckCircle size={12} /> Verified Purchase</span>
                                                     </div>
                                                 </div>
                                                 <div className="review-stars">

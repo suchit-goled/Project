@@ -42,7 +42,7 @@ const Signup = () => {
                 email: form.email,
                 password: form.password
             });
-            toast.success("Account created successfully! Welcome to ElectroNova 🎉");
+            toast.success("Account created successfully! Welcome to ElectroNova.");
             navigate("/");
         } catch (error) {
             toast.error(
@@ -55,8 +55,8 @@ const Signup = () => {
     return (
         <div className="auth-page">
             <div className="auth-card">
-                <h1>Create Account 🚀</h1>
-                <p>Join ElectroNova today.</p>
+                <h1>Create an Account</h1>
+                <p>Register to unlock express checkout, order history, and warranty tracking.</p>
 
                 <form onSubmit={handleSubmit}>
                     <input

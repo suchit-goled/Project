@@ -18,6 +18,7 @@ import {
 } from "react-icons/fi";
 import { useAuth } from "../../../context/AuthContext";
 import { useSearch } from "../../../context/SearchContext";
+import Logo from "./Logo";
 import "./MobileMenu.css";
 
 const MobileMenu = ({ isOpen, onClose }) => {
@@ -56,9 +57,8 @@ const MobileMenu = ({ isOpen, onClose }) => {
         aria-label="Mobile Navigation"
       >
         <div className="mobile-menu-header">
-          <div className="mobile-brand">
-            <span className="brand-bolt">⚡</span>
-            <strong>ElectroNova</strong>
+          <div onClick={onClose} style={{ cursor: "pointer" }}>
+            <Logo size="sm" />
           </div>
           <button className="mobile-close-btn" onClick={onClose} aria-label="Close menu">
             <FiX />

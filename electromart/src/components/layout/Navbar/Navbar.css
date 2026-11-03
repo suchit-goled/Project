@@ -50,32 +50,78 @@
 }
 
 /* ===========================
-   Logo
+   Logo & Brand Identity
 =========================== */
 
 .logo {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    font-size: 1.35rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: -0.02em;
+    gap: 10px;
+    text-decoration: none;
     user-select: none;
+    transition: opacity 0.2s ease;
 }
 
-.logo__icon {
-    font-size: 1.3rem;
-    background: linear-gradient(135deg, #0284c7, #0ea5e9);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.logo:hover {
+    opacity: 0.92;
+}
+
+.logo__mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+    border-radius: 8px;
+}
+
+.logo__svg {
+    display: block;
+    border-radius: 8px;
+}
+
+.logo__text-group {
+    display: flex;
+    flex-direction: column;
 }
 
 .logo__text {
     font-family: var(--font-heading);
-    background: linear-gradient(180deg, #0f172a 0%, #334155 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: #0f172a;
+    line-height: 1.1;
+}
+
+.logo__accent {
+    color: #0284c7;
+}
+
+.logo__sub {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #64748b;
+    text-transform: uppercase;
+}
+
+.logo--sm .logo__svg {
+    width: 26px;
+    height: 26px;
+}
+
+.logo--sm .logo__text {
+    font-size: 1.15rem;
+}
+
+.logo--lg .logo__svg {
+    width: 38px;
+    height: 38px;
+}
+
+.logo--lg .logo__text {
+    font-size: 1.55rem;
 }
 
 /* ===========================

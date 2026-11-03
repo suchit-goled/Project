@@ -1,5 +1,6 @@
 import React from "react";
 import { FiFilter, FiRotateCcw, FiCheck } from "react-icons/fi";
+import { FaStar } from "react-icons/fa";
 import "./FiltersSidebar.css";
 
 const FiltersSidebar = ({
@@ -53,19 +54,19 @@ const FiltersSidebar = ({
             {/* Price Filter */}
             <div className="filter-group">
                 <div className="filter-group-header">
-                    <h4>Max Price</h4>
-                    <span className="price-tag">₹{maxPrice.toLocaleString()}</span>
+                    <h4>Price Range</h4>
+                    <span className="price-tag">Up to ₹{Number(maxPrice).toLocaleString()}</span>
                 </div>
                 <input
                     type="range"
                     min="500"
                     max="200000"
-                    step="2500"
+                    step="1000"
                     value={maxPrice}
                     onChange={(e) => setMaxPrice(Number(e.target.value))}
-                    className="price-range-slider"
+                    className="price-slider"
                 />
-                <div className="price-range-labels">
+                <div className="price-slider-labels">
                     <span>₹500</span>
                     <span>₹2,00,000</span>
                 </div>
@@ -77,9 +78,9 @@ const FiltersSidebar = ({
                 <div className="rating-options">
                     {[
                         { label: "All Ratings", val: 0 },
-                        { label: "4.5★ & Above", val: 4.5 },
-                        { label: "4.0★ & Above", val: 4.0 },
-                        { label: "3.5★ & Above", val: 3.5 },
+                        { label: "4.5 & Above", val: 4.5 },
+                        { label: "4.0 & Above", val: 4.0 },
+                        { label: "3.5 & Above", val: 3.5 },
                     ].map((opt) => (
                         <label key={opt.val} className={`rating-radio-label ${rating === opt.val ? "selected" : ""}`}>
                             <input
@@ -88,7 +89,10 @@ const FiltersSidebar = ({
                                 checked={rating === opt.val}
                                 onChange={() => setRating(opt.val)}
                             />
-                            <span>{opt.label}</span>
+                            <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                                {opt.val > 0 && <FaStar color="#f59e0b" size={12} />}
+                                {opt.label}
+                            </span>
                         </label>
                     ))}
                 </div>

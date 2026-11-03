@@ -39,8 +39,8 @@ const Login = () => {
     return (
         <div className="auth-page">
             <div className="auth-card">
-                <h1>Welcome Back 👋</h1>
-                <p>Login to continue shopping.</p>
+                <h1>Sign In</h1>
+                <p>Access your orders, saved addresses, and member benefits.</p>
 
                 <form onSubmit={handleSubmit}>
                     <input
@@ -65,10 +65,10 @@ const Login = () => {
                         <Link
                             to="/forgot-password"
                             style={{
-                                color: "#ff6e26",
+                                color: "#0284c7",
                                 fontSize: "0.85rem",
                                 textDecoration: "none",
-                                fontWeight: 500,
+                                fontWeight: 600,
                                 transition: "color 0.2s"
                             }}
                         >
@@ -80,7 +80,7 @@ const Login = () => {
                         type="submit"
                         disabled={loading}
                     >
-                        {loading ? "Logging in..." : "Login"}
+                        {loading ? "Signing In..." : "Sign In"}
                     </button>
                 </form>
 

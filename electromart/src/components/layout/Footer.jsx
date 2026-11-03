@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FiMail, FiPhone, FiMapPin, FiArrowRight, FiShield, FiLock, FiCheckCircle } from "react-icons/fi";
+import Logo from "./Navbar/Logo";
 import toast from "react-hot-toast";
 import "./Footer.css";
 
@@ -23,10 +24,7 @@ function Footer() {
       <div className="container footer__container">
         {/* Brand & Newsletter Column */}
         <div className="footer-col footer-col--brand">
-          <Link to="/" className="footer-brand">
-            <span className="brand-icon">⚡</span>
-            <h2>Electro<span>Nova</span></h2>
-          </Link>
+          <Logo size="md" showSubtitle={true} className="footer-logo" />
 
           <p className="footer-bio">
             Engineered for high performance. Curated smartphones, laptops, audio systems, and smart home technology backed by official warranty.

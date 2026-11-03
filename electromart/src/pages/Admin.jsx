@@ -15,6 +15,7 @@ import {
 } from "react-icons/fi";
 import AdminService from "../services/admin.service";
 import { useAuth } from "../context/AuthContext";
+import { FaStar } from "react-icons/fa";
 import toast from "react-hot-toast";
 import "./Admin.css";
 
@@ -388,7 +389,11 @@ function Admin() {
                                                 <td><strong>₹{(prod.discounted_price || 0).toLocaleString()}</strong></td>
                                                 <td>₹{(prod.original_price || 0).toLocaleString()}</td>
                                                 <td>{prod.discount_percentage}% OFF</td>
-                                                <td>⭐ {prod.product_rating || 4.5}</td>
+                                                <td>
+                                                    <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                                                        <FaStar color="#f59e0b" size={12} /> {prod.product_rating || 4.5}
+                                                    </span>
+                                                </td>
                                                 <td>
                                                     <div className="table-row-actions">
                                                         <Link

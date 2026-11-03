@@ -39,7 +39,7 @@ const ForgotPassword = () => {
     return (
         <div className="auth-page">
             <div className="auth-card">
-                <h1>Reset Password 🔑</h1>
+                <h1>Forgot Your Password?</h1>
                 <p>
                     {submitted
                         ? "Check your inbox for instructions to reset your password."

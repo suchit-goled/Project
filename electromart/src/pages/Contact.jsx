@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FiMail, FiPhone, FiMapPin, FiClock } from "react-icons/fi";
 import api from "../api/axios";
 import "../pages/Contact.css";
 
@@ -78,35 +79,34 @@ function Contact() {
           </p>
 
           <div className="contact-info-card">
-            <div className="contact-icon">📧</div>
+            <div className="contact-icon"><FiMail /></div>
             <div>
-              <h3>Email</h3>
-              <p>support@electronova.com</p>
+              <h3>Official Support Email</h3>
+              <p>support@electronova.tech</p>
             </div>
           </div>
 
           <div className="contact-info-card">
-            <div className="contact-icon">📞</div>
+            <div className="contact-icon"><FiPhone /></div>
             <div>
-              <h3>Phone</h3>
-              <p>+91 7676716597</p>
+              <h3>Toll-Free Customer Care</h3>
+              <p>+91 1800 258 3690</p>
             </div>
           </div>
 
           <div className="contact-info-card">
-            <div className="contact-icon">📍</div>
+            <div className="contact-icon"><FiMapPin /></div>
             <div>
-              <h3>Location</h3>
-              <p>India</p>
+              <h3>Corporate Technology Hub</h3>
+              <p>ElectroNova Tech Park, Indiranagar, Bengaluru, KA 560038</p>
             </div>
           </div>
 
           <div className="contact-info-card">
-            <div className="contact-icon">🕐</div>
+            <div className="contact-icon"><FiClock /></div>
             <div>
-              <h3>Working Hours</h3>
-              <p>Monday – Saturday</p>
-              <p>9:00 AM – 6:00 PM</p>
+              <h3>Operational Hours</h3>
+              <p>Monday – Saturday: 9:00 AM – 8:00 PM IST</p>
             </div>
           </div>
         </div>

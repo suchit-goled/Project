@@ -26,8 +26,12 @@ export const addToCart = async (req, res, next) => {
         }
 
         const numQuantity = Number(quantity);
-        if (isNaN(numQuantity) || numQuantity <= 0) {
+        if (isNaN(numQuantity) || !Number.isInteger(numQuantity) || numQuantity <= 0) {
             return ApiResponse.error(res, "Quantity must be a positive integer", 400);
+        }
+
+        if (numQuantity > 50) {
+            return ApiResponse.error(res, "Maximum quantity allowed per item is 50", 400);
         }
 
         const product = await Product.findById(productId);
@@ -41,7 +45,11 @@ export const addToCart = async (req, res, next) => {
         });
 
         if (cartItem) {
-            cartItem.quantity += numQuantity;
+            const newTotalQty = cartItem.quantity + numQuantity;
+            if (newTotalQty > 50) {
+                return ApiResponse.error(res, "Cannot exceed maximum of 50 units per product in cart", 400);
+            }
+            cartItem.quantity = newTotalQty;
             await cartItem.save();
         } else {
             cartItem = await Cart.create({
@@ -111,6 +119,10 @@ export const updateQuantity = async (req, res, next) => {
         }
 
         const numQuantity = Number(quantity);
+        if (isNaN(numQuantity) || !Number.isInteger(numQuantity)) {
+            return ApiResponse.error(res, "Quantity must be a valid integer", 400);
+        }
+
         if (numQuantity <= 0) {
             await Cart.findOneAndDelete({
                 userId: targetUserId,
@@ -120,6 +132,10 @@ export const updateQuantity = async (req, res, next) => {
                 success: true,
                 message: "Item removed from cart"
             });
+        }
+
+        if (numQuantity > 50) {
+            return ApiResponse.error(res, "Maximum quantity allowed per item is 50", 400);
         }
 
         const cartItem = await Cart.findOne({

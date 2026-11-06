@@ -5,12 +5,32 @@ import { sendEmail } from "../utils/sendEmail.js";
 import { orderConfirmationTemplate } from "../templates/orderConfirmationEmail.js";
 import ApiResponse from "../utils/apiResponse.js";
 
+const allowedPaymentMethods = ["Cash On Delivery", "Cash on Delivery", "COD", "Razorpay", "Online"];
+
 export const createOrder = async (req, res, next) => {
     try {
         const { shippingAddress, paymentMethod = "Cash On Delivery" } = req.body;
 
         if (!shippingAddress || !shippingAddress.address || !shippingAddress.city) {
             return ApiResponse.error(res, "Complete shipping address is required", 400);
+        }
+
+        const chosenPaymentMethod = paymentMethod || "Cash On Delivery";
+        if (!allowedPaymentMethods.includes(chosenPaymentMethod)) {
+            return ApiResponse.error(res, "Invalid payment method specified", 400);
+        }
+
+        const cleanShippingAddress = {
+            fullName: String(shippingAddress.fullName || "").trim().slice(0, 100),
+            phone: String(shippingAddress.phone || "").trim().slice(0, 25),
+            address: String(shippingAddress.address || "").trim().slice(0, 250),
+            city: String(shippingAddress.city || "").trim().slice(0, 100),
+            state: String(shippingAddress.state || "").trim().slice(0, 100),
+            pincode: String(shippingAddress.pincode || "").trim().slice(0, 20),
+        };
+
+        if (!cleanShippingAddress.address || !cleanShippingAddress.city) {
+            return ApiResponse.error(res, "Street address and city cannot be empty", 400);
         }
 
         const userId = req.user._id.toString();
@@ -28,13 +48,15 @@ export const createOrder = async (req, res, next) => {
         let subtotal = 0;
 
         const products = cartItems.map(item => {
-            subtotal += item.price * item.quantity;
+            const validPrice = Math.max(0, Number(item.price) || 0);
+            const validQty = Math.max(1, Number(item.quantity) || 1);
+            subtotal += validPrice * validQty;
             return {
                 productId: item.productId,
-                title: item.title,
+                title: String(item.title || "Electronics Item").slice(0, 200),
                 image: item.image,
-                quantity: item.quantity,
-                price: item.price
+                quantity: validQty,
+                price: validPrice
             };
         });
 
@@ -45,8 +67,8 @@ export const createOrder = async (req, res, next) => {
         const order = await orderModel.create({
             userId,
             products,
-            shippingAddress,
-            paymentMethod,
+            shippingAddress: cleanShippingAddress,
+            paymentMethod: chosenPaymentMethod,
             subtotal,
             shippingCharge,
             tax,
@@ -56,7 +78,7 @@ export const createOrder = async (req, res, next) => {
         });
 
         // Clear cart immediately for Cash On Delivery
-        if (paymentMethod === "Cash On Delivery") {
+        if (chosenPaymentMethod === "Cash On Delivery" || chosenPaymentMethod === "Cash on Delivery" || chosenPaymentMethod === "COD") {
             await Cart.deleteMany({ userId });
         }
 
@@ -93,7 +115,7 @@ export const getUserOrders = async (req, res, next) => {
         const { userId } = req.params;
 
         // Security check: only own orders or admin
-        if (req.user.role !== "admin" && req.user._id.toString() !== userId) {
+        if (req.user.role !== "admin" && String(req.user._id) !== String(userId)) {
             return ApiResponse.error(
                 res,
                 "Access denied. You cannot view other users' orders.",
@@ -131,7 +153,7 @@ export const getOrderById = async (req, res, next) => {
         }
 
         // Security check: only own order or admin
-        if (req.user.role !== "admin" && String(order.userId) !== req.user._id.toString()) {
+        if (req.user.role !== "admin" && String(order.userId) !== String(req.user._id)) {
             return ApiResponse.error(
                 res,
                 "Access denied. You cannot view this order.",

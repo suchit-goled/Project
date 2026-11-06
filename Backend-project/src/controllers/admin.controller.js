@@ -5,6 +5,8 @@ import adminOrderService from "../services/adminOrder.service.js";
 import uploadToCloudinary from "../utils/uploadToCloudinary.js";
 import User from "../models/user.model.js";
 import Cart from "../models/Cart.js";
+import Wishlist from "../models/wishlist.model.js";
+import Address from "../models/address.model.js";
 
 class AdminController {
     async getProducts(req, res, next) {
@@ -57,6 +59,10 @@ class AdminController {
                 req.body
             );
 
+            if (!product) {
+                return ApiResponse.error(res, "Product not found.", 404);
+            }
+
             return ApiResponse.success(
                 res,
                 product,
@@ -69,7 +75,11 @@ class AdminController {
 
     async deleteProduct(req, res, next) {
         try {
-            await productService.deleteProduct(req.params.id);
+            const deleted = await productService.deleteProduct(req.params.id);
+
+            if (!deleted) {
+                return ApiResponse.error(res, "Product not found.", 404);
+            }
 
             return ApiResponse.success(
                 res,
@@ -201,8 +211,12 @@ class AdminController {
                 return ApiResponse.error(res, "User not found.", 404);
             }
 
-            // Cleanup associated carts
-            await Cart.deleteMany({ userId: id });
+            // Cascade cleanup: delete associated carts, wishlists, and addresses
+            await Promise.all([
+                Cart.deleteMany({ userId: id }),
+                Wishlist.deleteMany({ userId: id }),
+                Address.deleteMany({ userId: id })
+            ]);
 
             return ApiResponse.success(
                 res,

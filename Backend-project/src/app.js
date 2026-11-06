@@ -42,8 +42,10 @@ app.use(cors({
         // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
+        } else if (env.node_env === "production") {
+            callback(new Error(`Origin ${origin} not allowed by CORS policy`));
         } else {
-            callback(null, true); // Permissive in dev, or can restrict if needed
+            callback(null, true); // Permissive in dev/test
         }
     },
     credentials: true,
@@ -104,7 +106,7 @@ app.get("/", (req, res) => {
     res.status(200).json({
         success: true,
         message: "🚀 ElectroNova Backend Running Securely",
-        version: "2.0.0",
+        version: "2.3.0",
         timestamp: new Date().toISOString()
     });
 });

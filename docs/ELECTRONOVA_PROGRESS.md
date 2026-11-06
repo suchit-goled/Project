@@ -170,6 +170,29 @@ ElectroNova has undergone a complete, production-grade transformation from an in
   - Backend: 53/53 tests passing across 6 suites.
   - Production build: compiles cleanly with 0 errors.
 
+### Phase 12: Production Security Hardening, Bug Fixes, Version Upgrade (v2.3.0) & Test Expansion (95 Passing Tests)
+- [x] **Platform Upgrade to v2.3.0**:
+  - Unified version bump across root orchestrator, monorepo, and backend API (`v2.3.0`).
+  - Synchronized `/` status check to return `version: "2.3.0"`.
+- [x] **Backend Security Hardening**:
+  - **Mongoose User Schema Security**: Attached `toJSON` and `toObject` transform hooks that automatically strip `password`, `resetPasswordToken`, `resetPasswordExpire`, and `__v` to prevent accidental credential leakage in serialized responses.
+  - **Production CORS Lock-down**: Enforced strict origin validation against `allowedOrigins` in production mode while maintaining development flexibility.
+  - **Cart Quantity & Integer Bounds**: Restricted cart item addition and quantity updates to positive integers with a strict 50-unit upper bound per item.
+  - **Address Mutual Exclusivity Bug Fix**: Fixed a bug where updating an address with `isDefault: true` failed to clear `isDefault: false` on a user's other addresses; enforced string length limits across all address fields.
+  - **Wishlist Product Verification & Crash Prevention**: Hardened `addToWishlist` to verify product existence before creation (returning 404 on invalid products) and filtered null/deleted product references in `getWishlist`.
+  - **Admin Cascade Deletion**: Hardened admin user deletion to cascade across orphaned wishlists and addresses in addition to shopping carts.
+  - **Admin Inventory 404 Handling**: Enhanced product update and deletion endpoints to return explicit 404 responses when targeted products do not exist.
+  - **Review Bounds & XSS Protection**: Enforced 1000-character maximum length limit and HTML entity escaping on review comments.
+  - **Order Payment Method Validation**: Enforced strict whitelist check on order payment methods (`Cash On Delivery`, `Razorpay`, `COD`, `Online`).
+- [x] **Frontend Resiliency & Bug Fixes**:
+  - **Auth Context JSON Safety**: Wrapped `localStorage.getItem("user")` parsing in defensive `try/catch` to eliminate white-screen crashes from corrupted cached credentials.
+  - **Axios Interceptor Token Purging**: Ensured 401 unauthorized responses cleanly purge stale authentication tokens and local user state across all endpoints.
+- [x] **Automated Test Suite Expansion (95 Total Tests)**:
+  - **Backend**: Expanded from 53 to **63 passing tests across 7 test suites** with the addition of `security_and_hardening_v2.test.js` (10 new tests covering user schema transforms, wishlist 404 handling, cart limits, review bounds, admin 404s, and health metadata).
+  - **Frontend**: Expanded from 23 to **32 passing tests across 13 test suites** with the addition of `CartItem.test.js` (5 tests) and `Hero.test.js` (4 tests).
+  - **Zero Security Vulnerabilities**: `npm audit` reports 0 vulnerabilities.
+  - **Production Build**: Compiles cleanly with zero errors.
+
 ---
 
 ## 3. Automated Test Verification Summary
@@ -182,14 +205,15 @@ TAP version 13
 # Subtest: Backend Health & Security Baseline Tests (4 tests) - PASS
 # Subtest: Product, Review & Catalog Deep Tests (11 tests) - PASS
 # Subtest: Backend Security & Authorization Gate Tests (9 tests) - PASS
+# Subtest: Security, Bug Fixes & Edge Case Hardening Suite v2 (10 tests) - PASS
 # Subtest: User, Security & Business Logic Hardening Tests (15 tests) - PASS
 
-# tests 53 | suites 6 | pass 53 | fail 0
+# tests 63 | suites 7 | pass 63 | fail 0
 ```
 
 ### Backend Security Vulnerability Audit (`npm audit` / `npm run security:audit`)
 ```
-> electronova-backend@2.0.0 security:audit
+> electronova-backend@2.3.0 security:audit
 > npm audit
 
 found 0 vulnerabilities
@@ -200,20 +224,22 @@ found 0 vulnerabilities
 > electromart@0.1.0 test:ci
 > react-scripts test --watchAll=false
 
-PASS src/components/cart/EmptyCart.test.js
-PASS src/components/profile/PasswordSection.test.js
 PASS src/components/checkout/CheckoutItemsReview.test.js
+PASS src/components/wishlist/EmptyWishlist.test.js
+PASS src/components/cart/EmptyCart.test.js
+PASS src/components/EmptyOrders.test.js
 PASS src/components/checkout/AddressForm.test.js
+PASS src/components/profile/PasswordSection.test.js
 PASS src/components/OrderCard.test.js
-PASS src/components/cart/CartSummary.test.js
 PASS src/components/common/Card/ProductCard.test.js
 PASS src/components/wishlist/WishlistCard.test.js
+PASS src/components/cart/CartSummary.test.js
+PASS src/components/cart/CartItem.test.js
+PASS src/components/home/Hero/Hero.test.js
 PASS src/App.test.js
-PASS src/components/wishlist/EmptyWishlist.test.js
-PASS src/components/EmptyOrders.test.js
 
-Test Suites: 11 passed, 11 total
-Tests:       23 passed, 23 total
+Test Suites: 13 passed, 13 total
+Tests:       32 passed, 32 total
 Snapshots:   0 total
 Ran all test suites.
 ```
@@ -227,8 +253,8 @@ Creating an optimized production build...
 Compiled successfully.
 
 File sizes after gzip:
-  207.55 kB  build\static\js\main.a2842af8.js
-  22.26 kB   build\static\css\main.9b964a54.css
+  208.84 kB  build\static\js\main.532862bd.js
+  22.63 kB   build\static\css\main.9037975d.css
   1.76 kB    build\static\js\453.584002af.chunk.js
 
 The build folder is ready to be deployed.

@@ -1,6 +1,12 @@
 import Address from "../models/address.model.js";
 import ApiResponse from "../utils/apiResponse.js";
 
+// Helper to sanitize and bound string
+const cleanString = (val, maxLen = 200) => {
+    if (val === undefined || val === null) return "";
+    return String(val).trim().slice(0, maxLen);
+};
+
 // Add Address
 export const addAddress = async (req, res, next) => {
     try {
@@ -14,7 +20,12 @@ export const addAddress = async (req, res, next) => {
             country
         } = req.body;
 
-        if (!fullName || !addressLine || !city || !pincode) {
+        const cleanFullName = cleanString(fullName, 100);
+        const cleanAddressLine = cleanString(addressLine, 250);
+        const cleanCity = cleanString(city, 100);
+        const cleanPincode = cleanString(pincode, 20);
+
+        if (!cleanFullName || !cleanAddressLine || !cleanCity || !cleanPincode) {
             return ApiResponse.error(res, "Full name, address, city, and pincode are required.", 400);
         }
 
@@ -26,13 +37,13 @@ export const addAddress = async (req, res, next) => {
 
         const address = await Address.create({
             userId: req.user._id,
-            fullName,
-            phone,
-            addressLine,
-            city,
-            state,
-            pincode,
-            country,
+            fullName: cleanFullName,
+            phone: cleanString(phone, 25),
+            addressLine: cleanAddressLine,
+            city: cleanCity,
+            state: cleanString(state, 100),
+            pincode: cleanPincode,
+            country: cleanString(country, 100) || "India",
             isDefault: existingDefault ? false : true
         });
 
@@ -73,14 +84,23 @@ export const updateAddress = async (req, res, next) => {
         } = req.body;
 
         const updateData = {};
-        if (fullName !== undefined) updateData.fullName = fullName;
-        if (phone !== undefined) updateData.phone = phone;
-        if (addressLine !== undefined) updateData.addressLine = addressLine;
-        if (city !== undefined) updateData.city = city;
-        if (state !== undefined) updateData.state = state;
-        if (pincode !== undefined) updateData.pincode = pincode;
-        if (country !== undefined) updateData.country = country;
-        if (isDefault !== undefined) updateData.isDefault = Boolean(isDefault);
+        if (fullName !== undefined) updateData.fullName = cleanString(fullName, 100);
+        if (phone !== undefined) updateData.phone = cleanString(phone, 25);
+        if (addressLine !== undefined) updateData.addressLine = cleanString(addressLine, 250);
+        if (city !== undefined) updateData.city = cleanString(city, 100);
+        if (state !== undefined) updateData.state = cleanString(state, 100);
+        if (pincode !== undefined) updateData.pincode = cleanString(pincode, 20);
+        if (country !== undefined) updateData.country = cleanString(country, 100);
+        if (isDefault !== undefined) {
+            updateData.isDefault = Boolean(isDefault);
+            if (updateData.isDefault) {
+                // If setting this address to default, unset other defaults for this user
+                await Address.updateMany(
+                    { userId: req.user._id, _id: { $ne: req.params.id } },
+                    { isDefault: false }
+                );
+            }
+        }
 
         const address = await Address.findOneAndUpdate(
             {

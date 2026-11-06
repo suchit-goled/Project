@@ -17,24 +17,24 @@ const userSchema = new mongoose.Schema(
         },
 
         address: {
-    type: String,
-    default: "",
-},
+            type: String,
+            default: "",
+        },
 
-city: {
-    type: String,
-    default: "",
-},
+        city: {
+            type: String,
+            default: "",
+        },
 
-state: {
-    type: String,
-    default: "",
-},
+        state: {
+            type: String,
+            default: "",
+        },
 
-pincode: {
-    type: String,
-    default: "",
-},
+        pincode: {
+            type: String,
+            default: "",
+        },
 
         password: {
             type: String,
@@ -59,15 +59,33 @@ pincode: {
         },
 
         resetPasswordToken: {
-    type: String,
-},
+            type: String,
+        },
 
-resetPasswordExpire: {
-    type: Date,
-},
+        resetPasswordExpire: {
+            type: Date,
+        },
     },
     {
         timestamps: true,
+        toJSON: {
+            transform: function (doc, ret) {
+                delete ret.password;
+                delete ret.resetPasswordToken;
+                delete ret.resetPasswordExpire;
+                delete ret.__v;
+                return ret;
+            }
+        },
+        toObject: {
+            transform: function (doc, ret) {
+                delete ret.password;
+                delete ret.resetPasswordToken;
+                delete ret.resetPasswordExpire;
+                delete ret.__v;
+                return ret;
+            }
+        }
     }
 );
 

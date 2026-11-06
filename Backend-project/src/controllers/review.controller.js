@@ -7,7 +7,8 @@ const sanitizeComment = (str) => {
     return str
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
-        .trim();
+        .trim()
+        .slice(0, 1000);
 };
 
 const updateProductRating = async (productId) => {
@@ -36,6 +37,10 @@ export const addReview = async (req, res, next) => {
         const numRating = Number(rating);
         if (isNaN(numRating) || numRating < 1 || numRating > 5) {
             return ApiResponse.error(res, "Rating must be a number between 1 and 5", 400);
+        }
+
+        if (comment && typeof comment === "string" && comment.length > 1000) {
+            return ApiResponse.error(res, "Review comment cannot exceed 1000 characters", 400);
         }
 
         const product = await Product.findById(productId);
@@ -114,6 +119,9 @@ export const updateReview = async (req, res, next) => {
         }
 
         if (comment !== undefined) {
+            if (typeof comment === "string" && comment.length > 1000) {
+                return ApiResponse.error(res, "Review comment cannot exceed 1000 characters", 400);
+            }
             review.comment = sanitizeComment(comment);
         }
 

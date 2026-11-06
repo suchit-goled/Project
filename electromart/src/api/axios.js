@@ -21,10 +21,10 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        // If 401 and token is expired/invalid, clear stale token
+        // If 401 received, safely purge stale credentials
         if (error.response && error.response.status === 401) {
             const token = localStorage.getItem("token");
-            if (token && error.response.data?.message?.includes("expired")) {
+            if (token) {
                 localStorage.removeItem("token");
                 localStorage.removeItem("user");
             }

@@ -149,10 +149,10 @@ From the root `Project/` directory, execute unified automation scripts:
 # Run both Backend & Frontend automated test suites
 npm run test
 
-# Run backend unit, integration & security test suite (51/51 tests across 6 suites)
+# Run backend unit, integration & security test suite (63/63 tests across 7 suites)
 npm run test:backend
 
-# Run frontend Jest component test suite (16/16 tests across 7 suites)
+# Run frontend Jest component test suite (32/32 tests across 13 suites)
 npm run test:frontend
 
 # Run zero-vulnerability security audit
@@ -170,27 +170,30 @@ npm run install:all
 ## 🤖 CI/CD Automation Pipeline
 
 Automated with **GitHub Actions** (`.github/workflows/ci.yml`):
-* **Backend Security & Testing**: Checks out code, provisions Node 22, executes `npm run security:audit` (fails on vulnerabilities), and runs all 53 automated unit & IDOR integration tests.
-* **Frontend Verification & Production Build**: Runs component Jest test suites in headless CI mode (23 tests across 11 suites) and builds production bundles (`npm run build`) ensuring zero build-time warnings or bundle breakages.
+* **Backend Security & Testing**: Checks out code, provisions Node 22, executes `npm run security:audit` (fails on vulnerabilities), and runs all 63 automated unit, security, and IDOR integration tests.
+* **Frontend Verification & Production Build**: Runs component Jest test suites in headless CI mode (32 tests across 13 suites) and builds production bundles (`npm run build`) ensuring zero build-time warnings or bundle breakages.
 
 ---
 
 ## 🧪 Testing Coverage Summary
 
 ### Backend Automated Test Suite (`npm run test:backend`)
-* 6 suites, 53 automated tests passing with 0 failures:
+* 7 suites, 63 automated tests passing with 0 failures:
   - `health.test.js`: Service status, health uptime, Helmet HTTP headers, unmatched route 404 JSON fallback.
   - `security.test.js`: Tiered route protection, invalid/expired JWT rejection, auth rate-limiting headers.
   - `cart_and_orders.test.js`: Empty cart guards, order address validation, IDOR authorization access controls.
   - `contact_and_admin.test.js`: Contact payload sanitization, admin route guards, ReDoS regex search resilience.
   - `user_and_security_deep.test.js`: NoSQL injection key stripping, change-password authentication, address mass-assignment prevention, shipped order cancellation constraints, timing-safe Razorpay HMAC comparison, admin order status transitions, admin self-demotion prevention, and prototype pollution / array sanitization.
   - `products_and_reviews.test.js`: Product pagination metadata, single product 200/404 handling, featured products query, related products, product reviews retrieval & rating bounds validation (1-5), review HTML sanitization, home layout payload, and image upload MIME-type validation.
+  - `security_and_hardening_v2.test.js`: User schema JSON transforms stripping credentials, wishlist 404 product verification, cart quantity upper limits & integer checks, order payment method validation, review comment character bounds, and admin 404 missing item handling.
 
 ### Frontend Automated Component Tests (`npm run test:frontend`)
-* 11 suites, 23 automated tests passing with 0 failures:
+* 13 suites, 32 automated tests passing with 0 failures:
   - `App.test.js`: Global layout mounting, branding, navigation links.
   - `OrderCard.test.js`: Order card status badges, receipt summary, product thumbnails.
   - `CartSummary.test.js`: Subtotal, GST, free shipping thresholds, promo code discount calculation (ELECTRO10), checkout CTA.
+  - `CartItem.test.js`: Item details, category pills, price formatting, quantity increment/decrement, and item removal.
+  - `Hero.test.js`: Authoritative hero headline, value pillars, trust badges, product spotlight tab switcher, and primary CTA navigation.
   - `PasswordSection.test.js`: Password input rendering, password visibility toggle (Show/Hide), validation constraints.
   - `ProductCard.test.js`: Product cards rendering title, category, discount badge, formatted currency, rating review counts, Add to Cart click handlers, and wishlist toggling.
   - `EmptyCart.test.js`: Empty cart illustration, helpful prompt text, and Continue Shopping navigation link.

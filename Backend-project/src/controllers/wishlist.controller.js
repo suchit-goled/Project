@@ -1,4 +1,5 @@
 import Wishlist from "../models/wishlist.model.js";
+import Product from "../models/Product.js";
 import ApiResponse from "../utils/apiResponse.js";
 
 // Add Product to Wishlist
@@ -8,6 +9,11 @@ export const addToWishlist = async (req, res, next) => {
 
         if (!productId) {
             return ApiResponse.error(res, "Product ID is required", 400);
+        }
+
+        const product = await Product.findById(productId);
+        if (!product) {
+            return ApiResponse.error(res, "Product not found", 404);
         }
 
         const existingItem = await Wishlist.findOne({
@@ -38,7 +44,7 @@ export const addToWishlist = async (req, res, next) => {
 // Get Wishlist
 export const getWishlist = async (req, res, next) => {
     try {
-        const wishlist = await Wishlist.find({
+        const rawWishlist = await Wishlist.find({
             userId: req.user._id
         })
         .populate(
@@ -46,6 +52,9 @@ export const getWishlist = async (req, res, next) => {
             "product_title discounted_price original_price product_image_url product_rating total_reviews"
         )
         .sort({ createdAt: -1 });
+
+        // Filter out any entries where the referenced product no longer exists
+        const wishlist = rawWishlist.filter((item) => item.productId !== null && item.productId !== undefined);
 
         return res.status(200).json({
             success: true,

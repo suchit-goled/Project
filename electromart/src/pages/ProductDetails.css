@@ -776,3 +776,22 @@
         grid-template-columns: 1fr;
     }
 }
+
+@media (max-width: 480px) {
+    .main-image-wrapper {
+        min-height: 280px;
+        padding: 16px;
+    }
+
+    .primary-product-image {
+        max-height: 250px;
+    }
+
+    .related-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .product-breadcrumb .current-crumb {
+        max-width: 180px;
+    }
+}

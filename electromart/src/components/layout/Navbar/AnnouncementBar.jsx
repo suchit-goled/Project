@@ -1,6 +1,6 @@
 import React from "react";
 import "./AnnouncementBar.css";
-import { FiTruck, FiShield, FiZap } from "react-icons/fi";
+import { FiTruck, FiShield, FiZap, FiLock } from "react-icons/fi";
 
 const AnnouncementBar = () => {
   return (
@@ -13,6 +13,10 @@ const AnnouncementBar = () => {
         <div className="announcement-item announcement-item--desktop">
           <FiShield className="announcement-icon" />
           <span>100% Genuine Products with 1-Year Brand Warranty</span>
+        </div>
+        <div className="announcement-item announcement-item--desktop">
+          <FiLock className="announcement-icon" />
+          <span>256-Bit SSL Encrypted & Verified</span>
         </div>
         <div className="announcement-item announcement-item--desktop">
           <FiZap className="announcement-icon" />

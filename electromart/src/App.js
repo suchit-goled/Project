@@ -8,6 +8,12 @@ import "./App.css";
 import Navbar from "./components/layout/Navbar/Navbar";
 import Footer from "./components/layout/Footer";
 import ScrollToTop from "./components/common/ScrollToTop";
+import WhatsAppButton from "./components/common/WhatsAppButton";
+
+// Auth & Access Route Guards
+import ProtectedRoute from "./components/common/ProtectedRoute";
+import AdminRoute from "./components/common/AdminRoute";
+import PublicOnlyRoute from "./components/common/PublicOnlyRoute";
 
 // Core Store Pages
 import Home from "./pages/Home";
@@ -76,7 +82,7 @@ function App() {
 
             <div className="app-main-content">
                 <Routes>
-                    {/* Storefront */}
+                    {/* Public Storefront */}
                     <Route path="/" element={<Home />} />
                     <Route path="/products" element={<Products />} />
                     <Route path="/products/:id" element={<ProductDetails />} />
@@ -84,40 +90,120 @@ function App() {
                     <Route path="/products/search/:key" element={<Products />} />
                     <Route path="/deals" element={<Deals />} />
 
-                    {/* Cart & Checkout */}
+                    {/* Cart & Guest / Authenticated flows */}
                     <Route path="/cart" element={<Cart />} />
-                    <Route path="/checkout" element={<Checkout />} />
+                    <Route
+                        path="/checkout"
+                        element={
+                            <ProtectedRoute>
+                                <Checkout />
+                            </ProtectedRoute>
+                        }
+                    />
                     <Route path="/order-success" element={<OrderSuccess />} />
 
-                    {/* Customer Account & Orders */}
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Signup />} />
+                    {/* Guest-only Auth (redirects authenticated users) */}
+                    <Route
+                        path="/login"
+                        element={
+                            <PublicOnlyRoute>
+                                <Login />
+                            </PublicOnlyRoute>
+                        }
+                    />
+                    <Route
+                        path="/register"
+                        element={
+                            <PublicOnlyRoute>
+                                <Signup />
+                            </PublicOnlyRoute>
+                        }
+                    />
                     <Route path="/forgot-password" element={<ForgotPassword />} />
                     <Route path="/reset-password/:token" element={<ResetPassword />} />
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="/profile/edit" element={<EditProfile />} />
-                    <Route path="/settings" element={<EditProfile />} />
-                    <Route path="/orders" element={<MyOrders />} />
-                    <Route path="/orders/:orderId" element={<OrderDetails />} />
-                    <Route path="/orders/details/:orderId" element={<OrderDetails />} />
+
+                    {/* Customer Account (Protected by Authentication Guard) */}
+                    <Route
+                        path="/profile"
+                        element={
+                            <ProtectedRoute>
+                                <Profile />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/profile/edit"
+                        element={
+                            <ProtectedRoute>
+                                <EditProfile />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/settings"
+                        element={
+                            <ProtectedRoute>
+                                <EditProfile />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/orders"
+                        element={
+                            <ProtectedRoute>
+                                <MyOrders />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/orders/:orderId"
+                        element={
+                            <ProtectedRoute>
+                                <OrderDetails />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/orders/details/:orderId"
+                        element={
+                            <ProtectedRoute>
+                                <OrderDetails />
+                            </ProtectedRoute>
+                        }
+                    />
                     <Route path="/wishlist" element={<Wishlist />} />
 
-                    {/* Admin Dashboard */}
-                    <Route path="/admin" element={<Admin />} />
-                    <Route path="/admin-orders" element={<AdminOrders />} />
+                    {/* Administrator Control Center (Protected by Admin Role Guard) */}
+                    <Route
+                        path="/admin"
+                        element={
+                            <AdminRoute>
+                                <Admin />
+                            </AdminRoute>
+                        }
+                    />
+                    <Route
+                        path="/admin-orders"
+                        element={
+                            <AdminRoute>
+                                <AdminOrders />
+                            </AdminRoute>
+                        }
+                    />
 
-                    {/* Support & Policies */}
+                    {/* Support, Policies & Company */}
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/shipping" element={<ShippingPolicy />} />
                     <Route path="/returns" element={<ReturnsPolicy />} />
                     <Route path="/warranty" element={<WarrantyGuide />} />
                     <Route path="/about" element={<About />} />
 
-                    {/* 404 Fallback */}
+                    {/* 404 Recovery Fallback */}
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </div>
 
+            <WhatsAppButton />
             <Footer />
         </BrowserRouter>
     );

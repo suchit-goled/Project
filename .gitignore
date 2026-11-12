@@ -20,6 +20,10 @@ yarn-debug.log*
 yarn-error.log*
 *.log
 
+# Database Backups
+backups/
+*.json.gz
+
 # Operating System
 .DS_Store
 Thumbs.db

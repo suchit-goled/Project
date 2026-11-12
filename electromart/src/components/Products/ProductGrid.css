@@ -74,6 +74,20 @@
   gap: 24px;
 }
 
+@media (max-width: 640px) {
+  .product-cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
 /* Empty & Error States */
 .product-grid-empty {
   text-align: center;

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { FiMail, FiPhone, FiMapPin, FiClock } from "react-icons/fi";
+import { FiMail, FiPhone, FiMapPin, FiClock, FiSend } from "react-icons/fi";
 import api from "../api/axios";
+import toast from "react-hot-toast";
 import "../pages/Contact.css";
 
 function Contact() {
@@ -29,8 +30,9 @@ function Contact() {
 
     try {
       const response = await api.post("/contact", formData);
-
-      setStatus(response.data?.message || "Message sent successfully! We'll get back to you soon.");
+      const successMsg = response.data?.message || "Message sent successfully! We'll get back to you soon.";
+      toast.success(successMsg);
+      setStatus(successMsg);
 
       setFormData({
         name: "",
@@ -42,7 +44,9 @@ function Contact() {
 
     } catch (error) {
       console.error("Contact error:", error);
-      setStatus(error.response?.data?.message || "Unable to send message. Please try again.");
+      const errMsg = error.response?.data?.message || "Unable to send message. Please try again.";
+      toast.error(errMsg);
+      setStatus(errMsg);
     } finally {
       setIsSubmitting(false);
     }
@@ -184,7 +188,12 @@ function Contact() {
               className="contact-submit-btn"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Sending..." : "Send Message →"}
+              {isSubmitting ? "Sending..." : (
+                <>
+                  <span>Send Message</span>
+                  <FiSend style={{ marginLeft: 8, verticalAlign: "middle" }} />
+                </>
+              )}
             </button>
           </form>
 

@@ -5,13 +5,27 @@ let transporter = null;
 
 const getTransporter = () => {
     if (!transporter) {
-        transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: env.email_user || process.env.EMAIL_USER,
-                pass: env.email_pass || process.env.EMAIL_PASS,
-            },
-        });
+        if (env.smtp_host) {
+            // Custom domain SMTP (e.g. Zoho, Google Workspace, AWS SES, SendGrid, Hostinger)
+            transporter = nodemailer.createTransport({
+                host: env.smtp_host,
+                port: env.smtp_port,
+                secure: env.smtp_secure,
+                auth: {
+                    user: env.email_user || process.env.EMAIL_USER,
+                    pass: env.email_pass || process.env.EMAIL_PASS,
+                },
+            });
+        } else {
+            // Default service provider (e.g. Gmail)
+            transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                    user: env.email_user || process.env.EMAIL_USER,
+                    pass: env.email_pass || process.env.EMAIL_PASS,
+                },
+            });
+        }
     }
     return transporter;
 };
@@ -26,8 +40,10 @@ export const sendEmail = async ({ email, subject, html }) => {
     }
 
     const mailer = getTransporter();
+    const fromAddress = env.email_from || env.email_user || process.env.EMAIL_USER || "ElectroNova <support@electronova.tech>";
+
     return await mailer.sendMail({
-        from: env.email_user || process.env.EMAIL_USER,
+        from: fromAddress,
         to: email,
         subject,
         html,

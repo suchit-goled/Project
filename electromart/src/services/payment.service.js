@@ -1,6 +1,11 @@
 import api from "../api/axios";
 
 class PaymentService {
+    async getKey() {
+        const response = await api.get("/payment/key");
+        return response.data?.data?.keyId || response.data?.keyId || "";
+    }
+
     async createOrder(orderId) {
         const response = await api.post("/payment/create-order", {
             orderId,

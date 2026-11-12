@@ -2,8 +2,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-
-
 export default {
   node_env: process.env.NODE_ENV || "development",
   port: process.env.PORT || 8000,
@@ -20,6 +18,10 @@ export default {
 
   email_user: process.env.EMAIL_USER || "",
   email_pass: process.env.EMAIL_PASS || "",
+  smtp_host: process.env.SMTP_HOST || "",
+  smtp_port: parseInt(process.env.SMTP_PORT || "587", 10),
+  smtp_secure: process.env.SMTP_SECURE === "true",
+  email_from: process.env.EMAIL_FROM || "",
 
   frontend_url: process.env.FRONTEND_URL || "http://localhost:3000",
 };

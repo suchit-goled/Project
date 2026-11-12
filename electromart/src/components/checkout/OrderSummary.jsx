@@ -22,8 +22,15 @@ const OrderSummary = ({ address }) => {
             const razorpayOrder = await PaymentService.createOrder(order._id);
             const rzpData = razorpayOrder.data || razorpayOrder;
 
+            const razorpayKey = rzpData.keyId || rzpData.key || process.env.REACT_APP_RAZORPAY_KEY_ID;
+            if (!razorpayKey) {
+                toast.error("Payment gateway configuration missing. Please choose Cash on Delivery or contact support.");
+                setIsSubmitting(false);
+                return;
+            }
+
             const options = {
-                key: process.env.REACT_APP_RAZORPAY_KEY_ID || "rzp_test_TFlDYqRuVCPLrc",
+                key: razorpayKey,
                 amount: rzpData.amount,
                 currency: rzpData.currency || "INR",
                 name: "ElectroNova Tech Store",

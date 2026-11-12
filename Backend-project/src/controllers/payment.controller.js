@@ -5,8 +5,21 @@ import Cart from "../models/Cart.js";
 import User from "../models/user.model.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import { orderConfirmationTemplate } from "../templates/orderConfirmationEmail.js";
+import env from "../config/env.js";
 
 class PaymentController {
+
+    async getKey(req, res, next) {
+        try {
+            return ApiResponse.success(
+                res,
+                { keyId: env.razorpay_key_id },
+                "Razorpay public key fetched successfully."
+            );
+        } catch (error) {
+            next(error);
+        }
+    }
 
     async createOrder(req, res, next) {
         try {
@@ -29,7 +42,10 @@ class PaymentController {
 
             return ApiResponse.success(
                 res,
-                razorpayOrder,
+                {
+                    ...razorpayOrder,
+                    keyId: env.razorpay_key_id
+                },
                 "Payment order created successfully."
             );
         } catch (error) {

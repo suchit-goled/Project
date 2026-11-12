@@ -56,6 +56,10 @@ const ProductCard = ({ product }) => {
                 <img
                     src={product.product_image_url}
                     alt={product.product_title}
+                    loading="lazy"
+                    decoding="async"
+                    width="145"
+                    height="145"
                     onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=80";

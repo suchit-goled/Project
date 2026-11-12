@@ -1,6 +1,7 @@
 .checkout-page {
     padding: 36px 0 80px;
     min-height: 100vh;
+    min-height: 100dvh;
     background: #f8fafc;
 }
 

@@ -15,6 +15,7 @@ import "./Hero.css";
 import macbook from "../../../assets/products/macbook.png";
 import iphone from "../../../assets/products/iphone.png";
 import watch from "../../../assets/products/watch.png";
+import headphone from "../../../assets/products/headphone.png";
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -56,6 +57,18 @@ const Hero = () => {
       specs: ["49mm Titanium Case", "36h Battery Life", "Precision Dual GPS"],
       image: watch,
       searchQuery: "Watch"
+    },
+    {
+      id: "headphone",
+      tabLabel: "Audio",
+      title: "Sony WH-1000XM5 Wireless",
+      category: "Hi-Res Noise Cancelling",
+      price: "₹26,990",
+      oldPrice: "₹34,990",
+      discount: "23% OFF",
+      specs: ["Auto NC Optimizer", "30h Battery Life", "Integrated Processor V1"],
+      image: headphone,
+      searchQuery: "Sony"
     }
   ];
 
@@ -153,6 +166,10 @@ const Hero = () => {
                 src={currentItem.image}
                 alt={currentItem.title}
                 className="spotlight-img"
+                width="320"
+                height="180"
+                loading="eager"
+                decoding="async"
               />
             </div>
 

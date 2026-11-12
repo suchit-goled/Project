@@ -254,6 +254,14 @@ const ProductDetails = () => {
                             src={selectedImage || product.product_image_url}
                             alt={product.product_title}
                             className="primary-product-image"
+                            width="450"
+                            height="420"
+                            loading="eager"
+                            decoding="async"
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80";
+                            }}
                         />
                     </div>
 

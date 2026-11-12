@@ -45,3 +45,21 @@
     background: #e0f2fe;
     border-radius: 2px;
 }
+
+@media (max-width: 480px) {
+    .checkout-steps {
+        gap: 8px;
+        margin-bottom: 24px;
+    }
+    .line {
+        width: 28px;
+    }
+    .step {
+        font-size: 0.78rem;
+    }
+    .step svg {
+        width: 36px;
+        height: 36px;
+        padding: 8px;
+    }
+}

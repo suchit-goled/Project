@@ -1,53 +1,97 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { FiHome, FiSearch, FiAlertTriangle } from "react-icons/fi";
+import React, { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { FiHome, FiSearch, FiAlertTriangle, FiHelpCircle, FiArrowRight } from "react-icons/fi";
 import "./Policies.css";
 
 const NotFound = () => {
-  return (
-    <div className="policy-page container" style={{ textAlign: "center", padding: "80px 20px" }}>
-      <div style={{ fontSize: "3.5rem", color: "var(--primary)", marginBottom: "16px" }}>
-        <FiAlertTriangle />
-      </div>
-      <h1 style={{ fontSize: "2.5rem", marginBottom: "12px" }}>404 — Page Not Found</h1>
-      <p style={{ color: "var(--text-secondary)", maxWidth: "500px", margin: "0 auto 32px" }}>
-        The page or product you're looking for doesn't exist, has been relocated, or is temporarily unavailable.
-      </p>
-      <div style={{ display: "flex", justifyContent: "center", gap: "16px", flexWrap: "wrap" }}>
-        <Link
-          to="/"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
-            padding: "10px 22px",
-            background: "var(--primary)",
-            color: "#fff",
-            borderRadius: "var(--radius-sm)",
-            fontWeight: 600
-          }}
-        >
-          <FiHome /> Return Home
-        </Link>
-        <Link
-          to="/products"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
-            padding: "10px 22px",
-            background: "var(--bg-card)",
-            color: "var(--text-primary)",
-            border: "1px solid var(--border-medium)",
-            borderRadius: "var(--radius-sm)",
-            fontWeight: 500
-          }}
-        >
-          <FiSearch /> Browse Catalogue
-        </Link>
-      </div>
-    </div>
-  );
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const errorDetails = location.state?.errorDetails || location.state?.message;
+    const requestedPath = location.pathname;
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+        }
+    };
+
+    const popularCategories = [
+        { label: "Smartphones", path: "/products/category/smartphones" },
+        { label: "Laptops", path: "/products/category/laptops" },
+        { label: "Premium Audio", path: "/products/category/audio" },
+        { label: "Flash Deals", path: "/deals" },
+    ];
+
+    return (
+        <div className="policy-page container notfound-container">
+            <div className="notfound-icon-wrap">
+                <FiAlertTriangle />
+            </div>
+
+            <span className="policy-badge">Error 404 • Resource Not Found</span>
+
+            <h1 className="notfound-title">We Couldn't Find That Page</h1>
+
+            <p className="notfound-description">
+                The resource at <code className="notfound-path">{requestedPath}</code> may have been relocated, discontinued, or typed incorrectly.
+            </p>
+
+            {errorDetails && (
+                <div className="notfound-details-box">
+                    <strong>Technical Diagnostics:</strong>
+                    <span>{errorDetails}</span>
+                </div>
+            )}
+
+            {/* Quick in-page search */}
+            <form className="notfound-search-form" onSubmit={handleSearch}>
+                <div className="notfound-search-input-group">
+                    <FiSearch className="notfound-search-icon" />
+                    <input
+                        type="text"
+                        placeholder="Search for MacBook, iPhone, Sony headphones..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        aria-label="Search catalogue from 404 page"
+                    />
+                    <button type="submit" className="notfound-search-btn">
+                        Search <FiArrowRight />
+                    </button>
+                </div>
+            </form>
+
+            {/* Popular recovery destinations */}
+            <div className="notfound-suggestions">
+                <span className="notfound-suggestions-title">Popular Categories:</span>
+                <div className="notfound-chips-row">
+                    {popularCategories.map((cat, idx) => (
+                        <button
+                            key={idx}
+                            className="notfound-chip"
+                            onClick={() => navigate(cat.path)}
+                        >
+                            {cat.label}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            <div className="notfound-actions">
+                <Link to="/" className="notfound-primary-btn">
+                    <FiHome /> Return to Storefront
+                </Link>
+                <Link to="/products" className="notfound-secondary-btn">
+                    <FiSearch /> Browse Full Catalogue
+                </Link>
+                <Link to="/contact" className="notfound-text-btn">
+                    <FiHelpCircle /> Contact Customer Support
+                </Link>
+            </div>
+        </div>
+    );
 };
 
 export default NotFound;

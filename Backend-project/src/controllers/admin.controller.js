@@ -176,6 +176,16 @@ class AdminController {
                 return ApiResponse.error(res, "Cannot demote your own admin account.", 400);
             }
 
+            if (role !== "admin") {
+                const targetUser = await User.findById(id);
+                if (targetUser?.role === "admin") {
+                    const adminCount = await User.countDocuments({ role: "admin" });
+                    if (adminCount <= 1) {
+                        return ApiResponse.error(res, "Cannot demote the sole remaining administrator account.", 400);
+                    }
+                }
+            }
+
             const user = await User.findByIdAndUpdate(
                 id,
                 { role },
@@ -205,11 +215,19 @@ class AdminController {
                 return ApiResponse.error(res, "Cannot delete your own admin account.", 400);
             }
 
-            const user = await User.findByIdAndDelete(id);
-
-            if (!user) {
+            const targetUser = await User.findById(id);
+            if (!targetUser) {
                 return ApiResponse.error(res, "User not found.", 404);
             }
+
+            if (targetUser.role === "admin") {
+                const adminCount = await User.countDocuments({ role: "admin" });
+                if (adminCount <= 1) {
+                    return ApiResponse.error(res, "Cannot delete the sole remaining administrator account.", 400);
+                }
+            }
+
+            await targetUser.deleteOne();
 
             // Cascade cleanup: delete associated carts, wishlists, and addresses
             await Promise.all([

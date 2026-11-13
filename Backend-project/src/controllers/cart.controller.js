@@ -14,8 +14,9 @@ const checkCartAuthorization = (req, targetUserId) => {
 // =============================
 export const addToCart = async (req, res, next) => {
     try {
-        const { productId, quantity = 1 } = req.body;
-        const targetUserId = req.body.userId || req.user._id.toString();
+        const productId = req.body && req.body.productId;
+        const quantity = req.body && req.body.quantity !== undefined ? req.body.quantity : 1;
+        const targetUserId = (req.body && req.body.userId) || (req.user && req.user._id ? req.user._id.toString() : null);
 
         if (!checkCartAuthorization(req, targetUserId)) {
             return ApiResponse.error(res, "Access denied. Cannot modify another user's cart.", 403);
@@ -107,8 +108,9 @@ export const getCart = async (req, res, next) => {
 // =============================
 export const updateQuantity = async (req, res, next) => {
     try {
-        const { productId, quantity } = req.body;
-        const targetUserId = req.body.userId || req.user._id.toString();
+        const productId = (req.body && req.body.productId) || (req.params && req.params.productId);
+        const quantity = req.body && req.body.quantity !== undefined ? req.body.quantity : (req.query && req.query.quantity);
+        const targetUserId = (req.body && req.body.userId) || (req.params && req.params.userId) || (req.user && req.user._id ? req.user._id.toString() : null);
 
         if (!checkCartAuthorization(req, targetUserId)) {
             return ApiResponse.error(res, "Access denied. Cannot modify another user's cart.", 403);
@@ -166,8 +168,8 @@ export const updateQuantity = async (req, res, next) => {
 // =============================
 export const removeFromCart = async (req, res, next) => {
     try {
-        const { productId } = req.body;
-        const targetUserId = req.body.userId || req.user._id.toString();
+        const productId = (req.body && req.body.productId) || (req.params && req.params.productId) || (req.query && req.query.productId);
+        const targetUserId = (req.body && req.body.userId) || (req.params && req.params.userId) || (req.user && req.user._id ? req.user._id.toString() : null);
 
         if (!checkCartAuthorization(req, targetUserId)) {
             return ApiResponse.error(res, "Access denied. Cannot modify another user's cart.", 403);
@@ -197,7 +199,7 @@ export const removeFromCart = async (req, res, next) => {
 // =============================
 export const clearCart = async (req, res, next) => {
     try {
-        const targetUserId = req.params.userId || (req.user && req.user._id.toString());
+        const targetUserId = (req.params && req.params.userId) || (req.body && req.body.userId) || (req.user && req.user._id ? req.user._id.toString() : null);
 
         if (!checkCartAuthorization(req, targetUserId)) {
             return ApiResponse.error(res, "Access denied. Cannot clear another user's cart.", 403);

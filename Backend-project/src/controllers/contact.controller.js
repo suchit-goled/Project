@@ -22,17 +22,21 @@ export const handleContactMessage = async (req, res, next) => {
         }
 
         const normalizedEmail = String(email).trim().toLowerCase();
-        if (!validator.isEmail(normalizedEmail)) {
+        if (normalizedEmail.length > 254 || !validator.isEmail(normalizedEmail)) {
             return ApiResponse.error(res, "Please provide a valid email address.", 400);
         }
 
-        const trimmedName = String(name).trim();
-        const trimmedSubject = subject ? String(subject).trim() : "New Inquiry";
+        const trimmedName = String(name).trim().slice(0, 100);
+        const trimmedSubject = subject ? String(subject).trim().slice(0, 150) : "New Inquiry";
         const trimmedMessage = String(message).trim();
-        const trimmedPhone = phone ? String(phone).trim() : "Not provided";
+        const trimmedPhone = phone ? String(phone).trim().slice(0, 30) : "Not provided";
 
         if (trimmedMessage.length < 5) {
             return ApiResponse.error(res, "Message must be at least 5 characters long.", 400);
+        }
+
+        if (trimmedMessage.length > 5000) {
+            return ApiResponse.error(res, "Message cannot exceed 5000 characters.", 400);
         }
 
         // Try to dispatch an admin notification email if configured

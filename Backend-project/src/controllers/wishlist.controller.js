@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Wishlist from "../models/wishlist.model.js";
 import Product from "../models/Product.js";
 import ApiResponse from "../utils/apiResponse.js";
@@ -9,6 +10,10 @@ export const addToWishlist = async (req, res, next) => {
 
         if (!productId) {
             return ApiResponse.error(res, "Product ID is required", 400);
+        }
+
+        if (!mongoose.isValidObjectId(productId)) {
+            return ApiResponse.error(res, "Invalid product ID", 400);
         }
 
         const product = await Product.findById(productId);
@@ -70,9 +75,19 @@ export const getWishlist = async (req, res, next) => {
 // Remove Product from Wishlist
 export const removeFromWishlist = async (req, res, next) => {
     try {
+        const productId = req.params.productId || req.body.productId;
+
+        if (!productId) {
+            return ApiResponse.error(res, "Product ID is required", 400);
+        }
+
+        if (!mongoose.isValidObjectId(productId)) {
+            return ApiResponse.error(res, "Invalid product ID", 400);
+        }
+
         const wishlistItem = await Wishlist.findOneAndDelete({
             userId: req.user._id,
-            productId: req.params.productId
+            productId
         });
 
         if (!wishlistItem) {

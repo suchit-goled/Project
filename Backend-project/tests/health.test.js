@@ -9,7 +9,7 @@ describe("Backend Health & Security Baseline Tests", () => {
         const res = await request(app).get("/");
         assert.equal(res.status, 200);
         assert.equal(res.body.success, true);
-        assert.equal(res.body.version, "2.3.0");
+        assert.equal(res.body.version, "2.4.0");
     });
 
     test("GET /api/health should return healthy status", async () => {

@@ -1,7 +1,7 @@
 # ELECTRONOVA — OVERNIGHT AUTONOMOUS ENGINEERING PROGRESS & AUDIT REPORT
 
-**Last Updated:** 2026-10-23  
-**Status:** COMPLETED & VERIFIED — Full E-Commerce Transformation, Monorepo Orchestration & Production Security Hardening  
+**Last Updated:** 2026-11-13  
+**Status:** COMPLETED & VERIFIED — Full E-Commerce Transformation, Monorepo Orchestration, v2.4.0 Upgrade & Advanced Security Hardening  
 
 ---
 
@@ -193,6 +193,29 @@ ElectroNova has undergone a complete, production-grade transformation from an in
   - **Zero Security Vulnerabilities**: `npm audit` reports 0 vulnerabilities.
   - **Production Build**: Compiles cleanly with zero errors.
 
+### Phase 13: Platform Upgrade (v2.4.0), Bug Fixes, Backend Security Hardening & Monorepo Test Expansion (117 Passing Tests)
+- [x] **Platform Upgrade to v2.4.0**:
+  - Unified version bump across root orchestrator, monorepo, backend API, and frontend client (`v2.4.0`).
+  - Updated `/` root health check and automated assertions to verify `version: "2.4.0"`.
+- [x] **Critical Dependency Security Audit**:
+  - Patched critical Mongoose vulnerability advisory (GHSA-gg4r-jv3p-qx3c / GHSA-pcrw-h46h-c93h / GHSA-wr5m-5jph-8m96 / GHSA-8332-j7wj-wjw4) by updating `mongoose` to `^9.12.1`.
+  - Zero vulnerabilities reported by `npm audit` across backend dependencies.
+- [x] **Backend Bug Fixes & Resilience**:
+  - **Cart Removal & Quantity Defensive Guard**: Resolved potential server crash where unpopulated or undefined `req.body` on HTTP `DELETE` requests caused unhandled TypeError exceptions; added multi-source extraction (`req.body`, `req.params`, `req.query`).
+  - **Cart Route Ergonomics**: Expanded `cart.routes.js` with explicit route handlers for `DELETE /api/cart/remove` and `DELETE /api/cart/remove/:productId`, as well as `DELETE /api/cart/clear` and `DELETE /api/cart/clear/:userId`.
+  - **Product Price Filtering Robustness**: Fixed edge cases in `product.repository.js` where `minPrice=0` was improperly dropped due to falsy evaluation; implemented graceful auto-swapping for inverted price ranges (`minPrice > maxPrice`).
+  - **Wishlist ObjectId Validation**: Enforced strict `mongoose.isValidObjectId(productId)` check on both wishlist addition and removal to return explicit 400 Bad Request responses instead of Mongoose CastError exceptions.
+  - **Review Rating Normalization**: Standardized review rating inputs to integer star values (1 to 5) with `Math.round()` bounds checking and sanitized comments.
+  - **Administrator Lockout Safeguard**: Hardened `admin.controller.js` to prevent demoting or deleting the sole remaining administrator account, eliminating operational lockouts.
+  - **Contact Message Length Limits**: Enforced 5,000-character upper bounds on inquiry messages and 254-character bounds on email addresses.
+  - **Express Security Hardening**: Added `app.disable("x-powered-by")` and enabled `noSniff: true` in Helmet headers.
+- [x] **Automated Test Expansion (117 Total Tests)**:
+  - **Backend Suite**: Expanded from 63 to **73 passing tests across 8 test suites** with the addition of `security_and_hardening_v3.test.js` (10 tests covering version 2.4.0, zero minPrice & inverted price swapping, parameter cart removal, wishlist ObjectId validation, review rating normalization, admin sole survivor guards, and contact payload limits).
+  - **Frontend Suite**: Expanded from 32 to **44 passing tests across 17 test suites** with the addition of `WhatsAppButton.test.js` (3 tests), `AnnouncementBar.test.js` (4 tests), `ProtectedRoute.test.js` (2 tests), and `AdminRoute.test.js` (3 tests).
+  - **100% Pass Rate**: 117 automated tests passing with 0 failures across 25 suites.
+  - **Zero Security Vulnerabilities**: `npm audit` reports 0 vulnerabilities.
+  - **Production Build**: Compiles cleanly with zero errors.
+
 ---
 
 ## 3. Automated Test Verification Summary
@@ -206,14 +229,15 @@ TAP version 13
 # Subtest: Product, Review & Catalog Deep Tests (11 tests) - PASS
 # Subtest: Backend Security & Authorization Gate Tests (9 tests) - PASS
 # Subtest: Security, Bug Fixes & Edge Case Hardening Suite v2 (10 tests) - PASS
+# Subtest: Security, Bug Fixes & Edge Case Hardening Suite v3 (10 tests) - PASS
 # Subtest: User, Security & Business Logic Hardening Tests (15 tests) - PASS
 
-# tests 63 | suites 7 | pass 63 | fail 0
+# tests 73 | suites 8 | pass 73 | fail 0
 ```
 
 ### Backend Security Vulnerability Audit (`npm audit` / `npm run security:audit`)
 ```
-> electronova-backend@2.3.0 security:audit
+> electronova-backend@2.4.0 security:audit
 > npm audit
 
 found 0 vulnerabilities
@@ -221,40 +245,44 @@ found 0 vulnerabilities
 
 ### Frontend Automated Component Tests (`npm run test:ci` / `npm run test:frontend`)
 ```
-> electromart@0.1.0 test:ci
+> electromart@2.4.0 test:ci
 > react-scripts test --watchAll=false
 
-PASS src/components/checkout/CheckoutItemsReview.test.js
-PASS src/components/wishlist/EmptyWishlist.test.js
+PASS src/components/layout/Navbar/AnnouncementBar.test.js
+PASS src/components/common/WhatsAppButton.test.js
+PASS src/components/common/ProtectedRoute.test.js
 PASS src/components/cart/EmptyCart.test.js
+PASS src/components/wishlist/EmptyWishlist.test.js
+PASS src/components/checkout/CheckoutItemsReview.test.js
 PASS src/components/EmptyOrders.test.js
-PASS src/components/checkout/AddressForm.test.js
 PASS src/components/profile/PasswordSection.test.js
+PASS src/components/common/AdminRoute.test.js
+PASS src/components/checkout/AddressForm.test.js
 PASS src/components/OrderCard.test.js
 PASS src/components/common/Card/ProductCard.test.js
-PASS src/components/wishlist/WishlistCard.test.js
 PASS src/components/cart/CartSummary.test.js
 PASS src/components/cart/CartItem.test.js
+PASS src/components/wishlist/WishlistCard.test.js
 PASS src/components/home/Hero/Hero.test.js
 PASS src/App.test.js
 
-Test Suites: 13 passed, 13 total
-Tests:       32 passed, 32 total
+Test Suites: 17 passed, 17 total
+Tests:       44 passed, 44 total
 Snapshots:   0 total
 Ran all test suites.
 ```
 
 ### Frontend Production Build (`npm run build` / `npm run build:frontend`)
 ```
-> electromart@0.1.0 build
+> electromart@2.4.0 build
 > react-scripts build
 
 Creating an optimized production build...
 Compiled successfully.
 
 File sizes after gzip:
-  208.84 kB  build\static\js\main.532862bd.js
-  22.63 kB   build\static\css\main.9037975d.css
+  211.11 kB  build\static\js\main.e8ecfd3f.js
+  23.85 kB   build\static\css\main.331b64c6.css
   1.76 kB    build\static\js\453.584002af.chunk.js
 
 The build folder is ready to be deployed.

@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Review from "../models/review.model.js";
 import Product from "../models/Product.js";
 import ApiResponse from "../utils/apiResponse.js";
@@ -34,9 +35,18 @@ export const addReview = async (req, res, next) => {
             return ApiResponse.error(res, "Product ID is required", 400);
         }
 
+        if (!mongoose.isValidObjectId(productId)) {
+            return ApiResponse.error(res, "Invalid product ID", 400);
+        }
+
         const numRating = Number(rating);
         if (isNaN(numRating) || numRating < 1 || numRating > 5) {
             return ApiResponse.error(res, "Rating must be a number between 1 and 5", 400);
+        }
+
+        const cleanRating = Math.round(numRating);
+        if (cleanRating < 1 || cleanRating > 5) {
+            return ApiResponse.error(res, "Rating must be a valid integer between 1 and 5", 400);
         }
 
         if (comment && typeof comment === "string" && comment.length > 1000) {
@@ -60,7 +70,7 @@ export const addReview = async (req, res, next) => {
         const review = await Review.create({
             userId: req.user._id,
             productId,
-            rating: numRating,
+            rating: cleanRating,
             comment: sanitizeComment(comment)
         });
 
@@ -115,7 +125,7 @@ export const updateReview = async (req, res, next) => {
             if (isNaN(numRating) || numRating < 1 || numRating > 5) {
                 return ApiResponse.error(res, "Rating must be a number between 1 and 5", 400);
             }
-            review.rating = numRating;
+            review.rating = Math.round(numRating);
         }
 
         if (comment !== undefined) {

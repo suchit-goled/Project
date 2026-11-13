@@ -34,13 +34,26 @@ class ProductRepository {
         }
 
         // Price Filter
-        if (minPrice || maxPrice) {
+        const hasMinPrice = minPrice !== undefined && minPrice !== "" && !isNaN(Number(minPrice));
+        const hasMaxPrice = maxPrice !== undefined && maxPrice !== "" && !isNaN(Number(maxPrice));
+
+        if (hasMinPrice || hasMaxPrice) {
             filter.discounted_price = {};
-            if (minPrice && !isNaN(Number(minPrice))) {
-                filter.discounted_price.$gte = Number(minPrice);
+            let minVal = hasMinPrice ? Math.max(0, Number(minPrice)) : null;
+            let maxVal = hasMaxPrice ? Math.max(0, Number(maxPrice)) : null;
+
+            // If both provided and inverted, gracefully swap them
+            if (minVal !== null && maxVal !== null && minVal > maxVal) {
+                const temp = minVal;
+                minVal = maxVal;
+                maxVal = temp;
             }
-            if (maxPrice && !isNaN(Number(maxPrice))) {
-                filter.discounted_price.$lte = Number(maxPrice);
+
+            if (minVal !== null) {
+                filter.discounted_price.$gte = minVal;
+            }
+            if (maxVal !== null) {
+                filter.discounted_price.$lte = maxVal;
             }
         }
 

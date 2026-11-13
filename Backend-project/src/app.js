@@ -23,10 +23,12 @@ import env from "./config/env.js";
 import ApiResponse from "./utils/apiResponse.js";
 
 const app = express();
+app.disable("x-powered-by");
 
 // 1. Security Headers via Helmet
 app.use(helmet({
-    crossOriginResourcePolicy: { policy: "cross-origin" }
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    noSniff: true
 }));
 
 // 2. CORS Security
@@ -106,7 +108,7 @@ app.get("/", (req, res) => {
     res.status(200).json({
         success: true,
         message: "🚀 ElectroNova Backend Running Securely",
-        version: "2.3.0",
+        version: "2.4.0",
         timestamp: new Date().toISOString()
     });
 });

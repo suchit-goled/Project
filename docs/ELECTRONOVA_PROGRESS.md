@@ -1,7 +1,7 @@
 # ELECTRONOVA — OVERNIGHT AUTONOMOUS ENGINEERING PROGRESS & AUDIT REPORT
 
-**Last Updated:** 2026-11-13  
-**Status:** COMPLETED & VERIFIED — Full E-Commerce Transformation, Monorepo Orchestration, v2.4.0 Upgrade & Advanced Security Hardening  
+**Last Updated:** 2026-11-15  
+**Status:** COMPLETED & VERIFIED — Full E-Commerce Transformation, Monorepo Orchestration, v2.5.0 Upgrade, Payment Integrity & Advanced Security Hardening  
 
 ---
 
@@ -216,6 +216,38 @@ ElectroNova has undergone a complete, production-grade transformation from an in
   - **Zero Security Vulnerabilities**: `npm audit` reports 0 vulnerabilities.
   - **Production Build**: Compiles cleanly with zero errors.
 
+### Phase 14: Platform Upgrade (v2.5.0), Payment State Integrity, IDOR/ObjectId Hardening & Monorepo Test Expansion (141 Passing Tests)
+- [x] **Platform Upgrade to v2.5.0**:
+  - Unified version bump across root orchestrator (`c:\ElectroNova\package.json`), monorepo orchestrator (`Project/package.json`), backend API (`Backend-project/package.json`), and frontend client (`electromart/package.json`) to `v2.5.0`.
+  - Updated `/` root health check and automated assertions to verify `version: "2.5.0"`.
+- [x] **Payment Flow Integrity & Anti-Tampering Hardening (`payment.controller.js`)**:
+  - Enforced strict `mongoose.isValidObjectId(orderId)` validation on `POST /api/payment/create-order` and `POST /api/payment/verify` returning explicit 400 Bad Request responses.
+  - Hardened state transitions to prevent generating payment sessions for orders that are already `Paid` or `Cancelled`.
+  - Enforced idempotent 200 handling on `POST /api/payment/verify` for already verified orders, mitigating replay attacks and duplicate notifications.
+- [x] **Cart & Order Input Resilience (`cart.controller.js` & `order.controller.js`)**:
+  - Validated `mongoose.isValidObjectId(productId)` on `addToCart`, `updateQuantity`, and `removeFromCart`.
+  - Validated `mongoose.isValidObjectId(orderId)` on `getOrderById` and `cancelOrder`.
+  - Validated `mongoose.isValidObjectId(userId)` on `getUserOrders`.
+  - Enforced bounds and sanitization on shipping address parameters.
+- [x] **Address & Review IDOR/Boundary Hardening**:
+  - Validated `mongoose.isValidObjectId(id)` across address mutations (`updateAddress`, `deleteAddress`, `setDefaultAddress`).
+  - Validated `mongoose.isValidObjectId` across review routes (`getReviews`, `updateReview`, `deleteReview`).
+- [x] **Admin Route Hardening & Status Whitelisting (`admin.controller.js`)**:
+  - Enforced strict ObjectId format checks on product updates/deletions, order status updates, and user modifications.
+  - Enforced strict whitelist check for order status transitions (`["Pending", "Processing", "Confirmed", "Shipped", "Delivered", "Cancelled"]`).
+- [x] **Password Policies & CPU DoS Prevention**:
+  - Enforced 128-character upper bounds on user passwords across registration (`auth.service.js`), password change (`user.controller.js`), and tokenized password reset (`password.service.js`), neutralizing bcrypt computational exhaustion attacks.
+  - Disallowed identical new passwords matching current passwords in `changePassword`.
+- [x] **Advanced Sanitization & Parameter Pollution Defense**:
+  - Upgraded `sanitize.middleware.js` to strip extended prototype pollution keys (`__defineGetter__`, `__defineSetter__`, `__lookupGetter__`, `__lookupSetter__`) and purge null bytes (`\0`).
+  - Added parameter pollution defense in `product.repository.js` to handle array query inputs gracefully.
+- [x] **Automated Test Expansion (141 Total Tests)**:
+  - **Backend Suite**: Expanded from 73 to **83 passing tests across 9 test suites** with the addition of `security_and_hardening_v4.test.js` (10 tests covering payment state checks, idempotency, cart and address ObjectId validation, password length bounds, and identical password rejection).
+  - **Frontend Suite**: Expanded from 44 to **58 passing tests across 22 test suites** with the addition of `PublicOnlyRoute.test.js` (3 tests), `PaymentMethod.test.js` (3 tests), `CheckoutSteps.test.js` (2 tests), `SortDropdown.test.js` (3 tests), and `Badge.test.js` (3 tests).
+  - **100% Pass Rate**: 141 automated tests passing with 0 failures across 31 test suites.
+  - **Zero Security Vulnerabilities**: `npm audit` reports 0 vulnerabilities.
+  - **Production Build**: Compiles cleanly with zero errors.
+
 ---
 
 ## 3. Automated Test Verification Summary
@@ -230,14 +262,15 @@ TAP version 13
 # Subtest: Backend Security & Authorization Gate Tests (9 tests) - PASS
 # Subtest: Security, Bug Fixes & Edge Case Hardening Suite v2 (10 tests) - PASS
 # Subtest: Security, Bug Fixes & Edge Case Hardening Suite v3 (10 tests) - PASS
+# Subtest: Security, Bug Fixes & Edge Case Hardening Suite v4 (10 tests) - PASS
 # Subtest: User, Security & Business Logic Hardening Tests (15 tests) - PASS
 
-# tests 73 | suites 8 | pass 73 | fail 0
+# tests 83 | suites 9 | pass 83 | fail 0
 ```
 
 ### Backend Security Vulnerability Audit (`npm audit` / `npm run security:audit`)
 ```
-> electronova-backend@2.4.0 security:audit
+> electronova-backend@2.5.0 security:audit
 > npm audit
 
 found 0 vulnerabilities
@@ -245,36 +278,41 @@ found 0 vulnerabilities
 
 ### Frontend Automated Component Tests (`npm run test:ci` / `npm run test:frontend`)
 ```
-> electromart@2.4.0 test:ci
+> electromart@2.5.0 test:ci
 > react-scripts test --watchAll=false
 
-PASS src/components/layout/Navbar/AnnouncementBar.test.js
 PASS src/components/common/WhatsAppButton.test.js
-PASS src/components/common/ProtectedRoute.test.js
-PASS src/components/cart/EmptyCart.test.js
-PASS src/components/wishlist/EmptyWishlist.test.js
-PASS src/components/checkout/CheckoutItemsReview.test.js
-PASS src/components/EmptyOrders.test.js
-PASS src/components/profile/PasswordSection.test.js
-PASS src/components/common/AdminRoute.test.js
 PASS src/components/checkout/AddressForm.test.js
+PASS src/components/layout/Navbar/AnnouncementBar.test.js
+PASS src/components/wishlist/EmptyWishlist.test.js
+PASS src/components/common/AdminRoute.test.js
+PASS src/components/cart/EmptyCart.test.js
+PASS src/components/common/ProtectedRoute.test.js
+PASS src/components/profile/PasswordSection.test.js
+PASS src/components/EmptyOrders.test.js
+PASS src/components/checkout/CheckoutItemsReview.test.js
 PASS src/components/OrderCard.test.js
 PASS src/components/common/Card/ProductCard.test.js
 PASS src/components/cart/CartSummary.test.js
-PASS src/components/cart/CartItem.test.js
 PASS src/components/wishlist/WishlistCard.test.js
+PASS src/components/cart/CartItem.test.js
 PASS src/components/home/Hero/Hero.test.js
+PASS src/components/ui/Badge/Badge.test.js
+PASS src/components/checkout/CheckoutSteps.test.js
+PASS src/components/common/PublicOnlyRoute.test.js
+PASS src/components/Products/SortDropdown.test.js
+PASS src/components/checkout/PaymentMethod.test.js
 PASS src/App.test.js
 
-Test Suites: 17 passed, 17 total
-Tests:       44 passed, 44 total
+Test Suites: 22 passed, 22 total
+Tests:       58 passed, 58 total
 Snapshots:   0 total
 Ran all test suites.
 ```
 
 ### Frontend Production Build (`npm run build` / `npm run build:frontend`)
 ```
-> electromart@2.4.0 build
+> electromart@2.5.0 build
 > react-scripts build
 
 Creating an optimized production build...

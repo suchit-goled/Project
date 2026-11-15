@@ -34,17 +34,17 @@ export const updateProfile = async (req, res, next) => {
         }
 
         if (name !== undefined) {
-            const trimmedName = String(name).trim();
+            const trimmedName = String(name).trim().slice(0, 100);
             if (trimmedName.length === 0) {
                 return ApiResponse.error(res, "Name cannot be empty", 400);
             }
             user.name = trimmedName;
         }
-        if (phone !== undefined) user.phone = String(phone).trim();
-        if (address !== undefined) user.address = String(address).trim();
-        if (city !== undefined) user.city = String(city).trim();
-        if (state !== undefined) user.state = String(state).trim();
-        if (pincode !== undefined) user.pincode = String(pincode).trim();
+        if (phone !== undefined) user.phone = String(phone).trim().slice(0, 25);
+        if (address !== undefined) user.address = String(address).trim().slice(0, 250);
+        if (city !== undefined) user.city = String(city).trim().slice(0, 100);
+        if (state !== undefined) user.state = String(state).trim().slice(0, 100);
+        if (pincode !== undefined) user.pincode = String(pincode).trim().slice(0, 20);
 
         await user.save();
 
@@ -70,6 +70,14 @@ export const changePassword = async (req, res, next) => {
 
         if (String(newPassword).length < 6) {
             return ApiResponse.error(res, "New password must be at least 6 characters long.", 400);
+        }
+
+        if (String(newPassword).length > 128) {
+            return ApiResponse.error(res, "New password cannot exceed 128 characters.", 400);
+        }
+
+        if (currentPassword === newPassword) {
+            return ApiResponse.error(res, "New password must be different from current password.", 400);
         }
 
         const user = await User.findById(req.user._id);

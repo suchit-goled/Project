@@ -2,22 +2,20 @@ import Product from "../models/Product.js";
 
 class ProductRepository {
 
-    async getProducts(query, page = 1, limit = 20) {
-        const {
-            search,
-            category,
-            minPrice,
-            maxPrice,
-            rating,
-            sort,
-            minDiscount
-        } = query;
+    async getProducts(query = {}, page = 1, limit = 20) {
+        const rawSearch = Array.isArray(query.search) ? query.search[0] : query.search;
+        const rawCategory = Array.isArray(query.category) ? query.category[0] : query.category;
+        const rawSort = Array.isArray(query.sort) ? query.sort[0] : query.sort;
+        const rawRating = Array.isArray(query.rating) ? query.rating[0] : query.rating;
+        const rawMinDiscount = Array.isArray(query.minDiscount) ? query.minDiscount[0] : query.minDiscount;
+        const rawMinPrice = Array.isArray(query.minPrice) ? query.minPrice[0] : query.minPrice;
+        const rawMaxPrice = Array.isArray(query.maxPrice) ? query.maxPrice[0] : query.maxPrice;
 
         const filter = {};
 
         // Escape regex special characters to prevent ReDoS / RegExp injection
-        if (search && typeof search === "string" && search.trim()) {
-            const escapedSearch = search.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        if (rawSearch && typeof rawSearch === "string" && rawSearch.trim()) {
+            const escapedSearch = rawSearch.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
             filter.product_title = {
                 $regex: escapedSearch,
                 $options: "i"
@@ -25,8 +23,8 @@ class ProductRepository {
         }
 
         // Case-insensitive Category matching
-        if (category && typeof category === "string" && category.trim() && category.trim().toLowerCase() !== "all") {
-            const escapedCategory = category.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        if (rawCategory && typeof rawCategory === "string" && rawCategory.trim() && rawCategory.trim().toLowerCase() !== "all") {
+            const escapedCategory = rawCategory.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
             filter.product_category = {
                 $regex: `^${escapedCategory}$`,
                 $options: "i"
@@ -34,13 +32,13 @@ class ProductRepository {
         }
 
         // Price Filter
-        const hasMinPrice = minPrice !== undefined && minPrice !== "" && !isNaN(Number(minPrice));
-        const hasMaxPrice = maxPrice !== undefined && maxPrice !== "" && !isNaN(Number(maxPrice));
+        const hasMinPrice = rawMinPrice !== undefined && rawMinPrice !== "" && !isNaN(Number(rawMinPrice));
+        const hasMaxPrice = rawMaxPrice !== undefined && rawMaxPrice !== "" && !isNaN(Number(rawMaxPrice));
 
         if (hasMinPrice || hasMaxPrice) {
             filter.discounted_price = {};
-            let minVal = hasMinPrice ? Math.max(0, Number(minPrice)) : null;
-            let maxVal = hasMaxPrice ? Math.max(0, Number(maxPrice)) : null;
+            let minVal = hasMinPrice ? Math.max(0, Number(rawMinPrice)) : null;
+            let maxVal = hasMaxPrice ? Math.max(0, Number(rawMaxPrice)) : null;
 
             // If both provided and inverted, gracefully swap them
             if (minVal !== null && maxVal !== null && minVal > maxVal) {
@@ -58,22 +56,22 @@ class ProductRepository {
         }
 
         // Rating Filter
-        if (rating && !isNaN(Number(rating)) && Number(rating) > 0) {
+        if (rawRating && !isNaN(Number(rawRating)) && Number(rawRating) > 0) {
             filter.product_rating = {
-                $gte: Number(rating)
+                $gte: Number(rawRating)
             };
         }
 
         // Minimum Discount Filter
-        if (minDiscount && !isNaN(Number(minDiscount)) && Number(minDiscount) > 0) {
+        if (rawMinDiscount && !isNaN(Number(rawMinDiscount)) && Number(rawMinDiscount) > 0) {
             filter.discount_percentage = {
-                $gte: Number(minDiscount)
+                $gte: Number(rawMinDiscount)
             };
         }
 
         // Sorting
         let sortOption = {};
-        switch (sort) {
+        switch (rawSort) {
             case "priceLow":
             case "low":
                 sortOption.discounted_price = 1;

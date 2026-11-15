@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import orderModel from "../models/order.model.js";
 import Cart from "../models/Cart.js";
 import User from "../models/user.model.js";
@@ -114,6 +115,14 @@ export const getUserOrders = async (req, res, next) => {
     try {
         const { userId } = req.params;
 
+        if (!mongoose.isValidObjectId(userId)) {
+            return ApiResponse.error(
+                res,
+                "Invalid user ID format",
+                400
+            );
+        }
+
         // Security check: only own orders or admin
         if (req.user.role !== "admin" && String(req.user._id) !== String(userId)) {
             return ApiResponse.error(
@@ -141,6 +150,14 @@ export const getUserOrders = async (req, res, next) => {
 export const getOrderById = async (req, res, next) => {
     try {
         const { orderId } = req.params;
+
+        if (!mongoose.isValidObjectId(orderId)) {
+            return ApiResponse.error(
+                res,
+                "Invalid order ID format",
+                400
+            );
+        }
 
         const order = await orderModel.findById(orderId);
 
@@ -175,6 +192,14 @@ export const getOrderById = async (req, res, next) => {
 export const cancelOrder = async (req, res, next) => {
     try {
         const { orderId } = req.params;
+
+        if (!mongoose.isValidObjectId(orderId)) {
+            return ApiResponse.error(
+                res,
+                "Invalid order ID format",
+                400
+            );
+        }
 
         const order = await orderModel.findById(orderId);
 

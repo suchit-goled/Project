@@ -1,15 +1,27 @@
 /**
- * Middleware to sanitize user input and prevent MongoDB operator / NoSQL injection
- * and Prototype Pollution attacks.
+ * Middleware to sanitize user input and prevent MongoDB operator / NoSQL injection,
+ * Prototype Pollution, and null-byte injection attacks.
  * Compatible with Express 5 (mutates objects in place rather than reassigning getters).
  */
+const forbiddenKeys = new Set([
+    "__proto__",
+    "constructor",
+    "prototype",
+    "__defineGetter__",
+    "__defineSetter__",
+    "__lookupGetter__",
+    "__lookupSetter__"
+]);
+
 const cleanInPlace = (obj) => {
     if (!obj || typeof obj !== "object") return;
 
     if (Array.isArray(obj)) {
-        for (const item of obj) {
-            if (item && typeof item === "object") {
-                cleanInPlace(item);
+        for (let i = 0; i < obj.length; i++) {
+            if (typeof obj[i] === "string" && obj[i].includes("\0")) {
+                obj[i] = obj[i].replace(/\0/g, "");
+            } else if (obj[i] && typeof obj[i] === "object") {
+                cleanInPlace(obj[i]);
             }
         }
         return;
@@ -19,11 +31,11 @@ const cleanInPlace = (obj) => {
         if (
             key.startsWith("$") ||
             key.includes(".") ||
-            key === "__proto__" ||
-            key === "constructor" ||
-            key === "prototype"
+            forbiddenKeys.has(key)
         ) {
             delete obj[key];
+        } else if (typeof obj[key] === "string" && obj[key].includes("\0")) {
+            obj[key] = obj[key].replace(/\0/g, "");
         } else if (obj[key] && typeof obj[key] === "object") {
             cleanInPlace(obj[key]);
         }

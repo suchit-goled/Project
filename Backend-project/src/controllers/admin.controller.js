@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import productService from "../services/product.service.js";
 import ApiResponse from "../utils/apiResponse.js";
 import adminService from "../services/admin.service.js";
@@ -54,6 +55,10 @@ class AdminController {
 
     async updateProduct(req, res, next) {
         try {
+            if (!mongoose.isValidObjectId(req.params.id)) {
+                return ApiResponse.error(res, "Invalid product ID format.", 400);
+            }
+
             const product = await productService.updateProduct(
                 req.params.id,
                 req.body
@@ -75,6 +80,10 @@ class AdminController {
 
     async deleteProduct(req, res, next) {
         try {
+            if (!mongoose.isValidObjectId(req.params.id)) {
+                return ApiResponse.error(res, "Invalid product ID format.", 400);
+            }
+
             const deleted = await productService.deleteProduct(req.params.id);
 
             if (!deleted) {
@@ -127,8 +136,17 @@ class AdminController {
             const { orderStatus, status } = req.body;
             const newStatus = orderStatus || status;
 
+            if (!id || !mongoose.isValidObjectId(id)) {
+                return ApiResponse.error(res, "Invalid order ID format.", 400);
+            }
+
             if (!newStatus) {
                 return ApiResponse.error(res, "Order status is required.", 400);
+            }
+
+            const allowedStatuses = ["Pending", "Processing", "Confirmed", "Shipped", "Delivered", "Cancelled"];
+            if (!allowedStatuses.includes(newStatus)) {
+                return ApiResponse.error(res, `Invalid order status. Allowed: ${allowedStatuses.join(", ")}`, 400);
             }
 
             const order = await adminOrderService.updateOrderStatus(
@@ -166,6 +184,10 @@ class AdminController {
         try {
             const { id } = req.params;
             const { role } = req.body;
+
+            if (!id || !mongoose.isValidObjectId(id)) {
+                return ApiResponse.error(res, "Invalid user ID format.", 400);
+            }
 
             if (!role || !["user", "admin"].includes(role)) {
                 return ApiResponse.error(res, "Valid role ('user' or 'admin') is required.", 400);
@@ -209,6 +231,10 @@ class AdminController {
     async deleteUser(req, res, next) {
         try {
             const { id } = req.params;
+
+            if (!id || !mongoose.isValidObjectId(id)) {
+                return ApiResponse.error(res, "Invalid user ID format.", 400);
+            }
 
             // Prevent an admin from deleting their own account
             if (req.user._id.toString() === id.toString()) {

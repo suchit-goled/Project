@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import productService from "../services/product.service.js";
 import ApiResponse from "../utils/apiResponse.js";
 
@@ -47,6 +48,15 @@ class ProductController {
     async getRelatedProducts(req, res, next) {
         try {
             const { id } = req.params;
+
+            if (!id || !mongoose.isValidObjectId(id)) {
+                return ApiResponse.success(
+                    res,
+                    [],
+                    "Related products fetched successfully."
+                );
+            }
+
             const related = await productService.getRelatedProducts(id, 4);
 
             return ApiResponse.success(
@@ -61,7 +71,13 @@ class ProductController {
 
     async getProductById(req, res, next) {
         try {
-            const data = await productService.getProductById(req.params.id);
+            const { id } = req.params;
+
+            if (!id || !mongoose.isValidObjectId(id)) {
+                return ApiResponse.error(res, "Product not found", 404);
+            }
+
+            const data = await productService.getProductById(id);
 
             if (!data) {
                 return ApiResponse.error(res, "Product not found", 404);

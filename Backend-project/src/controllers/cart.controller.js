@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Cart from "../models/Cart.js";
 import Product from "../models/Product.js";
 import ApiResponse from "../utils/apiResponse.js";
@@ -24,6 +25,10 @@ export const addToCart = async (req, res, next) => {
 
         if (!productId) {
             return ApiResponse.error(res, "Product ID is required", 400);
+        }
+
+        if (!mongoose.isValidObjectId(productId)) {
+            return ApiResponse.error(res, "Invalid product ID format", 400);
         }
 
         const numQuantity = Number(quantity);
@@ -120,6 +125,10 @@ export const updateQuantity = async (req, res, next) => {
             return ApiResponse.error(res, "Product ID and quantity are required", 400);
         }
 
+        if (!mongoose.isValidObjectId(productId)) {
+            return ApiResponse.error(res, "Invalid product ID format", 400);
+        }
+
         const numQuantity = Number(quantity);
         if (isNaN(numQuantity) || !Number.isInteger(numQuantity)) {
             return ApiResponse.error(res, "Quantity must be a valid integer", 400);
@@ -177,6 +186,10 @@ export const removeFromCart = async (req, res, next) => {
 
         if (!productId) {
             return ApiResponse.error(res, "Product ID is required", 400);
+        }
+
+        if (!mongoose.isValidObjectId(productId)) {
+            return ApiResponse.error(res, "Invalid product ID format", 400);
         }
 
         await Cart.findOneAndDelete({

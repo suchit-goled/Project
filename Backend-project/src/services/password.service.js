@@ -59,6 +59,10 @@ class PasswordService {
             throw new Error("Password must be at least 6 characters long");
         }
 
+        if (newPassword.length > 128) {
+            throw new Error("Password cannot exceed 128 characters");
+        }
+
         const hashedToken = hashResetToken(token);
         const user = await passwordRepository.findByResetToken(hashedToken);
 

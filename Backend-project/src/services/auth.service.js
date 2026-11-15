@@ -18,8 +18,16 @@ class AuthService {
             throw new AppError("Invalid email address", 400);
         }
 
+        if (name.trim().length > 100) {
+            throw new AppError("Name cannot exceed 100 characters", 400);
+        }
+
         if (password.length < 6) {
             throw new AppError("Password must be at least 6 characters long", 400);
+        }
+
+        if (password.length > 128) {
+            throw new AppError("Password cannot exceed 128 characters", 400);
         }
 
         const existingUser = await userRepository.findByEmail(normalizedEmail);

@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Address from "../models/address.model.js";
 import ApiResponse from "../utils/apiResponse.js";
 
@@ -72,6 +73,10 @@ export const getAddresses = async (req, res, next) => {
 // Update Address
 export const updateAddress = async (req, res, next) => {
     try {
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            return ApiResponse.error(res, "Invalid address ID format", 400);
+        }
+
         const {
             fullName,
             phone,
@@ -127,6 +132,10 @@ export const updateAddress = async (req, res, next) => {
 // Delete Address
 export const deleteAddress = async (req, res, next) => {
     try {
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            return ApiResponse.error(res, "Invalid address ID format", 400);
+        }
+
         const address = await Address.findOne({
             _id: req.params.id,
             userId: req.user._id
@@ -160,6 +169,10 @@ export const deleteAddress = async (req, res, next) => {
 // Set Default Address
 export const setDefaultAddress = async (req, res, next) => {
     try {
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            return ApiResponse.error(res, "Invalid address ID format", 400);
+        }
+
         const address = await Address.findOne({
             _id: req.params.id,
             userId: req.user._id

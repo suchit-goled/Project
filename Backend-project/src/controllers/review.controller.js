@@ -90,6 +90,10 @@ export const addReview = async (req, res, next) => {
 
 export const getReviews = async (req, res, next) => {
     try {
+        if (!mongoose.isValidObjectId(req.params.productId)) {
+            return ApiResponse.error(res, "Invalid product ID format", 400);
+        }
+
         const reviews = await Review.find({
             productId: req.params.productId
         })
@@ -109,6 +113,10 @@ export const getReviews = async (req, res, next) => {
 
 export const updateReview = async (req, res, next) => {
     try {
+        if (!mongoose.isValidObjectId(req.params.reviewId)) {
+            return ApiResponse.error(res, "Invalid review ID format", 400);
+        }
+
         const { rating, comment } = req.body;
 
         const review = await Review.findOne({
@@ -151,6 +159,10 @@ export const updateReview = async (req, res, next) => {
 
 export const deleteReview = async (req, res, next) => {
     try {
+        if (!mongoose.isValidObjectId(req.params.reviewId)) {
+            return ApiResponse.error(res, "Invalid review ID format", 400);
+        }
+
         const reviewQuery = req.user.role === "admin"
             ? { _id: req.params.reviewId }
             : { _id: req.params.reviewId, userId: req.user._id };

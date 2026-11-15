@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import paymentService from "../services/payment.service.js";
 import ApiResponse from "../utils/apiResponse.js";
 import orderModel from "../models/order.model.js";
@@ -29,6 +30,10 @@ class PaymentController {
                 return ApiResponse.error(res, "Order ID is required", 400);
             }
 
+            if (!mongoose.isValidObjectId(orderId)) {
+                return ApiResponse.error(res, "Invalid order ID format", 400);
+            }
+
             const order = await orderModel.findById(orderId);
             if (!order) {
                 return ApiResponse.error(res, "Order not found", 404);
@@ -36,6 +41,14 @@ class PaymentController {
 
             if (String(order.userId) !== req.user._id.toString() && req.user.role !== "admin") {
                 return ApiResponse.error(res, "Access denied", 403);
+            }
+
+            if (order.paymentStatus === "Paid") {
+                return ApiResponse.error(res, "Order has already been paid", 400);
+            }
+
+            if (order.orderStatus === "Cancelled") {
+                return ApiResponse.error(res, "Cannot process payment for a cancelled order", 400);
             }
 
             const razorpayOrder = await paymentService.createOrder(orderId);
@@ -66,6 +79,10 @@ class PaymentController {
                 return ApiResponse.error(res, "All payment verification fields are required", 400);
             }
 
+            if (!mongoose.isValidObjectId(orderId)) {
+                return ApiResponse.error(res, "Invalid order ID format", 400);
+            }
+
             const existingOrder = await orderModel.findById(orderId);
             if (!existingOrder) {
                 return ApiResponse.error(res, "Order not found.", 404);
@@ -73,6 +90,18 @@ class PaymentController {
 
             if (String(existingOrder.userId) !== req.user._id.toString() && req.user.role !== "admin") {
                 return ApiResponse.error(res, "Access denied.", 403);
+            }
+
+            if (existingOrder.orderStatus === "Cancelled") {
+                return ApiResponse.error(res, "Cannot verify payment for a cancelled order.", 400);
+            }
+
+            if (existingOrder.paymentStatus === "Paid") {
+                return ApiResponse.success(
+                    res,
+                    existingOrder,
+                    "Payment already verified."
+                );
             }
 
             const verified = await paymentService.verifyPayment({

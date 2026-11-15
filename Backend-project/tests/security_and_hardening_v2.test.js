@@ -211,11 +211,11 @@ describe("Security, Bug Fixes & Edge Case Hardening Suite v2", () => {
         assert.ok(res.body.message.includes("Product not found"));
     });
 
-    // 9. Root status check returns version 2.4.0
-    test("GET / returns version 2.4.0 with secure health metadata", async () => {
+    // 9. Root status check returns version 2.5.0
+    test("GET / returns version 2.5.0 with secure health metadata", async () => {
         const res = await request(app).get("/");
         assert.equal(res.status, 200);
         assert.equal(res.body.success, true);
-        assert.equal(res.body.version, "2.4.0");
+        assert.equal(res.body.version, "2.5.0");
     });
 });

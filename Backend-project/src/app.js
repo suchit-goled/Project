@@ -108,7 +108,7 @@ app.get("/", (req, res) => {
     res.status(200).json({
         success: true,
         message: "🚀 ElectroNova Backend Running Securely",
-        version: "2.4.0",
+        version: "2.5.0",
         timestamp: new Date().toISOString()
     });
 });

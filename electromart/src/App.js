@@ -19,6 +19,7 @@ import PublicOnlyRoute from "./components/common/PublicOnlyRoute";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
+import StorePage from "./pages/StorePage";
 import Deals from "./pages/Deals";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
@@ -88,6 +89,7 @@ function App() {
                     <Route path="/products/:id" element={<ProductDetails />} />
                     <Route path="/products/category/:category" element={<Products />} />
                     <Route path="/products/search/:key" element={<Products />} />
+                    <Route path="/stores/:slug" element={<StorePage />} />
                     <Route path="/deals" element={<Deals />} />
 
                     {/* Cart & Guest / Authenticated flows */}

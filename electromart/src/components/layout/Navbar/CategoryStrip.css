@@ -1,0 +1,106 @@
+.category-strip {
+    background: #0f172a;
+    border-bottom: 1px solid #1e293b;
+    padding: 0.35rem 0;
+    font-size: 0.825rem;
+    overflow: hidden;
+}
+
+.category-strip__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.category-strip__scrollable {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    flex: 1;
+}
+
+.category-strip__scrollable::-webkit-scrollbar {
+    display: none;
+}
+
+.category-strip__link {
+    color: #cbd5e1;
+    text-decoration: none;
+    padding: 0.35rem 0.65rem;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+}
+
+.category-strip__link:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.category-strip__link.active {
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.12);
+    font-weight: 600;
+}
+
+.category-strip__link.all-link {
+    font-weight: 600;
+    color: #f8fafc;
+    border-right: 1px solid #334155;
+    padding-right: 1rem;
+    margin-right: 0.25rem;
+    flex-shrink: 0;
+}
+
+.strip-icon {
+    font-size: 0.95rem;
+    color: #38bdf8;
+}
+
+.category-strip__right-deals {
+    flex-shrink: 0;
+}
+
+.deals-pill-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: linear-flex;
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    color: #fbbf24;
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.deals-pill-link:hover {
+    background: #f59e0b;
+    color: #0f172a;
+}
+
+.deals-pill-link .zap-icon {
+    font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+    .category-strip__link.all-link {
+        border-right: none;
+        padding-right: 0.5rem;
+    }
+    .category-strip__right-deals {
+        display: none;
+    }
+}

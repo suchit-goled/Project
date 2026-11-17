@@ -16,6 +16,9 @@ import passwordRoutes from "./routes/password.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import homeRoutes from "./routes/home.routes.js";
 import contactRoutes from "./routes/contact.routes.js";
+import storeRoutes from "./routes/store.routes.js";
+import categoryRoutes from "./routes/category.routes.js";
+import deliveryRoutes from "./routes/delivery.routes.js";
 
 import errorMiddleware from "./middleware/error.middleware.js";
 import mongoSanitize from "./middleware/sanitize.middleware.js";
@@ -150,6 +153,9 @@ app.use("/api/password", passwordRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/home", homeRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/stores", storeRoutes);
+app.use("/api/categories", categoryRoutes);
+app.use("/api/delivery", deliveryRoutes);
 
 // 7. 404 Handler for Unmatched API Routes
 app.use((req, res, next) => {

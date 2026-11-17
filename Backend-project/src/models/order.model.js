@@ -65,10 +65,58 @@ const OrderSchema = new mongoose.Schema(
             type: String,
             default: "Pending",
         },
+
+        // Multi-Vendor Marketplace extensions (v3.0.0)
+        parentOrderNumber: {
+            type: String,
+            unique: true,
+            sparse: true,
+            index: true,
+        },
+
+        sellerOrders: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "SellerOrder",
+            },
+        ],
+
+        commissionTotal: {
+            type: Number,
+            default: 0,
+        },
+
+        isMultiSeller: {
+            type: Boolean,
+            default: false,
+        },
+
+        razorpayOrderId: {
+            type: String,
+            default: "",
+        },
+
+        razorpayPaymentId: {
+            type: String,
+            default: "",
+        },
+
+        razorpaySignature: {
+            type: String,
+            default: "",
+        },
+
+        notes: {
+            type: String,
+            default: "",
+        },
     },
     {
         timestamps: true,
     }
 );
+
+OrderSchema.index({ userId: 1, createdAt: -1 });
+OrderSchema.index({ orderStatus: 1 });
 
 export default mongoose.model("Order", OrderSchema);

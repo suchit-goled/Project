@@ -1,0 +1,206 @@
+.pincode-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 1rem;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.pincode-modal-card {
+    background: #ffffff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    padding: 1.5rem;
+    position: relative;
+    border: 1px solid #e2e8f0;
+}
+
+.pincode-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+}
+
+.pincode-modal-title {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.pincode-modal-title .pin-icon {
+    color: #0284c7;
+    font-size: 1.5rem;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.pincode-modal-title h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.pincode-modal-title p {
+    margin: 0;
+    font-size: 0.825rem;
+    color: #64748b;
+    line-height: 1.35;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+}
+
+.close-btn:hover {
+    color: #0f172a;
+    background: #f1f5f9;
+}
+
+.pincode-form {
+    margin-bottom: 1.25rem;
+}
+
+.pincode-input-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.pincode-input-group input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.pincode-input-group input:focus {
+    border-color: #0284c7;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.apply-pin-btn {
+    background: #0284c7;
+    color: #ffffff;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.apply-pin-btn:hover:not(:disabled) {
+    background: #0369a1;
+}
+
+.apply-pin-btn:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+}
+
+.current-location-status {
+    display: flex;
+    gap: 0.65rem;
+    align-items: flex-start;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.85rem;
+    color: #166534;
+}
+
+.current-location-status .check-icon {
+    color: #16a34a;
+    font-size: 1.15rem;
+    margin-top: 1px;
+    flex-shrink: 0;
+}
+
+.delivery-time-note {
+    font-size: 0.8rem;
+    color: #15803d;
+    margin-top: 0.2rem;
+}
+
+.quick-locations-section {
+    border-top: 1px solid #f1f5f9;
+    padding-top: 1rem;
+}
+
+.quick-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 0.65rem;
+    letter-spacing: 0.5px;
+}
+
+.quick-locations-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+}
+
+.quick-loc-btn {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.5rem 0.65rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.quick-loc-btn:hover {
+    border-color: #0284c7;
+    background: #f0f9ff;
+}
+
+.quick-loc-btn.active {
+    border-color: #0284c7;
+    background: #e0f2fe;
+}
+
+.quick-loc-btn .city-name {
+    font-size: 0.825rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.quick-loc-btn .city-pin {
+    font-size: 0.725rem;
+    color: #64748b;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: scale(1); }
+}

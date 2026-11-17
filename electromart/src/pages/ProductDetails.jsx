@@ -12,7 +12,9 @@ import {
     FiClock,
     FiChevronRight,
     FiShare2,
-    FiMessageSquare
+    FiMessageSquare,
+    FiMapPin,
+    FiExternalLink
 } from "react-icons/fi";
 import { FaHeart, FaStar } from "react-icons/fa";
 import toast from "react-hot-toast";
@@ -22,10 +24,14 @@ import ReviewService from "../services/review.service";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { useAuth } from "../context/AuthContext";
+import { useDelivery } from "../context/DeliveryContext";
 import ProductCard from "../components/common/Card/ProductCard";
 import ProductSkeleton from "../components/common/Skeleton/ProductSkeleton";
+import OtherSellersComparison from "../components/Products/OtherSellersComparison";
 
 import "./ProductDetails.css";
+
+const RECENTLY_VIEWED_KEY = "electronova_recently_viewed";
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -34,6 +40,7 @@ const ProductDetails = () => {
     const { user } = useAuth();
     const { addToCart } = useCart();
     const { addToWishlist, removeFromWishlist, isWishlisted } = useWishlist();
+    const { pincode, location, openModal } = useDelivery();
 
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -44,6 +51,7 @@ const ProductDetails = () => {
     const [activeTab, setActiveTab] = useState("description");
 
     const [relatedProducts, setRelatedProducts] = useState([]);
+    const [sellerOffers, setSellerOffers] = useState([]);
     const [reviews, setReviews] = useState([]);
     const [reviewsLoading, setReviewsLoading] = useState(false);
 
@@ -54,7 +62,7 @@ const ProductDetails = () => {
 
     const isCurrentProductWishlisted = product ? isWishlisted(product._id) : false;
 
-    // Fetch product details, related products, and reviews
+    // Fetch product details, other offers, related products, and reviews
     const fetchProductData = useCallback(async () => {
         try {
             setLoading(true);
@@ -63,6 +71,26 @@ const ProductDetails = () => {
             const data = await ProductService.getProductById(id);
             setProduct(data);
             setSelectedImage(data.product_image_url || data.image);
+
+            // Record to recently viewed in localStorage
+            try {
+                const stored = localStorage.getItem(RECENTLY_VIEWED_KEY);
+                let list = stored ? JSON.parse(stored) : [];
+                list = list.filter((item) => (item._id || item.id) !== data._id);
+                list.unshift(data);
+                if (list.length > 10) list = list.slice(0, 10);
+                localStorage.setItem(RECENTLY_VIEWED_KEY, JSON.stringify(list));
+            } catch (storageErr) {
+                console.warn("Could not save to recently viewed:", storageErr);
+            }
+
+            // Fetch alternative seller offers
+            try {
+                const offers = await ProductService.getOtherSellerOffers(id);
+                setSellerOffers(offers);
+            } catch (offerErr) {
+                console.warn("Could not load other seller offers:", offerErr);
+            }
 
             // Fetch related products
             const related = await ProductService.getRelatedProducts(id);
@@ -204,6 +232,12 @@ const ProductDetails = () => {
 
     const savings = Math.max(0, (product.original_price || 0) - (product.discounted_price || 0));
     const inStock = (product.countInStock ?? 25) > 0;
+    const store = product.store || {};
+    const storeName = store.name || "ElectroNova Official Store";
+    const storeSlug = store.slug || "";
+    const imagesList = Array.isArray(product.images) && product.images.length > 0
+        ? product.images
+        : [selectedImage || product.product_image_url || product.image];
 
     return (
         <div className="product-details-page container">
@@ -251,7 +285,7 @@ const ProductDetails = () => {
                         </div>
 
                         <img
-                            src={selectedImage || product.product_image_url}
+                            src={selectedImage || product.product_image_url || product.image}
                             alt={product.product_title}
                             className="primary-product-image"
                             width="450"
@@ -264,6 +298,22 @@ const ProductDetails = () => {
                             }}
                         />
                     </div>
+
+                    {/* Image Thumbnail Selector */}
+                    {imagesList.length > 1 && (
+                        <div className="thumbnails-row">
+                            {imagesList.map((imgUrl, idx) => (
+                                <button
+                                    key={idx}
+                                    type="button"
+                                    className={`thumbnail-btn ${selectedImage === imgUrl ? "active" : ""}`}
+                                    onClick={() => setSelectedImage(imgUrl)}
+                                >
+                                    <img src={imgUrl} alt={`${product.product_title} view ${idx + 1}`} />
+                                </button>
+                            ))}
+                        </div>
+                    )}
 
                     <div className="stock-delivery-indicator">
                         <div className="indicator-item">
@@ -281,7 +331,7 @@ const ProductDetails = () => {
                 <div className="product-info-panel">
                     <div className="product-category-brand">
                         <span className="category-tag">{product.product_category}</span>
-                        {product.brand && <span className="brand-tag">Brand: {product.brand}</span>}
+                        {product.brand && <span className="brand-tag">Brand: <strong>{product.brand}</strong></span>}
                     </div>
 
                     <h1 className="product-title">{product.product_title}</h1>
@@ -327,6 +377,79 @@ const ProductDetails = () => {
                         <span className="tax-inclusive-label">
                             Inclusive of all applicable GST taxes. Free express shipping applied.
                         </span>
+                    </div>
+
+                    {/* SELLER / STORE CARD */}
+                    <div className="product-seller-card">
+                        <div className="seller-card-top">
+                            <div className="seller-card-info">
+                                <span className="seller-subheading">Sold & Fulfilled By:</span>
+                                <div className="seller-heading-row">
+                                    {storeSlug ? (
+                                        <Link to={`/stores/${storeSlug}`} className="seller-store-title">
+                                            {storeName} <FiExternalLink />
+                                        </Link>
+                                    ) : (
+                                        <span className="seller-store-title">{storeName}</span>
+                                    )}
+                                    {store.isVerified && (
+                                        <span className="seller-verified-tag">
+                                            <FiCheckCircle /> Verified Partner
+                                        </span>
+                                    )}
+                                </div>
+                                <div className="seller-details-row">
+                                    <span className="seller-store-rating">
+                                        <FaStar className="star-icon" /> {store.rating?.toFixed(1) || "4.8"} / 5.0
+                                    </span>
+                                    {store.pickupAddress?.city && (
+                                        <span className="seller-city-tag">
+                                            <FiMapPin /> Ships from {store.pickupAddress.city}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="seller-delivery-badge">
+                            {product.deliveryOptions?.supportsPlatformDelivery ? (
+                                <span className="fulfillment-tag platform">
+                                    <FiTruck /> ElectroNova Express Fulfilled
+                                </span>
+                            ) : (
+                                <span className="fulfillment-tag direct">
+                                    <FiTruck /> Direct Store Dispatch
+                                </span>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* LOCAL PIN CODE DELIVERY CHECKER WIDGET */}
+                    <div className="pincode-checker-widget">
+                        <div className="pincode-widget-header">
+                            <span className="pincode-title">
+                                <FiMapPin className="pin-icon" />
+                                {pincode ? (
+                                    <span>Deliver to: <strong>{location.city || "PIN"} - {pincode}</strong></span>
+                                ) : (
+                                    <span>Check Delivery & Cash on Delivery Availability</span>
+                                )}
+                            </span>
+                            <button
+                                type="button"
+                                className="change-pin-btn"
+                                onClick={openModal}
+                            >
+                                {pincode ? "Change PIN" : "Select PIN"}
+                            </button>
+                        </div>
+                        <div className="pincode-estimate-text">
+                            {pincode ? (
+                                <span>⚡ Express Delivery available: <strong>Arrives in 2–3 Days</strong></span>
+                            ) : (
+                                <span>Enter your 6-digit delivery PIN code to see exact delivery date & seller options.</span>
+                            )}
+                        </div>
                     </div>
 
                     {/* Quantity & Actions */}
@@ -407,6 +530,14 @@ const ProductDetails = () => {
                 </div>
             </div>
 
+            {/* MULTI-SELLER OFFER COMPARISON TABLE */}
+            {sellerOffers.length > 1 && (
+                <OtherSellersComparison
+                    offers={sellerOffers}
+                    currentProductId={product._id}
+                />
+            )}
+
             {/* Product Tabs Section */}
             <div className="product-tabs-section" id="product-tabs-section">
                 <div className="tabs-header">
@@ -476,6 +607,18 @@ const ProductDetails = () => {
                                         <th>Category</th>
                                         <td>{product.product_category}</td>
                                     </tr>
+                                    {product.brand && (
+                                        <tr>
+                                            <th>Brand</th>
+                                            <td>{product.brand}</td>
+                                        </tr>
+                                    )}
+                                    {product.sku && (
+                                        <tr>
+                                            <th>SKU Code</th>
+                                            <td>{product.sku}</td>
+                                        </tr>
+                                    )}
                                     <tr>
                                         <th>Original Price</th>
                                         <td>₹{(product.original_price ?? 0).toLocaleString()}</td>
@@ -489,13 +632,24 @@ const ProductDetails = () => {
                                         <td>{product.discount_percentage}% OFF</td>
                                     </tr>
                                     <tr>
+                                        <th>Seller</th>
+                                        <td>{storeName}</td>
+                                    </tr>
+                                    <tr>
                                         <th>Warranty Period</th>
                                         <td>1 Year Manufacturer Warranty</td>
                                     </tr>
                                     <tr>
                                         <th>Stock Status</th>
-                                        <td>{inStock ? "Available (Ready to Ship)" : "Out of stock"}</td>
+                                        <td>{inStock ? `Available (${product.stock ?? 25} in stock)` : "Out of stock"}</td>
                                     </tr>
+                                    {/* Render custom specifications */}
+                                    {Array.isArray(product.specifications) && product.specifications.map((spec, sIdx) => (
+                                        <tr key={sIdx}>
+                                            <th>{spec.name || spec.key}</th>
+                                            <td>{spec.value}</td>
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </table>
                         </div>

@@ -31,6 +31,17 @@ const cartSchema = new mongoose.Schema(
       type: Number,
       default: 1,
     },
+
+    // Multi-Vendor extensions
+    sellerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+
+    storeId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Store",
+    },
   },
   {
     timestamps: true,

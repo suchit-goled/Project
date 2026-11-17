@@ -1,0 +1,56 @@
+.navbar-delivery-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: transparent;
+    border: 1px solid transparent;
+    padding: 0.35rem 0.6rem;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s ease;
+    margin-left: 0.5rem;
+}
+
+.navbar-delivery-selector:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.delivery-pin-icon {
+    color: #0284c7;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+
+.delivery-text-wrap {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.delivery-label {
+    font-size: 0.68rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.delivery-city {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.chevron-icon {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+@media (max-width: 900px) {
+    .navbar-delivery-selector {
+        display: none;
+    }
+}

@@ -5,20 +5,23 @@ import { SearchProvider } from "./context/SearchContext";
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";
+import { DeliveryProvider } from "./context/DeliveryContext";
 
 const renderWithProviders = async (ui) => {
     let result;
     await act(async () => {
         result = render(
-            <SearchProvider>
-                <AuthProvider>
-                    <WishlistProvider>
-                        <CartProvider>
-                            {ui}
-                        </CartProvider>
-                    </WishlistProvider>
-                </AuthProvider>
-            </SearchProvider>
+            <DeliveryProvider>
+                <SearchProvider>
+                    <AuthProvider>
+                        <WishlistProvider>
+                            <CartProvider>
+                                {ui}
+                            </CartProvider>
+                        </WishlistProvider>
+                    </AuthProvider>
+                </SearchProvider>
+            </DeliveryProvider>
         );
     });
     return result;

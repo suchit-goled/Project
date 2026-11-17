@@ -9,15 +9,22 @@ const ProductsHeader = ({
     setSort,
     onToggleMobileFilters,
     category = "",
+    brand = "",
     search = ""
 }) => {
+    const titleText = brand
+        ? `${brand} Electronics`
+        : category
+        ? `${category}`
+        : search
+        ? `Search: "${search}"`
+        : "All Electronics";
+
     return (
         <div className="products-header">
             <div className="products-header__left">
                 <div className="products-header__title-row">
-                    <h2>
-                        {category ? `${category}` : search ? `Search: "${search}"` : "All Products"}
-                    </h2>
+                    <h2>{titleText}</h2>
                     <span className="products-count-badge">
                         {total.toLocaleString()} {total === 1 ? "Product" : "Products"}
                     </span>

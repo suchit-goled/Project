@@ -54,8 +54,25 @@ const userSchema = new mongoose.Schema(
 
         role: {
             type: String,
-            enum: ["user", "admin"],
+            enum: ["user", "customer", "seller", "admin", "superadmin"],
             default: "user",
+        },
+
+        sellerStatus: {
+            type: String,
+            enum: ["none", "pending", "approved", "rejected", "suspended"],
+            default: "none",
+            index: true,
+        },
+
+        sellerProfile: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Seller",
+        },
+
+        isEmailVerified: {
+            type: Boolean,
+            default: false,
         },
 
         resetPasswordToken: {

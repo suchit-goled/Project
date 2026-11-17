@@ -15,6 +15,7 @@ const Products = () => {
 
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [brands, setBrands] = useState([]);
     const [totalProducts, setTotalProducts] = useState(0);
 
     const [loading, setLoading] = useState(true);
@@ -25,8 +26,11 @@ const Products = () => {
 
     const [sort, setSort] = useState("newest");
     const [category, setCategory] = useState(paramCategory || searchParams.get("category") || "");
+    const [brand, setBrand] = useState(searchParams.get("brand") || "");
     const [rating, setRating] = useState(0);
     const [maxPrice, setMaxPrice] = useState(200000);
+    const [inStock, setInStock] = useState(false);
+    const [minDiscount, setMinDiscount] = useState(0);
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
     // Sync from URL params
@@ -39,6 +43,11 @@ const Products = () => {
             setPage(1);
         }
 
+        if (searchParams.get("brand")) {
+            setBrand(searchParams.get("brand"));
+            setPage(1);
+        }
+
         if (paramKey) {
             setSearch(paramKey);
             setPage(1);
@@ -48,19 +57,26 @@ const Products = () => {
         }
     }, [paramCategory, paramKey, searchParams, setSearch]);
 
-    // Fetch categories list from backend
+    // Fetch categories and brands from backend
     useEffect(() => {
-        const fetchCategories = async () => {
+        const fetchMeta = async () => {
             try {
-                const cats = await ProductService.getCategories();
-                if (cats && cats.length > 0) {
-                    setCategories(cats);
+                const [cats, brandList] = await Promise.all([
+                    ProductService.getCategories(),
+                    ProductService.getBrands(),
+                ]);
+                if (cats && cats.length > 0) setCategories(cats);
+                if (brandList && brandList.length > 0) {
+                    setBrands(brandList);
+                } else {
+                    // Fallback to top electronics brands
+                    setBrands(["Apple", "Samsung", "Sony", "Dell", "HP", "Lenovo", "boAt", "OnePlus", "Asus", "Bose", "Canon", "LG"]);
                 }
             } catch (err) {
-                console.error("Failed to load categories:", err);
+                console.error("Failed to load catalog metadata:", err);
             }
         };
-        fetchCategories();
+        fetchMeta();
     }, []);
 
     // Fetch products from server with all query parameters
@@ -79,6 +95,10 @@ const Products = () => {
                 params.category = category.trim();
             }
 
+            if (brand && brand.trim()) {
+                params.brand = brand.trim();
+            }
+
             if (search && search.trim()) {
                 params.search = search.trim();
             }
@@ -89,6 +109,14 @@ const Products = () => {
 
             if (maxPrice < 200000) {
                 params.maxPrice = maxPrice;
+            }
+
+            if (inStock) {
+                params.inStock = "true";
+            }
+
+            if (minDiscount > 0) {
+                params.minDiscount = minDiscount;
             }
 
             const response = await ProductService.getProducts(params);
@@ -103,7 +131,7 @@ const Products = () => {
         } finally {
             setLoading(false);
         }
-    }, [page, category, search, rating, maxPrice, sort]);
+    }, [page, category, brand, search, rating, maxPrice, inStock, minDiscount, sort]);
 
     useEffect(() => {
         fetchProducts();
@@ -111,6 +139,11 @@ const Products = () => {
 
     const handleCategoryChange = (newCat) => {
         setCategory(newCat);
+        setPage(1);
+    };
+
+    const handleBrandChange = (newBrand) => {
+        setBrand(newBrand);
         setPage(1);
     };
 
@@ -124,6 +157,16 @@ const Products = () => {
         setPage(1);
     };
 
+    const handleInStockChange = (val) => {
+        setInStock(val);
+        setPage(1);
+    };
+
+    const handleMinDiscountChange = (val) => {
+        setMinDiscount(val);
+        setPage(1);
+    };
+
     const handleSortChange = (newSort) => {
         setSort(newSort);
         setPage(1);
@@ -131,8 +174,11 @@ const Products = () => {
 
     const handleResetAll = () => {
         setCategory("");
+        setBrand("");
         setRating(0);
         setMaxPrice(200000);
+        setInStock(false);
+        setMinDiscount(0);
         setSort("newest");
         setPage(1);
         if (setSearch) setSearch("");
@@ -146,6 +192,7 @@ const Products = () => {
                     sort={sort}
                     setSort={handleSortChange}
                     category={category}
+                    brand={brand}
                     search={search}
                     onToggleMobileFilters={() => setMobileFiltersOpen(!mobileFiltersOpen)}
                 />
@@ -156,10 +203,17 @@ const Products = () => {
                             categories={categories}
                             category={category}
                             setCategory={handleCategoryChange}
+                            brands={brands}
+                            brand={brand}
+                            setBrand={handleBrandChange}
                             rating={rating}
                             setRating={handleRatingChange}
                             maxPrice={maxPrice}
                             setMaxPrice={handleMaxPriceChange}
+                            inStock={inStock}
+                            setInStock={handleInStockChange}
+                            minDiscount={minDiscount}
+                            setMinDiscount={handleMinDiscountChange}
                             onReset={handleResetAll}
                         />
                     </div>

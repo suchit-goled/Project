@@ -20,6 +20,22 @@ class ProductService {
         return await productRepository.getCategories();
     }
 
+    async getOtherSellerOffers(id) {
+        return await productRepository.getOtherSellerOffers(id);
+    }
+
+    async getSuggestions(keyword) {
+        return await productRepository.getSuggestions(keyword);
+    }
+
+    async getDeals(limit = 12) {
+        return await productRepository.getDeals(limit);
+    }
+
+    async getBrands() {
+        return await productRepository.getBrands();
+    }
+
     async getRelatedProducts(productId, limit = 4) {
         return await productRepository.getRelatedProducts(productId, limit);
     }

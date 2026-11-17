@@ -8,6 +8,9 @@ import SearchBar from "./SearchBar";
 import ActionButtons from "./ActionButtons";
 import AnnouncementBar from "./AnnouncementBar";
 import MobileMenu from "./MobileMenu";
+import DeliverySelector from "./DeliverySelector";
+import CategoryStrip from "./CategoryStrip";
+import PincodeModal from "../../common/PincodeModal/PincodeModal";
 
 const Navbar = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -26,6 +29,7 @@ const Navbar = () => {
                             <FiMenu />
                         </button>
                         <Logo />
+                        <DeliverySelector />
                     </div>
 
                     <div className="navbar__center">
@@ -41,6 +45,12 @@ const Navbar = () => {
                     </div>
                 </div>
             </header>
+
+            {/* Marketplace Category Navigation Sub-bar */}
+            <CategoryStrip />
+
+            {/* PIN Code Delivery Selector Modal */}
+            <PincodeModal />
 
             <MobileMenu
                 isOpen={mobileOpen}

@@ -92,6 +92,48 @@ class ProductController {
             next(error);
         }
     }
+
+    async getSuggestions(req, res, next) {
+        try {
+            const { q } = req.query;
+            const data = await productService.getSuggestions(q);
+            return ApiResponse.success(res, data, "Suggestions fetched successfully.");
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getDeals(req, res, next) {
+        try {
+            const limit = Number(req.query.limit) || 12;
+            const data = await productService.getDeals(limit);
+            return ApiResponse.success(res, data, "Deals fetched successfully.");
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getBrands(req, res, next) {
+        try {
+            const data = await productService.getBrands();
+            return ApiResponse.success(res, data, "Brands fetched successfully.");
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getOtherSellerOffers(req, res, next) {
+        try {
+            const { id } = req.params;
+            if (!id || !mongoose.isValidObjectId(id)) {
+                return ApiResponse.success(res, [], "No other seller offers.");
+            }
+            const data = await productService.getOtherSellerOffers(id);
+            return ApiResponse.success(res, data, "Seller offers fetched successfully.");
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 export default new ProductController();

@@ -1,6 +1,6 @@
 import "./ProductCard.css";
 import { useNavigate } from "react-router-dom";
-import { FiHeart } from "react-icons/fi";
+import { FiHeart, FiTruck } from "react-icons/fi";
 import { FaHeart, FaStar } from "react-icons/fa";
 import { useCart } from "../../../context/CartContext";
 import { useWishlist } from "../../../context/WishlistContext";
@@ -31,6 +31,9 @@ const ProductCard = ({ product }) => {
         }
     };
 
+    const storeName = product.storeId?.name || product.store?.name || (product.sellerId ? "Verified Seller" : "ElectroNova Direct");
+    const stockCount = product.stock ?? product.countInStock ?? 25;
+
     return (
         <article
             className="product-card"
@@ -54,8 +57,8 @@ const ProductCard = ({ product }) => {
 
             <div className="product-card__image">
                 <img
-                    src={product.product_image_url}
-                    alt={product.product_title}
+                    src={product.product_image_url || product.image}
+                    alt={product.product_title || product.title}
                     loading="lazy"
                     decoding="async"
                     width="145"
@@ -68,30 +71,51 @@ const ProductCard = ({ product }) => {
             </div>
 
             <div className="product-card__content">
-                <span className="brand">
-                    {product.product_category}
-                </span>
+                <div className="category-and-brand">
+                    <span className="brand">
+                        {product.product_category || product.category}
+                    </span>
+                    {product.brand && product.brand !== product.product_category && (
+                        <span className="brand-pill">{product.brand}</span>
+                    )}
+                </div>
 
                 <h3>
-                    {product.product_title}
+                    {product.product_title || product.title}
                 </h3>
+
+                <div className="seller-attribution">
+                    <span className="seller-label">Seller:</span>
+                    <span className="seller-name">{storeName}</span>
+                </div>
 
                 <div className="rating">
                     <FaStar color="#f59e0b" size={13} style={{ flexShrink: 0, marginBottom: "1px" }} />
-                    <span className="rating-value">{product.product_rating ?? 0}</span>
+                    <span className="rating-value">{product.product_rating ?? product.rating ?? 0}</span>
                     <span>
-                        ({(product.total_reviews ?? 0).toLocaleString()} Reviews)
+                        ({(product.total_reviews ?? product.numReviews ?? 0).toLocaleString()} Reviews)
                     </span>
                 </div>
 
                 <div className="price-section">
                     <span className="discount-price">
-                        ₹{(product.discounted_price ?? 0).toLocaleString()}
+                        ₹{(product.discounted_price ?? product.discountPrice ?? 0).toLocaleString()}
                     </span>
 
                     <span className="original-price">
-                        ₹{(product.original_price ?? 0).toLocaleString()}
+                        ₹{(product.original_price ?? product.price ?? 0).toLocaleString()}
                     </span>
+                </div>
+
+                <div className="card-marketplace-footer">
+                    <div className="delivery-badge-tag">
+                        <FiTruck className="truck-icon" />
+                        <span>Free Delivery</span>
+                    </div>
+
+                    {stockCount > 0 && stockCount <= 8 && (
+                        <span className="low-stock-alert">Only {stockCount} left!</span>
+                    )}
                 </div>
 
                 <div onClick={(e) => e.stopPropagation()}>

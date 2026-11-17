@@ -40,6 +40,17 @@ import EditProfile from "./pages/EditProfile";
 import Admin from "./pages/Admin";
 import AdminOrders from "./pages/AdminOrders";
 
+// Seller Portal & Multi-Vendor Hub
+import SellerRoute from "./components/common/SellerRoute";
+import SellerRegister from "./pages/seller/SellerRegister";
+import SellerLayout from "./pages/seller/SellerLayout";
+import SellerDashboard from "./pages/seller/SellerDashboard";
+import SellerOrders from "./pages/seller/SellerOrders";
+import SellerProducts from "./pages/seller/SellerProducts";
+import SellerAddProduct from "./pages/seller/SellerAddProduct";
+import SellerEarnings from "./pages/seller/SellerEarnings";
+import SellerStoreProfile from "./pages/seller/SellerStoreProfile";
+
 // Informational & Support Pages
 import Contact from "./pages/Contact";
 import ShippingPolicy from "./pages/ShippingPolicy";
@@ -192,6 +203,32 @@ function App() {
                             </AdminRoute>
                         }
                     />
+
+                    {/* Seller Portal & Multi-Vendor Hub */}
+                    <Route
+                        path="/seller/register"
+                        element={
+                            <ProtectedRoute>
+                                <SellerRegister />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/seller"
+                        element={
+                            <SellerRoute>
+                                <SellerLayout />
+                            </SellerRoute>
+                        }
+                    >
+                        <Route index element={<SellerDashboard />} />
+                        <Route path="dashboard" element={<SellerDashboard />} />
+                        <Route path="orders" element={<SellerOrders />} />
+                        <Route path="products" element={<SellerProducts />} />
+                        <Route path="products/new" element={<SellerAddProduct />} />
+                        <Route path="earnings" element={<SellerEarnings />} />
+                        <Route path="store" element={<SellerStoreProfile />} />
+                    </Route>
 
                     {/* Support, Policies & Company */}
                     <Route path="/contact" element={<Contact />} />

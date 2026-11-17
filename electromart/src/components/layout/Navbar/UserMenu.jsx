@@ -1,5 +1,16 @@
 import { useState, useRef, useEffect } from "react";
-import { FiUser, FiChevronDown, FiPackage, FiHeart, FiShield, FiLogOut, FiSliders } from "react-icons/fi";
+import {
+    FiUser,
+    FiChevronDown,
+    FiPackage,
+    FiHeart,
+    FiShield,
+    FiLogOut,
+    FiSliders,
+    FiShoppingBag,
+    FiBox,
+    FiTrendingUp,
+} from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import toast from "react-hot-toast";
@@ -41,6 +52,7 @@ const UserMenu = () => {
     }
 
     const isAdmin = user.role === "admin";
+    const isSeller = user.role === "seller";
 
     const handleNavigate = (path) => {
         setOpen(false);
@@ -70,6 +82,7 @@ const UserMenu = () => {
                 </div>
                 <span className="user-name">{user.name}</span>
                 {isAdmin && <span className="admin-chip">Admin</span>}
+                {isSeller && <span className="seller-chip">Seller</span>}
                 <FiChevronDown className={`chevron-icon ${open ? "rotate" : ""}`} />
             </button>
 
@@ -91,6 +104,34 @@ const UserMenu = () => {
                             <button onClick={() => handleNavigate("/admin-orders")} className="dropdown-item admin-item">
                                 <FiSliders />
                                 <span>Manage All Orders</span>
+                            </button>
+                            <div className="dropdown-divider" />
+                        </>
+                    )}
+
+                    {isSeller && (
+                        <>
+                            <button onClick={() => handleNavigate("/seller/dashboard")} className="dropdown-item seller-item">
+                                <FiShoppingBag />
+                                <span>Seller Dashboard</span>
+                            </button>
+                            <button onClick={() => handleNavigate("/seller/orders")} className="dropdown-item">
+                                <FiPackage />
+                                <span>Store Orders</span>
+                            </button>
+                            <button onClick={() => handleNavigate("/seller/products")} className="dropdown-item">
+                                <FiBox />
+                                <span>My Products</span>
+                            </button>
+                            <div className="dropdown-divider" />
+                        </>
+                    )}
+
+                    {!isSeller && !isAdmin && (
+                        <>
+                            <button onClick={() => handleNavigate("/seller/register")} className="dropdown-item seller-item">
+                                <FiTrendingUp />
+                                <span>Sell on ElectroNova</span>
                             </button>
                             <div className="dropdown-divider" />
                         </>

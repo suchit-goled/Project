@@ -52,6 +52,11 @@ class ProductRepository {
             filter.storeId = rawStoreId;
         }
 
+        // Seller matching
+        if (query.sellerId && mongoose.isValidObjectId(query.sellerId)) {
+            filter.sellerId = query.sellerId;
+        }
+
         // In Stock filter
         if (query.inStock === "true" || query.inStock === true) {
             filter.stock = { $gt: 0 };

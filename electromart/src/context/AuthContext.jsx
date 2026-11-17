@@ -53,6 +53,12 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const updateUser = (updatedUserData) => {
+        const nextUser = typeof updatedUserData === "function" ? updatedUserData(user) : updatedUserData;
+        localStorage.setItem("user", JSON.stringify(nextUser));
+        setUser(nextUser);
+    };
+
     const logout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
@@ -68,7 +74,8 @@ export const AuthProvider = ({ children }) => {
                 loading,
                 login,
                 signup,
-                logout
+                logout,
+                updateUser
             }}
         >
             {children}

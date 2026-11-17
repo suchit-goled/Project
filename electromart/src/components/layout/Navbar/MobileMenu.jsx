@@ -14,7 +14,9 @@ import {
   FiPackage,
   FiHeart,
   FiLogOut,
-  FiSearch
+  FiSearch,
+  FiShoppingBag,
+  FiTrendingUp,
 } from "react-icons/fi";
 import { useAuth } from "../../../context/AuthContext";
 import { useSearch } from "../../../context/SearchContext";
@@ -90,6 +92,15 @@ const MobileMenu = ({ isOpen, onClose }) => {
               <NavLink to="/deals" onClick={onClose} className="mobile-nav-item deals-link">
                 <FiTag /> <span>Deals & Offers</span>
               </NavLink>
+              {user?.role === "seller" ? (
+                <NavLink to="/seller/dashboard" onClick={onClose} className="mobile-nav-item">
+                  <FiShoppingBag /> <span>Seller Dashboard</span>
+                </NavLink>
+              ) : (
+                <NavLink to="/seller/register" onClick={onClose} className="mobile-nav-item">
+                  <FiTrendingUp /> <span>Sell on ElectroNova</span>
+                </NavLink>
+              )}
               <NavLink to="/contact" onClick={onClose} className="mobile-nav-item">
                 <FiMail /> <span>Support & Contact</span>
               </NavLink>

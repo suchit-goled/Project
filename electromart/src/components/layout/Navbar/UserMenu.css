@@ -80,6 +80,18 @@
   letter-spacing: 0.05em;
 }
 
+.seller-chip {
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  letter-spacing: 0.05em;
+}
+
 .chevron-icon {
   font-size: 0.85rem;
   color: var(--text-muted);
@@ -178,6 +190,19 @@
 
 .dropdown-item.admin-item:hover {
   background: rgba(56, 189, 248, 0.08);
+}
+
+.dropdown-item.seller-item {
+  color: #818cf8;
+  font-weight: 600;
+}
+
+.dropdown-item.seller-item svg {
+  color: #818cf8;
+}
+
+.dropdown-item.seller-item:hover {
+  background: rgba(99, 102, 241, 0.08);
 }
 
 .dropdown-item.logout-item {

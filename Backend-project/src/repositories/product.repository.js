@@ -86,6 +86,14 @@ class ProductRepository {
             case "discount":
                 sortOption.discount_percentage = -1;
                 break;
+            case "titleAsc":
+            case "nameAsc":
+                sortOption.product_title = 1;
+                break;
+            case "titleDesc":
+            case "nameDesc":
+                sortOption.product_title = -1;
+                break;
             case "newest":
             case "latest":
             default:

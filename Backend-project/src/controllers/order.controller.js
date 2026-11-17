@@ -12,7 +12,7 @@ export const createOrder = async (req, res, next) => {
     try {
         const { shippingAddress, paymentMethod = "Cash On Delivery" } = req.body;
 
-        if (!shippingAddress || !shippingAddress.address || !shippingAddress.city) {
+        if (!shippingAddress || typeof shippingAddress !== "object" || Array.isArray(shippingAddress) || !shippingAddress.address || !shippingAddress.city) {
             return ApiResponse.error(res, "Complete shipping address is required", 400);
         }
 
@@ -113,9 +113,9 @@ export const createOrder = async (req, res, next) => {
 
 export const getUserOrders = async (req, res, next) => {
     try {
-        const { userId } = req.params;
+        const userId = req.params.userId || (req.user && req.user._id ? req.user._id.toString() : null);
 
-        if (!mongoose.isValidObjectId(userId)) {
+        if (!userId || !mongoose.isValidObjectId(userId)) {
             return ApiResponse.error(
                 res,
                 "Invalid user ID format",

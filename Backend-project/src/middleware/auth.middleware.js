@@ -10,7 +10,10 @@ export const protect = async (req, res, next) => {
             req.headers.authorization &&
             req.headers.authorization.startsWith("Bearer")
         ) {
-            token = req.headers.authorization.split(" ")[1];
+            const parts = req.headers.authorization.split(" ");
+            if (parts.length > 1 && parts[1].trim()) {
+                token = parts[1].trim();
+            }
         }
 
         if (!token) {
@@ -71,7 +74,10 @@ export const optionalProtect = async (req, res, next) => {
             req.headers.authorization &&
             req.headers.authorization.startsWith("Bearer")
         ) {
-            token = req.headers.authorization.split(" ")[1];
+            const parts = req.headers.authorization.split(" ");
+            if (parts.length > 1 && parts[1].trim()) {
+                token = parts[1].trim();
+            }
         }
 
         if (token) {

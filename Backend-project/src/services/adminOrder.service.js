@@ -11,6 +11,7 @@ class AdminOrderService {
 
         const validStatus = [
             "Pending",
+            "Processing",
             "Confirmed",
             "Packed",
             "Shipped",

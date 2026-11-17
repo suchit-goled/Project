@@ -28,7 +28,8 @@ app.disable("x-powered-by");
 // 1. Security Headers via Helmet
 app.use(helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
-    noSniff: true
+    noSniff: true,
+    referrerPolicy: { policy: "strict-origin-when-cross-origin" }
 }));
 
 // 2. CORS Security
@@ -103,12 +104,26 @@ const contactLimiter = rateLimit({
 });
 app.use("/api/contact", contactLimiter);
 
+// Dedicated rate limit for payment operations to mitigate automated card fraud and payment replay attacks
+const paymentLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 60, // 60 payment attempts per 15 mins
+    standardHeaders: true,
+    legacyHeaders: false,
+    skip: () => process.env.NODE_ENV === "test",
+    message: {
+        success: false,
+        message: "Too many payment requests from this IP, please try again after 15 minutes"
+    }
+});
+app.use("/api/payment", paymentLimiter);
+
 // 5. Health Check
 app.get("/", (req, res) => {
     res.status(200).json({
         success: true,
         message: "🚀 ElectroNova Backend Running Securely",
-        version: "2.5.0",
+        version: "2.6.0",
         timestamp: new Date().toISOString()
     });
 });

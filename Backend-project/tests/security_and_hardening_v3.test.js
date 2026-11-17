@@ -91,11 +91,11 @@ describe("Security, Bug Fixes & Edge Case Hardening Suite v3", () => {
     });
 
     // 1. Root and health check return version and security status
-    test("GET / returns version 2.5.0 and security status", async () => {
+    test("GET / returns version 2.6.0 and security status", async () => {
         const res = await request(app).get("/");
         assert.equal(res.status, 200);
         assert.equal(res.body.success, true);
-        assert.equal(res.body.version, "2.5.0");
+        assert.equal(res.body.version, "2.6.0");
     });
 
     // 2. Product filtering handles minPrice=0 and inverted ranges gracefully

@@ -12,6 +12,18 @@ const errorMiddleware = (err, req, res, next) => {
         message = `Resource not found with id of ${err.value}`;
     }
 
+    // Body-parser / Express JSON SyntaxError (malformed payload)
+    if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
+        statusCode = 400;
+        message = "Malformed JSON payload. Please check your request body syntax.";
+    }
+
+    // Malformed URI encoding (e.g., %ZZ)
+    if (err instanceof URIError) {
+        statusCode = 400;
+        message = "Malformed request URL parameter.";
+    }
+
     // Mongoose Duplicate Key Error
     if (err.code === 11000) {
         statusCode = 400;

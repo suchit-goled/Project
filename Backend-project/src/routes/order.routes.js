@@ -16,7 +16,10 @@ router.post("/", protect, createOrder);
 router.get("/details/:orderId", protect, getOrderById);
 router.put("/cancel/:orderId", protect, cancelOrder);
 
+// User orders (own authenticated user)
+router.get("/", protect, getUserOrders);
+
 // Generic route LAST
-router.get("/:userId",protect, getUserOrders);
+router.get("/:userId", protect, getUserOrders);
 
 export default router;

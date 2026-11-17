@@ -23,6 +23,10 @@ export const addToCart = async (req, res, next) => {
             return ApiResponse.error(res, "Access denied. Cannot modify another user's cart.", 403);
         }
 
+        if (targetUserId && !mongoose.isValidObjectId(targetUserId)) {
+            return ApiResponse.error(res, "Invalid user ID format", 400);
+        }
+
         if (!productId) {
             return ApiResponse.error(res, "Product ID is required", 400);
         }
@@ -84,10 +88,14 @@ export const addToCart = async (req, res, next) => {
 // =============================
 export const getCart = async (req, res, next) => {
     try {
-        const targetUserId = req.params.userId || (req.user && req.user._id.toString());
+        const targetUserId = req.params.userId || (req.user && req.user._id ? req.user._id.toString() : null);
 
         if (!targetUserId) {
             return ApiResponse.error(res, "User ID is required", 400);
+        }
+
+        if (!mongoose.isValidObjectId(targetUserId)) {
+            return ApiResponse.error(res, "Invalid user ID format", 400);
         }
 
         if (!checkCartAuthorization(req, targetUserId)) {
@@ -119,6 +127,10 @@ export const updateQuantity = async (req, res, next) => {
 
         if (!checkCartAuthorization(req, targetUserId)) {
             return ApiResponse.error(res, "Access denied. Cannot modify another user's cart.", 403);
+        }
+
+        if (targetUserId && !mongoose.isValidObjectId(targetUserId)) {
+            return ApiResponse.error(res, "Invalid user ID format", 400);
         }
 
         if (!productId || quantity === undefined) {
@@ -184,6 +196,10 @@ export const removeFromCart = async (req, res, next) => {
             return ApiResponse.error(res, "Access denied. Cannot modify another user's cart.", 403);
         }
 
+        if (targetUserId && !mongoose.isValidObjectId(targetUserId)) {
+            return ApiResponse.error(res, "Invalid user ID format", 400);
+        }
+
         if (!productId) {
             return ApiResponse.error(res, "Product ID is required", 400);
         }
@@ -216,6 +232,10 @@ export const clearCart = async (req, res, next) => {
 
         if (!checkCartAuthorization(req, targetUserId)) {
             return ApiResponse.error(res, "Access denied. Cannot clear another user's cart.", 403);
+        }
+
+        if (targetUserId && !mongoose.isValidObjectId(targetUserId)) {
+            return ApiResponse.error(res, "Invalid user ID format", 400);
         }
 
         await Cart.deleteMany({

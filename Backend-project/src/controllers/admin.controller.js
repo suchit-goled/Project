@@ -26,6 +26,18 @@ class AdminController {
 
     async createProduct(req, res, next) {
         try {
+            if (!req.body.product_title || (typeof req.body.product_title === "string" && !req.body.product_title.trim())) {
+                return ApiResponse.error(res, "Product title is required.", 400);
+            }
+
+            if (req.body.discounted_price !== undefined && (isNaN(Number(req.body.discounted_price)) || Number(req.body.discounted_price) < 0)) {
+                return ApiResponse.error(res, "Discounted price must be a non-negative number.", 400);
+            }
+
+            if (req.body.original_price !== undefined && (isNaN(Number(req.body.original_price)) || Number(req.body.original_price) < 0)) {
+                return ApiResponse.error(res, "Original price must be a non-negative number.", 400);
+            }
+
             let imageUrl = req.body.product_image_url || req.body.image || "";
 
             if (req.file) {
@@ -57,6 +69,18 @@ class AdminController {
         try {
             if (!mongoose.isValidObjectId(req.params.id)) {
                 return ApiResponse.error(res, "Invalid product ID format.", 400);
+            }
+
+            if (req.body.product_title !== undefined && typeof req.body.product_title === "string" && !req.body.product_title.trim()) {
+                return ApiResponse.error(res, "Product title cannot be empty.", 400);
+            }
+
+            if (req.body.discounted_price !== undefined && (isNaN(Number(req.body.discounted_price)) || Number(req.body.discounted_price) < 0)) {
+                return ApiResponse.error(res, "Discounted price must be a non-negative number.", 400);
+            }
+
+            if (req.body.original_price !== undefined && (isNaN(Number(req.body.original_price)) || Number(req.body.original_price) < 0)) {
+                return ApiResponse.error(res, "Original price must be a non-negative number.", 400);
             }
 
             const product = await productService.updateProduct(
@@ -144,7 +168,7 @@ class AdminController {
                 return ApiResponse.error(res, "Order status is required.", 400);
             }
 
-            const allowedStatuses = ["Pending", "Processing", "Confirmed", "Shipped", "Delivered", "Cancelled"];
+            const allowedStatuses = ["Pending", "Processing", "Confirmed", "Packed", "Shipped", "Out for Delivery", "Delivered", "Cancelled"];
             if (!allowedStatuses.includes(newStatus)) {
                 return ApiResponse.error(res, `Invalid order status. Allowed: ${allowedStatuses.join(", ")}`, 400);
             }
@@ -153,6 +177,10 @@ class AdminController {
                 id,
                 newStatus
             );
+
+            if (!order) {
+                return ApiResponse.error(res, "Order not found.", 404);
+            }
 
             return ApiResponse.success(
                 res,

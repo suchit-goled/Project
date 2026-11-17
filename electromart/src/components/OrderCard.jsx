@@ -60,6 +60,21 @@ const OrderCard = ({ order, onCancel }) => {
                 </div>
 
                 <div className="badges">
+                    {Boolean(order.isMultiSeller || (order.sellerOrders && order.sellerOrders.length > 1)) && (
+                        <span
+                            className="badge multi-seller-badge"
+                            style={{
+                                background: "#eff6ff",
+                                color: "#1d4ed8",
+                                border: "1px solid #bfdbfe",
+                                fontSize: "11px",
+                                fontWeight: 600,
+                            }}
+                        >
+                            📦 {order.sellerOrders?.length || "Multi"} Packages
+                        </span>
+                    )}
+
                     <span
                         className={`badge payment ${(order.paymentStatus || "pending").toLowerCase()}`}
                     >

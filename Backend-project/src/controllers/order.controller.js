@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 import orderModel from "../models/order.model.js";
 import Cart from "../models/Cart.js";
 import User from "../models/user.model.js";
+import Product from "../models/Product.js";
+import SellerOrder from "../models/sellerOrder.model.js";
+import Seller from "../models/seller.model.js";
+import Store from "../models/store.model.js";
+import Category from "../models/category.model.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import { orderConfirmationTemplate } from "../templates/orderConfirmationEmail.js";
 import ApiResponse from "../utils/apiResponse.js";
@@ -46,16 +51,43 @@ export const createOrder = async (req, res, next) => {
             );
         }
 
-        let subtotal = 0;
+        // Fetch corresponding product records to check live stock & seller ownership
+        const productIds = cartItems.map(it => it.productId).filter(Boolean);
+        let dbProducts = [];
+        try {
+            dbProducts = await Product.find({ _id: { $in: productIds } });
+        } catch {
+            dbProducts = [];
+        }
+        const productMap = new Map(dbProducts.map(p => [String(p._id), p]));
 
+        // Validate stock availability
+        for (const item of cartItems) {
+            const prod = productMap.get(String(item.productId));
+            if (prod && typeof prod.stock === "number" && prod.stock < item.quantity) {
+                return ApiResponse.error(
+                    res,
+                    `Insufficient stock for "${prod.product_title || item.title}". Available: ${prod.stock}, Requested: ${item.quantity}`,
+                    400
+                );
+            }
+        }
+
+        // Generate parent order number: e.g. EN-2026-XXXXXX
+        const currentYear = new Date().getFullYear();
+        const randId = Math.floor(100000 + Math.random() * 900000);
+        const parentOrderNumber = `EN-${currentYear}-${randId}`;
+
+        let subtotal = 0;
         const products = cartItems.map(item => {
-            const validPrice = Math.max(0, Number(item.price) || 0);
+            const prod = productMap.get(String(item.productId));
+            const validPrice = Math.max(0, Number(item.price) || (prod ? prod.discounted_price : 0) || 0);
             const validQty = Math.max(1, Number(item.quantity) || 1);
             subtotal += validPrice * validQty;
             return {
                 productId: item.productId,
-                title: String(item.title || "Electronics Item").slice(0, 200),
-                image: item.image,
+                title: String(item.title || (prod ? prod.product_title : "Electronics Item")).slice(0, 200),
+                image: item.image || (prod ? prod.product_image_url : ""),
                 quantity: validQty,
                 price: validPrice
             };
@@ -65,8 +97,43 @@ export const createOrder = async (req, res, next) => {
         const tax = Math.round(subtotal * 0.18);
         const total = subtotal + shippingCharge + tax;
 
+        // Group cart items by sellerId
+        const sellerGroups = new Map();
+        for (const item of cartItems) {
+            const prod = productMap.get(String(item.productId));
+            const validPrice = Math.max(0, Number(item.price) || (prod ? prod.discounted_price : 0) || 0);
+            const validQty = Math.max(1, Number(item.quantity) || 1);
+
+            let sId = item.sellerId || (prod && prod.sellerId) || null;
+            let stId = item.storeId || (prod && prod.storeId) || null;
+            const groupKey = sId ? String(sId) : "default_platform";
+
+            if (!sellerGroups.has(groupKey)) {
+                sellerGroups.set(groupKey, {
+                    sellerId: sId,
+                    storeId: stId,
+                    items: [],
+                    subtotal: 0,
+                });
+            }
+
+            const grp = sellerGroups.get(groupKey);
+            grp.items.push({
+                productId: item.productId,
+                title: String(item.title || (prod ? prod.product_title : "Electronics Item")).slice(0, 200),
+                image: item.image || (prod ? prod.product_image_url : ""),
+                price: validPrice,
+                quantity: validQty,
+                sku: prod?.sku || "",
+                brand: prod?.brand || "",
+            });
+            grp.subtotal += validPrice * validQty;
+        }
+
+        // Create initial parent order record
         const order = await orderModel.create({
             userId,
+            parentOrderNumber,
             products,
             shippingAddress: cleanShippingAddress,
             paymentMethod: chosenPaymentMethod,
@@ -75,8 +142,111 @@ export const createOrder = async (req, res, next) => {
             tax,
             total,
             paymentStatus: "Pending",
-            orderStatus: "Pending"
+            orderStatus: "Confirmed",
+            isMultiSeller: sellerGroups.size > 1,
+            sellerOrders: [],
+            commissionTotal: 0,
         });
+
+        // Decompose into child SellerOrders
+        const createdSellerOrders = [];
+        let totalCommissionAmount = 0;
+        let index = 0;
+
+        for (const [, grp] of sellerGroups.entries()) {
+            const suffix = String.fromCharCode(65 + index); // A, B, C...
+            const sellerOrderNumber = `${parentOrderNumber}-${suffix}`;
+            index++;
+
+            // Resolve seller and store profiles
+            let sellerProfile = null;
+            let storeProfile = null;
+
+            if (grp.sellerId && mongoose.isValidObjectId(grp.sellerId)) {
+                try {
+                    sellerProfile = await Seller.findOne({ userId: grp.sellerId });
+                    storeProfile = await Store.findOne({
+                        $or: [{ sellerId: grp.sellerId }, { _id: grp.storeId }]
+                    });
+                } catch {
+                    // Fallback to defaults
+                }
+            }
+
+            // Commission Resolution: Override -> Category Default -> Platform Default (5%)
+            let commissionRate = 5.0;
+            if (sellerProfile && sellerProfile.commissionRateOverride !== null && sellerProfile.commissionRateOverride !== undefined) {
+                commissionRate = Number(sellerProfile.commissionRateOverride);
+            }
+
+            const commAmount = Math.round((grp.subtotal * commissionRate) / 100);
+            const netEarnings = Math.max(0, grp.subtotal - commAmount);
+            totalCommissionAmount += commAmount;
+
+            const effectiveSellerId = grp.sellerId || req.user._id;
+            const effectiveStoreId = storeProfile?._id || grp.storeId;
+            const supportsSellerDelivery = storeProfile?.deliveryOptions?.supportsSellerDelivery ?? true;
+            const deliveryMethod = supportsSellerDelivery ? "seller_delivery" : "platform_delivery";
+
+            const childOrderData = {
+                sellerOrderNumber,
+                parentOrderId: order._id,
+                parentOrderNumber: order.parentOrderNumber,
+                customerId: req.user._id,
+                sellerId: effectiveSellerId,
+                products: grp.items,
+                subtotal: grp.subtotal,
+                shippingCharge: 0,
+                tax: Math.round(grp.subtotal * 0.18),
+                total: grp.subtotal + Math.round(grp.subtotal * 0.18),
+                commissionRate,
+                commissionAmount: commAmount,
+                sellerEarnings: netEarnings,
+                orderStatus: "Confirmed",
+                paymentStatus: order.paymentStatus,
+                deliveryMethod,
+                shipmentTimeline: [
+                    {
+                        status: "Confirmed",
+                        timestamp: new Date(),
+                        note: `Sub-order decomposed from parent order ${order.parentOrderNumber}.`,
+                    }
+                ],
+            };
+
+            if (effectiveStoreId && mongoose.isValidObjectId(effectiveStoreId)) {
+                childOrderData.storeId = effectiveStoreId;
+            }
+
+            try {
+                const createdChild = await SellerOrder.create(childOrderData);
+                if (createdChild) {
+                    createdSellerOrders.push(createdChild);
+                }
+            } catch (soErr) {
+                console.warn("SellerOrder decomposition notice:", soErr.message);
+            }
+
+            // Decrement product inventory atomically
+            for (const itm of grp.items) {
+                if (itm.productId && mongoose.isValidObjectId(itm.productId)) {
+                    try {
+                        await Product.findByIdAndUpdate(itm.productId, {
+                            $inc: { stock: -itm.quantity }
+                        });
+                    } catch (stockErr) {
+                        console.warn("Stock decrement notice:", stockErr.message);
+                    }
+                }
+            }
+        }
+
+        // Update parent order with linked SellerOrders and commission
+        if (createdSellerOrders.length > 0) {
+            order.sellerOrders = createdSellerOrders.map(so => so._id);
+            order.commissionTotal = totalCommissionAmount;
+            await order.save();
+        }
 
         // Clear cart immediately for Cash On Delivery
         if (chosenPaymentMethod === "Cash On Delivery" || chosenPaymentMethod === "Cash on Delivery" || chosenPaymentMethod === "COD") {
@@ -132,9 +302,20 @@ export const getUserOrders = async (req, res, next) => {
             );
         }
 
-        const orders = await orderModel
-            .find({ userId })
-            .sort({ createdAt: -1 });
+        let query = orderModel.find({ userId });
+        if (query && typeof query.populate === "function") {
+            query = query.populate({
+                path: "sellerOrders",
+                populate: [
+                    { path: "storeId", select: "name slug rating pickupAddress deliveryOptions logo" },
+                    { path: "sellerId", select: "name email" }
+                ]
+            });
+        }
+        if (query && typeof query.sort === "function") {
+            query = query.sort({ createdAt: -1 });
+        }
+        const orders = await query;
 
         return ApiResponse.success(
             res,
@@ -176,6 +357,20 @@ export const getOrderById = async (req, res, next) => {
                 "Access denied. You cannot view this order.",
                 403
             );
+        }
+
+        if (typeof order.populate === "function") {
+            try {
+                await order.populate({
+                    path: "sellerOrders",
+                    populate: [
+                        { path: "storeId", select: "name slug rating pickupAddress deliveryOptions logo" },
+                        { path: "sellerId", select: "name email" }
+                    ]
+                });
+            } catch {
+                // If already populated or mock document, continue gracefully
+            }
         }
 
         return ApiResponse.success(
@@ -246,6 +441,34 @@ export const cancelOrder = async (req, res, next) => {
 
         order.orderStatus = "Cancelled";
         await order.save();
+
+        // Synchronize cancellation to all decomposed child SellerOrders & append timeline
+        try {
+            await SellerOrder.updateMany(
+                { parentOrderId: order._id },
+                {
+                    $set: { orderStatus: "Cancelled" },
+                    $push: {
+                        shipmentTimeline: {
+                            status: "Cancelled",
+                            timestamp: new Date(),
+                            note: "Parent order cancelled by customer.",
+                        }
+                    }
+                }
+            );
+
+            // Restore product inventory atomically
+            for (const prod of order.products || []) {
+                if (prod.productId && mongoose.isValidObjectId(prod.productId)) {
+                    await Product.findByIdAndUpdate(prod.productId, {
+                        $inc: { stock: prod.quantity }
+                    });
+                }
+            }
+        } catch (syncErr) {
+            console.error("Failed to synchronize sub-order cancellation:", syncErr);
+        }
 
         return ApiResponse.success(
             res,

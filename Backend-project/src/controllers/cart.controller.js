@@ -68,7 +68,9 @@ export const addToCart = async (req, res, next) => {
                 title: product.product_title,
                 image: product.product_image_url,
                 price: product.discounted_price,
-                quantity: numQuantity
+                quantity: numQuantity,
+                sellerId: product.sellerId || undefined,
+                storeId: product.storeId || undefined,
             });
         }
 
@@ -102,9 +104,18 @@ export const getCart = async (req, res, next) => {
             return ApiResponse.error(res, "Access denied. Cannot view another user's cart.", 403);
         }
 
-        const cart = await Cart.find({
+        let cartQuery = Cart.find({
             userId: targetUserId
-        }).populate("productId");
+        });
+
+        if (cartQuery && typeof cartQuery.populate === "function") {
+            cartQuery = cartQuery.populate("productId");
+            if (cartQuery && typeof cartQuery.populate === "function") {
+                cartQuery = cartQuery.populate("storeId");
+            }
+        }
+
+        const cart = await cartQuery;
 
         return res.status(200).json({
             success: true,

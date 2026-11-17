@@ -37,6 +37,19 @@ const CartItem = ({ item }) => {
                     <span className="cart-item-category">{product.product_category}</span>
                 )}
 
+                <div className="cart-item-seller">
+                    <span>Sold by: </span>
+                    {(item.storeId?.slug || product.storeId?.slug) ? (
+                        <Link to={`/stores/${item.storeId?.slug || product.storeId?.slug}`} className="cart-seller-link">
+                            {item.storeId?.name || product.storeId?.name || "Verified Partner Store"}
+                        </Link>
+                    ) : (
+                        <span className="cart-seller-name">
+                            {item.storeId?.name || product.storeId?.name || "ElectroNova Direct"}
+                        </span>
+                    )}
+                </div>
+
                 <div className="price-box">
                     <span className="current-price">
                         ₹{Number(price).toLocaleString()}

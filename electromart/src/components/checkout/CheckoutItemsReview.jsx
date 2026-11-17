@@ -63,11 +63,9 @@ const CheckoutItemsReview = () => {
                                     <span className="checkout-item-badge in-stock">
                                         <FiCheckCircle size={12} /> In Stock
                                     </span>
-                                    {product.category && (
-                                        <span className="checkout-item-badge category">
-                                            {product.category}
-                                        </span>
-                                    )}
+                                    <span className="checkout-item-badge category">
+                                        Sold by: {item.storeId?.name || product.storeId?.name || "ElectroNova Direct"}
+                                    </span>
                                     <span className="checkout-item-unit-price">
                                         ₹{unitPrice.toLocaleString()} each
                                     </span>

@@ -59,6 +59,27 @@
     margin-left: 6px;
 }
 
+.cart-item-seller {
+    font-size: 0.82rem;
+    color: #64748b;
+    margin: 2px 0 10px 0;
+}
+
+.cart-seller-link {
+    color: #4f46e5;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.cart-seller-link:hover {
+    text-decoration: underline;
+}
+
+.cart-seller-name {
+    color: #334155;
+    font-weight: 600;
+}
+
 .price-box {
     display: flex;
     align-items: baseline;

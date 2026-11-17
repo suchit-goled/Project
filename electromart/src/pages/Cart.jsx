@@ -4,7 +4,7 @@ import { useCart } from "../context/CartContext";
 import CartItem from "../components/cart/CartItem";
 import CartSummary from "../components/cart/CartSummary";
 import EmptyCart from "../components/cart/EmptyCart";
-import { FiArrowLeft, FiTrash2 } from "react-icons/fi";
+import { FiArrowLeft, FiTrash2, FiBox } from "react-icons/fi";
 import "./Cart.css";
 
 const Cart = () => {
@@ -23,6 +23,22 @@ const Cart = () => {
     if (!cart || cart.length === 0) {
         return <EmptyCart />;
     }
+
+    // Compute distinct seller stores in cart
+    const storeMap = new Map();
+    cart.forEach((item) => {
+        const store = item.storeId || item.productId?.storeId;
+        const key = store?._id || store?.slug || "platform_direct";
+        if (!storeMap.has(key)) {
+            storeMap.set(key, {
+                store: store || { name: "ElectroNova Direct", slug: "" },
+                count: 0,
+            });
+        }
+        storeMap.get(key).count += 1;
+    });
+
+    const isMultiSellerCart = storeMap.size > 1;
 
     return (
         <section className="cart-page container">
@@ -50,6 +66,15 @@ const Cart = () => {
 
             <div className="cart-layout">
                 <div className="cart-left">
+                    {isMultiSellerCart && (
+                        <div className="multi-seller-notice-banner">
+                            <FiBox />
+                            <div>
+                                <strong>Multi-Seller Order ({storeMap.size} Stores)</strong>
+                                <p>Your order contains products from {storeMap.size} different sellers. Items will be packed and dispatched separately.</p>
+                            </div>
+                        </div>
+                    )}
                     <div className="cart-items-list">
                         {cart.map((item, index) => {
                             const key = item.productId?._id || item.productId || index;

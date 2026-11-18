@@ -148,8 +148,11 @@
 }
 
 .stat-metric-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
+    background: var(--glass-surface);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
     border-radius: var(--radius-md);
     padding: 20px;
     display: flex;
@@ -161,6 +164,7 @@
 .stat-metric-card:hover {
     border-color: var(--border-medium);
     transform: translateY(-2px);
+    box-shadow: var(--glass-shadow-hover);
 }
 
 .metric-icon-box {
@@ -221,8 +225,11 @@
 
 /* Card Table Box */
 .admin-card-table-box {
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
+    background: var(--glass-surface);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
     border-radius: var(--radius-md);
     overflow: hidden;
 }
@@ -531,9 +538,11 @@
 }
 
 .admin-modal-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-medium);
-    border-radius: var(--radius-md);
+    background: var(--glass-surface);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
     width: 100%;
     max-width: 600px;
     padding: 28px;

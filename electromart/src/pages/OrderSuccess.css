@@ -1,7 +1,7 @@
 .order-success-page {
     min-height: 100vh;
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #ffffff 100%);
-    padding: 50px 20px;
+    background: transparent;
+    padding: 50px 20px 80px;
 }
 
 .order-success-empty {
@@ -15,18 +15,25 @@
 
 .order-success-empty h2 {
     font-size: 28px;
-    color: #0f172a;
+    color: var(--text-primary);
 }
 
 .order-success-empty button {
     padding: 12px 24px;
     border: none;
-    border-radius: 10px;
-    background: #0284c7;
+    border-radius: var(--radius-sm);
+    background: var(--accent-blue);
     color: white;
     cursor: pointer;
     font-size: 15px;
     font-weight: 600;
+    box-shadow: 0 4px 14px var(--accent-glow);
+    transition: all var(--transition-fast);
+}
+
+.order-success-empty button:hover {
+    background: var(--primary-glow);
+    transform: translateY(-1px);
 }
 
 .success-animation {
@@ -37,8 +44,15 @@
 
 .success-icon {
     font-size: 96px;
-    color: #10b981;
-    filter: drop-shadow(0 10px 20px rgba(16, 185, 129, 0.25));
+    color: var(--success);
+    filter: drop-shadow(0 10px 24px rgba(22, 163, 74, 0.35));
+    animation: scalePulse 0.5s ease-out;
+}
+
+@keyframes scalePulse {
+    0% { transform: scale(0.6); opacity: 0; }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
 }
 
 .success-heading {
@@ -49,14 +63,16 @@
 
 .success-heading h1 {
   font-size: 38px;
-  color: #0f172a;
+  color: var(--text-primary);
   margin-bottom: 12px;
   font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .success-heading p {
   font-size: 17px;
-  color: #475569;
+  color: var(--text-secondary);
+  line-height: 1.5;
 }
 
 .order-info-card {
@@ -68,24 +84,34 @@
 }
 
 .info-box {
-  background: white;
-  border-radius: 16px;
+  background: var(--bg-glass-card);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: var(--radius-md);
   padding: 24px;
   text-align: center;
-  border: 1px solid #e0f2fe;
-  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.05);
+  border: 1px solid var(--border-glass);
+  box-shadow: var(--shadow-glass);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.info-box:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glass-lg);
 }
 
 .info-box span {
   display: block;
-  color: #64748b;
+  color: var(--text-secondary);
   margin-bottom: 8px;
   font-size: 14px;
+  font-weight: 500;
 }
 
 .info-box strong {
-  color: #0f172a;
-  font-size: 16px;
+  color: var(--text-primary);
+  font-size: 17px;
+  font-weight: 700;
 }
 
 .success-buttons {
@@ -100,27 +126,35 @@
 .success-buttons button {
   padding: 14px 28px;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all var(--transition-fast);
 }
 
 .success-buttons button:first-child {
-  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
+  background: var(--accent-blue);
   color: white;
-  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
+  box-shadow: 0 4px 14px var(--accent-glow);
+}
+
+.success-buttons button:first-child:hover {
+  background: var(--primary-glow);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px var(--accent-glow);
 }
 
 .success-buttons button:last-child {
-  background: #10b981;
-  color: white;
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  color: var(--text-primary);
 }
 
-.success-buttons button:hover {
+.success-buttons button:last-child:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-blue);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
 @media (max-width: 768px) {

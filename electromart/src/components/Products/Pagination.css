@@ -1,41 +1,49 @@
+/* ===================================================
+   PAGINATION - Glassmorphic & Minimalist
+   Dual Theme (Light & Dark) Compatible
+=================================================== */
+
 .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    margin: 40px 0;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 40px 0;
+  flex-wrap: wrap;
 }
 
 .pagination button {
-    background: #ffffff;
-    color: var(--text-primary);
-    border: 1px solid #e0f2fe;
-    padding: 10px 16px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 6px rgba(2, 132, 199, 0.05);
+  background: var(--glass-surface);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border);
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
 }
 
 .pagination button:hover:not(:disabled) {
-    background: #f0f9ff;
-    border-color: #0284c7;
-    color: #0284c7;
+  background: var(--glass-surface-hover);
+  border-color: var(--electric-blue);
+  color: var(--electric-blue);
+  transform: translateY(-1px);
 }
 
 .pagination button.active {
-    background: #0284c7;
-    border-color: #0284c7;
-    color: #ffffff;
-    font-weight: 700;
-    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+  background: var(--electric-blue);
+  border-color: var(--electric-blue);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .pagination button:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    background: #f8fafc;
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: var(--bg-secondary);
 }

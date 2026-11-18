@@ -1,73 +1,86 @@
+/* ===================================================
+   PERSONAL INFO - Glassmorphic & Minimalist
+   Dual Theme (Light & Dark) Compatible
+=================================================== */
+
 .personal-info {
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 28px;
-    border: 1px solid #e0f2fe;
-    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.05);
+  background: var(--glass-surface);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: all var(--transition-normal);
+}
+
+.personal-info:hover {
+  border-color: var(--border-medium);
+  box-shadow: var(--glass-shadow-hover);
 }
 
 .personal-info h2 {
-    color: #0f172a;
-    margin-bottom: 20px;
-    font-size: 22px;
-    font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 700;
 }
 
 .info-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 0;
-    border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .info-row:last-of-type {
-    margin-bottom: 24px;
+  margin-bottom: 24px;
 }
 
 .info-row span:first-child {
-    color: #64748b;
-    font-weight: 500;
-    font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 14px;
 }
 
 .info-row span:last-child {
-    color: #0f172a;
-    font-weight: 600;
-    font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 14px;
 }
 
 .personal-info button {
-    background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
-    color: #ffffff;
-    border: none;
-    border-radius: 10px;
-    padding: 12px 24px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
+  background: var(--electric-blue);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .personal-info button:hover {
-    background: #0284c7;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(2, 132, 199, 0.3);
+  background: var(--electric-blue-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(59, 130, 246, 0.4);
 }
 
 .personal-info button:active {
-    transform: scale(0.98);
+  transform: scale(0.98);
 }
 
 @media (max-width: 768px) {
-    .info-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
-    }
+  .info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
 
-    .personal-info button {
-        width: 100%;
-    }
+  .personal-info button {
+    width: 100%;
+  }
 }

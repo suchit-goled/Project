@@ -10,24 +10,27 @@ import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 import { WishlistProvider } from './context/WishlistContext';
 import { DeliveryProvider } from './context/DeliveryContext';
+import { ThemeProvider } from './context/ThemeContext';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
  
-   <SearchProvider>
-    <AuthProvider>
-        <DeliveryProvider>
-            <WishlistProvider>
-                <CartProvider>
-                    <React.StrictMode>
-                        <App />
-                    </React.StrictMode>
-                </CartProvider>
-            </WishlistProvider>
-        </DeliveryProvider>
-    </AuthProvider>
-</SearchProvider>
+   <ThemeProvider>
+     <SearchProvider>
+       <AuthProvider>
+           <DeliveryProvider>
+               <WishlistProvider>
+                   <CartProvider>
+                       <React.StrictMode>
+                           <App />
+                       </React.StrictMode>
+                   </CartProvider>
+               </WishlistProvider>
+           </DeliveryProvider>
+       </AuthProvider>
+     </SearchProvider>
+   </ThemeProvider>
   
 );
 

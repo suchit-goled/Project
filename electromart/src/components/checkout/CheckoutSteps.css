@@ -1,65 +1,74 @@
+/* ===================================================
+   CHECKOUT STEPS - Glassmorphic & Minimalist
+   Dual Theme (Light & Dark) Compatible
+=================================================== */
+
 .checkout-steps {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 18px;
-    margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 40px;
 }
 
 .step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    color: var(--text-muted);
-    font-size: 0.88rem;
-    font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: all var(--transition-fast);
 }
 
 .step svg {
-    width: 42px;
-    height: 42px;
-    padding: 10px;
-    border-radius: 50%;
-    background: #ffffff;
-    border: 1px solid #e0f2fe;
-    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.08);
-    transition: all 0.25s ease;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  border-radius: 50%;
+  background: var(--glass-surface);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  color: var(--text-muted);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
 }
 
 .step.active {
-    color: #0284c7;
-    font-weight: 600;
+  color: var(--electric-blue);
+  font-weight: 700;
 }
 
 .step.active svg {
-    background: #0284c7;
-    border-color: #0284c7;
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+  background: var(--electric-blue);
+  border-color: var(--electric-blue);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
 }
 
 .line {
-    width: 60px;
-    height: 3px;
-    background: #e0f2fe;
-    border-radius: 2px;
+  width: 60px;
+  height: 2px;
+  background: var(--border-medium);
+  border-radius: 2px;
 }
 
 @media (max-width: 480px) {
-    .checkout-steps {
-        gap: 8px;
-        margin-bottom: 24px;
-    }
-    .line {
-        width: 28px;
-    }
-    .step {
-        font-size: 0.78rem;
-    }
-    .step svg {
-        width: 36px;
-        height: 36px;
-        padding: 8px;
-    }
+  .checkout-steps {
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .line {
+    width: 28px;
+  }
+  .step {
+    font-size: 0.78rem;
+  }
+  .step svg {
+    width: 38px;
+    height: 38px;
+    padding: 8px;
+  }
 }

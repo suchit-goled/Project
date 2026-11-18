@@ -1,37 +1,43 @@
+/* ===================================================
+   CHECKOUT PAGE - Glassmorphic & Minimalist
+   Dual Theme (Light & Dark) Compatible
+=================================================== */
+
 .checkout-page {
-    padding: 36px 0 80px;
-    min-height: 100vh;
-    min-height: 100dvh;
-    background: #f8fafc;
+  padding: 36px 0 80px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg-main);
+  transition: background-color var(--transition-normal);
 }
 
 .checkout-layout {
-    display: grid;
-    grid-template-columns: 1.65fr 1fr;
-    gap: 32px;
-    margin-top: 32px;
-    align-items: start;
+  display: grid;
+  grid-template-columns: 1.65fr 1fr;
+  gap: 32px;
+  margin-top: 32px;
+  align-items: start;
 }
 
 .checkout-left {
-    display: flex;
-    flex-direction: column;
-    gap: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
 }
 
 .checkout-right {
-    position: sticky;
-    top: 90px;
-    height: fit-content;
+  position: sticky;
+  top: 90px;
+  height: fit-content;
 }
 
 @media (max-width: 992px) {
-    .checkout-layout {
-        grid-template-columns: 1fr;
-        gap: 24px;
-    }
+  .checkout-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
 
-    .checkout-right {
-        position: static;
-    }
+  .checkout-right {
+    position: static;
+  }
 }

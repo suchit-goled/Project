@@ -12,10 +12,10 @@
 
 .policy-badge {
   display: inline-block;
-  padding: 4px 12px;
-  background: var(--primary-light);
-  color: var(--primary);
-  border: 1px solid var(--border-medium);
+  padding: 5px 14px;
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--accent-blue);
+  border: 1px solid rgba(59, 130, 246, 0.25);
   border-radius: var(--radius-pill);
   font-size: 0.78rem;
   font-weight: 700;
@@ -26,9 +26,10 @@
 
 .policy-header h1 {
   font-size: 2.2rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 12px;
   color: var(--text-primary);
+  letter-spacing: -0.02em;
 }
 
 .policy-header p {
@@ -36,6 +37,7 @@
   font-size: 1.05rem;
   max-width: 650px;
   margin: 0 auto;
+  line-height: 1.6;
 }
 
 .policy-grid {
@@ -46,24 +48,28 @@
 }
 
 .policy-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  background: var(--bg-glass-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
   border-radius: var(--radius-md);
   padding: 24px;
-  transition: transform var(--transition-fast), border-color var(--transition-fast);
+  box-shadow: var(--shadow-glass);
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .policy-card:hover {
-  border-color: var(--border-medium);
+  border-color: var(--accent-blue);
   transform: translateY(-2px);
+  box-shadow: var(--shadow-glass-lg);
 }
 
 .policy-icon-box {
   width: 44px;
   height: 44px;
   border-radius: var(--radius-sm);
-  background: #e0f2fe;
-  color: var(--primary);
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--accent-blue);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,6 +79,7 @@
 
 .policy-card h3 {
   font-size: 1.1rem;
+  font-weight: 700;
   margin-bottom: 8px;
   color: var(--text-primary);
 }
@@ -88,16 +95,20 @@
 }
 
 .policy-body {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  background: var(--bg-glass-card);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--border-glass);
   border-radius: var(--radius-md);
   padding: 32px;
   color: var(--text-secondary);
   line-height: 1.7;
+  box-shadow: var(--shadow-glass);
 }
 
 .policy-body h2 {
   font-size: 1.3rem;
+  font-weight: 700;
   color: var(--text-primary);
   margin-top: 24px;
   margin-bottom: 12px;
@@ -113,8 +124,8 @@
 }
 
 .policy-link {
-  color: var(--primary);
-  font-weight: 500;
+  color: var(--accent-blue);
+  font-weight: 600;
   text-decoration: underline;
 }
 
@@ -129,8 +140,8 @@
 }
 
 .faq-item {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
   border-radius: var(--radius-sm);
   padding: 16px;
   margin-bottom: 12px;
@@ -149,11 +160,14 @@
 
 /* About Page specific */
 .about-hero-box {
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  border: 1px solid var(--border-medium);
+  background: var(--bg-glass-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass);
   border-radius: var(--radius-md);
-  padding: 32px;
+  padding: 36px;
   margin-bottom: 40px;
+  box-shadow: var(--shadow-glass);
 }
 
 .about-lead {
@@ -166,14 +180,18 @@
 .about-cta {
   margin-top: 48px;
   text-align: center;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  background: var(--bg-glass-card);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--border-glass);
   border-radius: var(--radius-md);
   padding: 40px;
+  box-shadow: var(--shadow-glass);
 }
 
 .about-cta h2 {
   font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
@@ -184,17 +202,17 @@
 
 .about-shop-btn {
   padding: 12px 28px;
-  background: var(--primary);
+  background: var(--accent-blue);
   color: white;
   border-radius: var(--radius-pill);
   font-weight: 600;
   font-size: 1rem;
-  box-shadow: 0 4px 16px var(--primary-glow);
+  box-shadow: 0 4px 16px var(--accent-glow);
   transition: all var(--transition-fast);
 }
 
 .about-shop-btn:hover {
-  background: var(--primary-hover);
+  background: var(--primary-glow);
   transform: translateY(-2px);
 }
 
@@ -207,17 +225,18 @@
 
 .notfound-icon-wrap {
   font-size: 3.5rem;
-  color: var(--primary);
+  color: var(--accent-blue);
   margin-bottom: 12px;
   animation: pulseSlow 3s ease-in-out infinite;
 }
 
 .notfound-title {
   font-size: 2.2rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-top: 12px;
   margin-bottom: 12px;
   color: var(--text-primary);
+  letter-spacing: -0.02em;
 }
 
 .notfound-description {
@@ -228,19 +247,19 @@
 }
 
 .notfound-path {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-medium);
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
   padding: 2px 8px;
   border-radius: 6px;
   font-size: 0.88rem;
-  color: var(--primary);
+  color: var(--accent-blue);
   word-break: break-all;
 }
 
 .notfound-details-box {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #991b1b;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: var(--error);
   padding: 12px 18px;
   border-radius: var(--radius-sm);
   max-width: 500px;
@@ -258,16 +277,17 @@
   display: flex;
   align-items: center;
   position: relative;
-  border: 1.5px solid var(--border-medium);
+  border: 1.5px solid var(--border-glass);
   border-radius: var(--radius-pill);
-  background: var(--bg-card);
+  background: var(--bg-glass-card);
+  backdrop-filter: blur(14px);
   padding: 4px;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .notfound-search-input-group:focus-within {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-light);
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
 .notfound-search-icon {
@@ -290,7 +310,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: var(--primary);
+  background: var(--accent-blue);
   color: #ffffff;
   border: none;
   padding: 10px 20px;
@@ -298,11 +318,12 @@
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color var(--transition-fast);
+  transition: all var(--transition-fast);
+  box-shadow: 0 4px 12px var(--accent-glow);
 }
 
 .notfound-search-btn:hover {
-  background: var(--primary-hover);
+  background: var(--primary-glow);
 }
 
 .notfound-suggestions {
@@ -328,7 +349,7 @@
 
 .notfound-chip {
   background: var(--bg-card);
-  border: 1px solid var(--border-medium);
+  border: 1px solid var(--border-glass);
   color: var(--text-primary);
   padding: 6px 14px;
   border-radius: var(--radius-pill);
@@ -339,9 +360,9 @@
 }
 
 .notfound-chip:hover {
-  background: var(--primary-light);
-  border-color: var(--primary);
-  color: var(--primary);
+  background: rgba(59, 130, 246, 0.12);
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
 }
 
 .notfound-actions {
@@ -357,16 +378,18 @@
   align-items: center;
   gap: 8px;
   padding: 12px 24px;
-  background: var(--primary);
+  background: var(--accent-blue);
   color: #ffffff;
   border-radius: var(--radius-sm);
   font-weight: 600;
   text-decoration: none;
-  transition: background-color var(--transition-fast);
+  transition: all var(--transition-fast);
+  box-shadow: 0 4px 14px var(--accent-glow);
 }
 
 .notfound-primary-btn:hover {
-  background: var(--primary-hover);
+  background: var(--primary-glow);
+  transform: translateY(-1px);
 }
 
 .notfound-secondary-btn {
@@ -376,7 +399,7 @@
   padding: 12px 24px;
   background: var(--bg-card);
   color: var(--text-primary);
-  border: 1px solid var(--border-medium);
+  border: 1px solid var(--border-glass);
   border-radius: var(--radius-sm);
   font-weight: 600;
   text-decoration: none;
@@ -384,8 +407,8 @@
 }
 
 .notfound-secondary-btn:hover {
-  border-color: var(--primary);
-  color: var(--primary);
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
 }
 
 .notfound-text-btn {
@@ -400,7 +423,7 @@
 }
 
 .notfound-text-btn:hover {
-  color: var(--primary);
+  color: var(--accent-blue);
 }
 
 @keyframes pulseSlow {

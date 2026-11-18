@@ -108,13 +108,20 @@
   right: 0;
   top: calc(100% + 8px);
   width: 230px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-medium);
+  background: var(--glass-surface-solid);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--glass-shadow-hover);
   z-index: 1000;
   padding: 8px 0;
   animation: dropdownIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="dark"] .dropdown {
+  background: #0F172A;
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 @keyframes dropdownIn {

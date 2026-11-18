@@ -1,56 +1,68 @@
-/* ===========================
-   HERO SECTION - Modern Tech Retail Spotlight
-=========================== */
+/* ===================================================
+   HERO SECTION - Glassmorphic & Minimalist Tech Spotlight
+   Dual Theme (Light & Dark) Compatible
+=================================================== */
 
 .hero {
   position: relative;
   min-height: calc(100vh - 80px);
   overflow: hidden;
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 45%, #ffffff 100%);
+  background: var(--bg-main);
   color: var(--text-primary);
   display: flex;
   align-items: center;
+  transition: background-color var(--transition-normal);
 }
 
+/* Atmospheric Ambient Glows */
 .hero-bg-circle {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
+  filter: blur(90px);
   z-index: 0;
   pointer-events: none;
+  opacity: 0.6;
 }
 
 .hero-bg-circle-1 {
-  width: 500px;
-  height: 500px;
-  background: rgba(14, 165, 233, 0.14);
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.18) 0%, rgba(96, 165, 250, 0.04) 70%);
   top: -120px;
-  right: -120px;
+  right: -100px;
 }
 
 .hero-bg-circle-2 {
-  width: 450px;
-  height: 450px;
-  background: rgba(2, 132, 199, 0.10);
-  bottom: -150px;
-  left: -150px;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(23, 37, 84, 0.15) 0%, rgba(59, 130, 246, 0.03) 70%);
+  bottom: -140px;
+  left: -120px;
+}
+
+[data-theme="dark"] .hero-bg-circle-1 {
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.22) 0%, transparent 70%);
+}
+
+[data-theme="dark"] .hero-bg-circle-2 {
+  background: radial-gradient(circle, rgba(30, 58, 138, 0.3) 0%, transparent 70%);
 }
 
 .hero__container {
-  width: min(1400px, 92%);
+  width: min(1320px, 92%);
   margin: auto;
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   align-items: center;
-  gap: 50px;
+  gap: 52px;
   position: relative;
   z-index: 2;
-  padding: 40px 0;
+  padding: 48px 0;
 }
 
-/* ===========================
+/* ===================================================
    LEFT CONTENT
-=========================== */
+=================================================== */
 
 .hero__left {
   display: flex;
@@ -65,30 +77,34 @@
   width: fit-content;
   padding: 8px 18px;
   border-radius: var(--radius-pill);
-  background: #e0f2fe;
-  border: 1px solid #bae6fd;
-  color: #0284c7;
+  background: var(--primary-light);
+  border: 1px solid var(--border-medium);
+  color: var(--primary);
   font-weight: 600;
   font-size: 0.85rem;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.08);
 }
 
 .badge-zap {
-  color: #0284c7;
+  color: var(--primary);
   font-size: 1rem;
 }
 
 .hero__title,
 .hero__left h1 {
-  font-size: clamp(38px, 4.5vw, 56px);
+  font-size: clamp(38px, 4.4vw, 56px);
   line-height: 1.15;
   font-weight: 800;
-  color: #0f172a;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
   margin: 0;
 }
 
 .hero__title-gradient {
-  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
+  background: linear-gradient(135deg, var(--electric-blue) 0%, var(--soft-blue) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -97,14 +113,14 @@
 .hero__left p {
   max-width: 580px;
   font-size: 1.05rem;
-  color: #475569;
+  color: var(--text-secondary);
   line-height: 1.7;
   margin: 0;
 }
 
-/* ===========================
-   BUTTONS
-=========================== */
+/* ===================================================
+   HERO BUTTONS
+=================================================== */
 
 .hero__buttons {
   display: flex;
@@ -122,20 +138,20 @@
   padding: 14px 28px;
   border: none;
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
+  background: var(--electric-blue);
   color: #ffffff;
-  font-size: 1rem;
+  font-size: 0.98rem;
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
-  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
+  box-shadow: 0 4px 18px rgba(59, 130, 246, 0.35);
 }
 
 .hero__btn-primary:hover,
 .primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(2, 132, 199, 0.35);
-  background: #0284c7;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.45);
+  background: var(--electric-blue-hover);
 }
 
 .hero__btn-secondary,
@@ -146,26 +162,30 @@
   gap: 10px;
   padding: 14px 28px;
   border-radius: var(--radius-md);
-  border: 1px solid #bae6fd;
-  background: #ffffff;
-  color: #0284c7;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-surface);
+  color: var(--text-primary);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.98rem;
   font-weight: 600;
   transition: all var(--transition-fast);
-  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.06);
+  box-shadow: var(--shadow-sm);
 }
 
 .hero__btn-secondary:hover,
 .secondary:hover {
-  background: #f0f9ff;
-  border-color: #0284c7;
+  background: var(--glass-surface-hover);
+  border-color: var(--primary);
+  color: var(--primary);
   transform: translateY(-2px);
+  box-shadow: var(--glass-shadow-hover);
 }
 
-/* ===========================
-   STATS CARDS
-=========================== */
+/* ===================================================
+   GLASS STATS CARDS
+=================================================== */
 
 .hero__stats {
   display: flex;
@@ -175,12 +195,14 @@
 }
 
 .stat-card {
-  min-width: 140px;
-  padding: 16px 20px;
+  min-width: 145px;
+  padding: 14px 18px;
   border-radius: var(--radius-md);
-  background: #ffffff;
-  border: 1px solid #e0f2fe;
-  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.08);
+  background: var(--glass-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -189,16 +211,17 @@
 
 .stat-card:hover {
   transform: translateY(-3px);
-  border-color: #bae6fd;
-  box-shadow: 0 8px 20px rgba(2, 132, 199, 0.12);
+  border-color: var(--border-medium);
+  box-shadow: var(--glass-shadow-hover);
+  background: var(--glass-surface-hover);
 }
 
 .stat-icon {
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: #e0f2fe;
-  color: #0284c7;
+  background: var(--primary-light);
+  color: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -207,7 +230,7 @@
 }
 
 .stat-card h3 {
-  color: #0284c7;
+  color: var(--electric-blue);
   font-size: 1.35rem;
   font-weight: 700;
   margin: 0;
@@ -215,14 +238,14 @@
 }
 
 .stat-card span {
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 0.8rem;
   font-weight: 500;
 }
 
-/* ===========================
-   RIGHT SIDE - FLAGSHIP SPOTLIGHT CARD
-=========================== */
+/* ===================================================
+   RIGHT SIDE - FLAGSHIP GLASS SPOTLIGHT CARD
+=================================================== */
 
 .hero__right {
   display: flex;
@@ -235,28 +258,33 @@
 .spotlight-card {
   width: 100%;
   max-width: 500px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 20px;
+  background: var(--glass-surface);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
   padding: 24px;
-  box-shadow: 0 20px 40px -15px rgba(2, 132, 199, 0.12), 0 0 1px 1px rgba(2, 132, 199, 0.05);
+  box-shadow: var(--glass-shadow);
   display: flex;
   flex-direction: column;
   position: relative;
-  transition: box-shadow 0.3s ease;
+  transition: all var(--transition-normal);
 }
 
 .spotlight-card:hover {
-  box-shadow: 0 24px 48px -12px rgba(2, 132, 199, 0.18), 0 0 1px 1px rgba(2, 132, 199, 0.08);
+  box-shadow: var(--glass-shadow-hover);
+  border-color: var(--border-medium);
+  transform: translateY(-2px);
 }
 
 /* Device Switcher Tabs */
 .spotlight-tabs {
   display: flex;
   gap: 6px;
-  background: #f1f5f9;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
   padding: 4px;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   margin-bottom: 14px;
 }
 
@@ -265,23 +293,23 @@
   padding: 8px 12px;
   border: none;
   background: transparent;
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 0.82rem;
   font-weight: 600;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-fast);
   text-align: center;
 }
 
 .spotlight-tab:hover {
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .spotlight-tab.active {
-  background: #ffffff;
-  color: #0284c7;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  background: var(--glass-surface-solid);
+  color: var(--electric-blue);
+  box-shadow: var(--shadow-sm);
   font-weight: 700;
 }
 
@@ -291,10 +319,10 @@
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  background: #ecfdf5;
-  border: 1px solid #a7f3d0;
-  color: #065f46;
-  border-radius: 9999px;
+  background: var(--success-bg);
+  border: 1px solid rgba(22, 163, 74, 0.28);
+  color: var(--success);
+  border-radius: var(--radius-pill);
   font-size: 0.75rem;
   font-weight: 600;
   width: fit-content;
@@ -308,24 +336,24 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  background: radial-gradient(circle, #f0f9ff 0%, #f8fafc 70%);
-  border-radius: 14px;
+  background: radial-gradient(circle, var(--bg-secondary) 0%, var(--glass-surface) 75%);
+  border-radius: var(--radius-lg);
   margin-bottom: 16px;
   overflow: hidden;
-  border: 1px solid #f1f5f9;
+  border: 1px solid var(--border-subtle);
 }
 
 .spotlight-img {
   max-height: 180px;
   max-width: 85%;
   object-fit: contain;
-  filter: drop-shadow(0 12px 20px rgba(15, 23, 42, 0.12));
+  filter: drop-shadow(0 12px 20px rgba(15, 23, 42, 0.14));
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
 }
 
 .spotlight-card:hover .spotlight-img {
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
 
 /* Content Area */
@@ -346,23 +374,23 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #0284c7;
+  color: var(--electric-blue);
 }
 
 .spotlight-discount-badge {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #dc2626;
+  background: var(--error-bg);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: var(--error);
   font-size: 0.72rem;
   font-weight: 700;
   padding: 3px 8px;
-  border-radius: 6px;
+  border-radius: var(--radius-xs);
 }
 
 .spotlight-title {
   font-size: 1.25rem;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text-primary);
   margin: 0;
   line-height: 1.25;
 }
@@ -375,11 +403,11 @@
 
 .spotlight-spec-chip {
   padding: 4px 8px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
   font-size: 0.72rem;
-  color: #475569;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -389,7 +417,7 @@
   align-items: center;
   margin-top: 6px;
   padding-top: 12px;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .spotlight-prices {
@@ -401,12 +429,12 @@
 .spotlight-current-price {
   font-size: 1.35rem;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .spotlight-old-price {
   font-size: 0.88rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   text-decoration: line-through;
 }
 
@@ -415,19 +443,20 @@
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  background: #0284c7;
+  background: var(--electric-blue);
   color: #ffffff;
   border: none;
   border-radius: 10px;
   font-size: 0.84rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-fast);
 }
 
 .spotlight-action-btn:hover {
-  background: #0369a1;
+  background: var(--electric-blue-hover);
   transform: translateX(2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .spotlight-footer-trust {
@@ -437,7 +466,7 @@
   flex-wrap: wrap;
   gap: 6px;
   font-size: 0.74rem;
-  color: #64748b;
+  color: var(--text-secondary);
   margin-top: 4px;
 }
 
@@ -446,17 +475,17 @@
   align-items: center;
   gap: 4px;
   font-weight: 600;
-  color: #334155;
+  color: var(--text-primary);
 }
 
 .spotlight-stock-status {
-  color: #059669;
+  color: var(--success);
   font-weight: 600;
 }
 
-/* ===========================
+/* ===================================================
    RESPONSIVE
-=========================== */
+=================================================== */
 
 @media (max-width: 1200px) {
   .hero__container {

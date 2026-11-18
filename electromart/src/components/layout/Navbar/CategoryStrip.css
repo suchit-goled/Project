@@ -1,9 +1,17 @@
 .category-strip {
-    background: #0f172a;
-    border-bottom: 1px solid #1e293b;
+    background: var(--glass-surface);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border-bottom: 1px solid var(--glass-border);
     padding: 0.35rem 0;
     font-size: 0.825rem;
     overflow: hidden;
+    transition: background var(--transition-normal);
+}
+
+[data-theme="dark"] .category-strip {
+    background: rgba(17, 24, 39, 0.75);
+    border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
 .category-strip__container {
@@ -29,12 +37,12 @@
 }
 
 .category-strip__link {
-    color: #cbd5e1;
+    color: var(--text-secondary);
     text-decoration: none;
     padding: 0.35rem 0.65rem;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     font-weight: 500;
-    transition: all 0.15s ease;
+    transition: all var(--transition-fast);
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
@@ -42,20 +50,20 @@
 }
 
 .category-strip__link:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    background: var(--glass-surface-hover);
 }
 
 .category-strip__link.active {
-    color: #38bdf8;
-    background: rgba(56, 189, 248, 0.12);
+    color: var(--primary);
+    background: var(--primary-light);
     font-weight: 600;
 }
 
 .category-strip__link.all-link {
     font-weight: 600;
-    color: #f8fafc;
-    border-right: 1px solid #334155;
+    color: var(--text-primary);
+    border-right: 1px solid var(--border-subtle);
     padding-right: 1rem;
     margin-right: 0.25rem;
     flex-shrink: 0;
@@ -63,7 +71,7 @@
 
 .strip-icon {
     font-size: 0.95rem;
-    color: #38bdf8;
+    color: var(--electric-blue);
 }
 
 .category-strip__right-deals {
@@ -74,16 +82,15 @@
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
-    background: linear-flex;
     background: rgba(245, 158, 11, 0.15);
     border: 1px solid rgba(245, 158, 11, 0.4);
-    color: #fbbf24;
+    color: #f59e0b;
     padding: 0.3rem 0.75rem;
-    border-radius: 20px;
+    border-radius: var(--radius-pill);
     text-decoration: none;
     font-size: 0.78rem;
     font-weight: 600;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast);
 }
 
 .deals-pill-link:hover {

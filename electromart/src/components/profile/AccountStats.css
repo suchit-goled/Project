@@ -1,82 +1,91 @@
+/* ===================================================
+   ACCOUNT STATS - Glassmorphic & Minimalist
+   Dual Theme (Light & Dark) Compatible
+=================================================== */
+
 .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 20px;
 }
 
 .stat-card {
-    background: #ffffff;
-    border: 1px solid #e0f2fe;
-    border-radius: 16px;
-    padding: 24px 20px;
-    transition: all .3s ease;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.05);
+  background: var(--glass-surface);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 24px 20px;
+  transition: all var(--transition-normal);
+  cursor: pointer;
+  box-shadow: var(--glass-shadow);
 }
 
 .stat-card:hover {
-    transform: translateY(-4px);
-    border-color: #0284c7;
-    box-shadow: 0 10px 24px rgba(2, 132, 199, 0.12);
+  transform: translateY(-4px);
+  border-color: var(--border-medium);
+  box-shadow: var(--glass-shadow-hover);
+  background: var(--glass-surface-hover);
 }
 
 .stat-icon {
-    width: 52px;
-    height: 52px;
-    border-radius: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    margin-bottom: 16px;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  margin-bottom: 16px;
 }
 
 /* Orders */
 .orders .stat-icon {
-    background: #e0f2fe;
-    color: #0284c7;
+  background: var(--primary-light);
+  color: var(--electric-blue);
 }
 
 /* Wishlist */
 .wishlist .stat-icon {
-    background: #fee2e2;
-    color: #ef4444;
+  background: var(--error-bg);
+  color: var(--error);
 }
 
 /* Cart */
 .cart .stat-icon {
-    background: #ecfdf5;
-    color: #10b981;
+  background: var(--success-bg);
+  color: var(--success);
 }
 
 /* Address */
 .address .stat-icon {
-    background: #fef3c7;
-    color: #f59e0b;
+  background: var(--warning-bg);
+  color: var(--warning);
 }
 
 .stat-card h3 {
-    color: #0f172a;
-    margin-bottom: 8px;
-    font-size: 16px;
-    font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .stat-card p {
-    color: #0284c7;
-    font-size: 28px;
-    font-weight: 700;
-    margin: 0;
+  color: var(--electric-blue);
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0;
+  font-family: var(--font-heading);
 }
 
 @media (max-width: 768px) {
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 500px) {
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
 }

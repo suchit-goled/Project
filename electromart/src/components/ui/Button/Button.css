@@ -1,11 +1,11 @@
 .btn {
     border: none;
     cursor: pointer;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
     padding: 12px 24px;
     font-size: 15px;
     font-weight: 600;
-    transition: var(--transition-normal);
+    transition: all var(--transition-fast);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -13,34 +13,35 @@
 }
 
 .btn--primary {
-    background: var(--primary);
+    background: var(--accent-blue);
     color: white;
-    box-shadow: 0 4px 12px var(--primary-glow);
+    box-shadow: 0 4px 12px var(--accent-glow);
 }
 
 .btn--primary:hover {
-    background: var(--primary-hover);
+    background: var(--primary-glow);
     transform: translateY(-2px);
-    box-shadow: 0 6px 18px var(--primary-glow);
+    box-shadow: 0 6px 18px var(--accent-glow);
 }
 
 .btn--secondary {
-    background: #ffffff;
+    background: var(--bg-card);
     color: var(--text-primary);
-    border: 1px solid var(--border-medium);
+    border: 1px solid var(--border-glass);
 }
 
 .btn--secondary:hover {
     background: var(--bg-card-hover);
-    border-color: var(--primary);
-    color: var(--primary);
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+    transform: translateY(-2px);
 }
 
 .btn--accent {
-    background: var(--sky-blue);
+    background: var(--accent-cyan);
     color: white;
 }
 
 .btn--accent:hover {
-    background: var(--primary-dark);
+    background: var(--accent-blue);
 }

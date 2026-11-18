@@ -1,35 +1,110 @@
-.fade-up{
-    animation:fadeUp .7s ease forwards;
+/* ===================================================
+   APPLICATION-WIDE ANIMATIONS & TRANSITIONS
+   Fluid, Minimalist & Respectful of Reduced Motion
+=================================================== */
+
+/* Page Route Transition */
+.page-transition,
+.fade-slide-up {
+    animation: fadeSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes fadeUp{
-
-    from{
-        opacity:0;
-        transform:translateY(30px);
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
     }
-
-    to{
-        opacity:1;
-        transform:translateY(0);
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
-
 }
 
-.scale-in{
-    animation:scaleIn .5s ease forwards;
+/* Modal and Dropdown Transitions */
+@keyframes glassFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
-@keyframes scaleIn{
-
-    from{
-        opacity:0;
-        transform:scale(.95);
+@keyframes glassSlideUp {
+    from {
+        opacity: 0;
+        transform: scale(0.96) translateY(10px);
     }
-
-    to{
-        opacity:1;
-        transform:scale(1);
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
     }
+}
 
+/* Shimmer Animation for Skeleton Loaders */
+@keyframes skeletonShimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.skeleton-shimmer {
+    background: linear-gradient(
+        90deg,
+        rgba(226, 232, 240, 0.4) 25%,
+        rgba(241, 245, 249, 0.8) 50%,
+        rgba(226, 232, 240, 0.4) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.8s infinite ease-in-out;
+    border-radius: var(--radius-sm);
+}
+
+[data-theme="dark"] .skeleton-shimmer {
+    background: linear-gradient(
+        90deg,
+        rgba(30, 41, 59, 0.5) 25%,
+        rgba(51, 65, 85, 0.8) 50%,
+        rgba(30, 41, 59, 0.5) 75%
+    );
+    background-size: 200% 100%;
+}
+
+/* Hover Elevation Utility */
+.hover-elevate {
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.hover-elevate:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--glass-shadow-hover);
+}
+
+/* Subtle Pulse for Live Badges */
+@keyframes subtlePulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+.pulse-beacon {
+    animation: subtlePulse 2s infinite ease-in-out;
+}
+
+/* Accessibility: User Prefers Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }

@@ -1,7 +1,15 @@
+/* ===================================================
+   FILTERS SIDEBAR - Glassmorphic & Minimalist
+   Dual Theme (Light & Dark) Compatible
+=================================================== */
+
 .filters-sidebar {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
+  background: var(--glass-surface);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius-lg);
   padding: 24px;
   position: sticky;
   top: calc(var(--navbar-height) + 24px);
@@ -10,6 +18,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  transition: all var(--transition-normal);
 }
 
 .filters-header {
@@ -28,12 +37,13 @@
 }
 
 .filters-title svg {
-  color: var(--primary);
+  color: var(--electric-blue);
   font-size: 1.1rem;
 }
 
 .filters-title h3 {
   font-size: 1.05rem;
+  font-weight: 700;
   margin: 0;
 }
 
@@ -43,7 +53,7 @@
   gap: 4px;
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--primary);
+  color: var(--electric-blue);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -52,11 +62,12 @@
 
 .reset-filters-link:hover {
   text-decoration: underline;
+  color: var(--electric-blue-hover);
 }
 
 /* In Stock Toggle */
 .in-stock-group {
-  padding-bottom: 12px;
+  padding-bottom: 14px;
   border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -79,9 +90,10 @@
   display: inline-block;
   width: 40px;
   height: 22px;
-  background-color: var(--bg-tertiary);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
   border-radius: 20px;
-  transition: .3s;
+  transition: .25s ease;
 }
 
 .toggle-slider:before {
@@ -89,15 +101,17 @@
   content: "";
   height: 16px;
   width: 16px;
-  left: 3px;
-  bottom: 3px;
+  left: 2px;
+  bottom: 2px;
   background-color: white;
   border-radius: 50%;
-  transition: .3s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: .25s ease;
 }
 
 .toggle-switch-label input:checked + .toggle-slider {
-  background-color: #10b981;
+  background-color: var(--success);
+  border-color: var(--success);
 }
 
 .toggle-switch-label input:checked + .toggle-slider:before {
@@ -123,11 +137,16 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: var(--bg-tertiary);
+  background: var(--bg-secondary);
   border: 1px solid var(--border-subtle);
-  border-radius: 6px;
-  padding: 6px 10px;
+  border-radius: var(--radius-xs);
+  padding: 7px 10px;
   margin-bottom: 8px;
+  transition: border-color var(--transition-fast);
+}
+
+.brand-search-box:focus-within {
+  border-color: var(--electric-blue);
 }
 
 .brand-search-box svg {
@@ -142,6 +161,10 @@
   color: var(--text-primary);
   font-size: 0.82rem;
   width: 100%;
+}
+
+.brand-search-box input::placeholder {
+  color: var(--text-muted);
 }
 
 .filter-options-list {
@@ -165,7 +188,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 7px 10px;
+  padding: 8px 10px;
   border-radius: var(--radius-sm);
   color: var(--text-secondary);
   font-size: 0.85rem;
@@ -177,19 +200,19 @@
 }
 
 .filter-category-btn:hover {
-  background: var(--bg-card-hover);
+  background: var(--glass-surface-hover);
   color: var(--text-primary);
 }
 
 .filter-category-btn.active {
-  background: rgba(99, 102, 241, 0.15);
-  color: #818cf8;
+  background: var(--primary-light);
+  color: var(--electric-blue);
   font-weight: 600;
 }
 
 .filter-check {
   font-size: 0.95rem;
-  color: #818cf8;
+  color: var(--electric-blue);
 }
 
 /* Price range */
@@ -203,15 +226,15 @@
 .price-tag {
   font-size: 0.88rem;
   font-weight: 700;
-  color: #818cf8;
+  color: var(--electric-blue);
 }
 
 .price-range-slider {
   width: 100%;
-  accent-color: #6366f1;
+  accent-color: var(--electric-blue);
   cursor: pointer;
   height: 6px;
-  background: var(--bg-tertiary);
+  background: var(--bg-secondary);
   border-radius: var(--radius-pill);
 }
 
@@ -231,26 +254,28 @@
 }
 
 .discount-pill-btn {
-  background: var(--bg-tertiary);
+  background: var(--bg-secondary);
   border: 1px solid var(--border-subtle);
   color: var(--text-secondary);
   font-size: 0.78rem;
   font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 6px;
+  padding: 5px 10px;
+  border-radius: var(--radius-xs);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-fast);
 }
 
 .discount-pill-btn:hover {
-  background: var(--bg-card-hover);
+  background: var(--glass-surface-hover);
   color: var(--text-primary);
+  border-color: var(--border-medium);
 }
 
 .discount-pill-btn.active {
-  background: #6366f1;
+  background: var(--electric-blue);
   color: #ffffff;
-  border-color: #6366f1;
+  border-color: var(--electric-blue);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
 
 /* Rating options */
@@ -267,24 +292,24 @@
   font-size: 0.85rem;
   color: var(--text-secondary);
   cursor: pointer;
-  padding: 5px 8px;
+  padding: 6px 8px;
   border-radius: var(--radius-sm);
   transition: all var(--transition-fast);
 }
 
 .rating-radio-label:hover {
-  background: var(--bg-card-hover);
+  background: var(--glass-surface-hover);
   color: var(--text-primary);
 }
 
 .rating-radio-label.selected {
-  color: #818cf8;
+  color: var(--electric-blue);
   font-weight: 600;
-  background: rgba(99, 102, 241, 0.12);
+  background: var(--primary-light);
 }
 
 .rating-radio-label input {
-  accent-color: #6366f1;
+  accent-color: var(--electric-blue);
 }
 
 @media (max-width: 900px) {

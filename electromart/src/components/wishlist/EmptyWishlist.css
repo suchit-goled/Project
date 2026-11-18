@@ -11,13 +11,14 @@
 
 .empty-wishlist h2 {
     font-size: 2rem;
-    font-weight: 700;
-    color: #0f172a;
+    font-weight: 800;
+    color: var(--text-primary);
     margin: 0;
+    letter-spacing: -0.02em;
 }
 
 .empty-wishlist p {
-    color: #475569;
+    color: var(--text-secondary);
     font-size: 1rem;
     max-width: 420px;
     line-height: 1.6;
@@ -26,19 +27,19 @@
 
 .empty-wishlist a {
     margin-top: 12px;
-    padding: 14px 28px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #0284c7, #0ea5e9);
+    padding: 13px 28px;
+    border-radius: var(--radius-sm);
+    background: var(--accent-blue);
     color: white;
     text-decoration: none;
     font-weight: 600;
     font-size: 0.95rem;
-    transition: all 0.25s ease;
-    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
+    transition: all var(--transition-fast);
+    box-shadow: 0 4px 14px var(--accent-glow);
 }
 
 .empty-wishlist a:hover {
-    background: #0284c7;
+    background: var(--primary-glow);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35);
+    box-shadow: 0 6px 20px var(--accent-glow);
 }

@@ -14,6 +14,7 @@ import {
     FaCheckCircle,
     FaClock
 } from "react-icons/fa";
+import "./OrderDetails.css";
 
 const OrderDetails = () => {
     const { orderId } = useParams();
@@ -72,8 +73,8 @@ const OrderDetails = () => {
         return (
             <div style={{ maxWidth: "600px", margin: "60px auto", textAlign: "center", padding: "30px" }}>
                 <h2>Order Not Found</h2>
-                <p style={{ color: "#64748b", margin: "14px 0" }}>{error || "The requested order could not be found."}</p>
-                <Link to="/orders" style={{ display: "inline-block", padding: "10px 20px", background: "#ff6b35", color: "#fff", borderRadius: "8px", textDecoration: "none" }}>
+                <p style={{ color: "var(--text-secondary)", margin: "14px 0" }}>{error || "The requested order could not be found."}</p>
+                <Link to="/orders" className="back-to-orders-btn">
                     Back to My Orders
                 </Link>
             </div>
@@ -114,33 +115,33 @@ const OrderDetails = () => {
     const hasSellerOrders = Array.isArray(order.sellerOrders) && order.sellerOrders.length > 0;
 
     return (
-        <div style={{ maxWidth: "960px", margin: "40px auto", padding: "0 20px" }}>
+        <div className="order-details-page">
             <button
                 onClick={() => navigate("/orders")}
-                style={{ display: "flex", alignItems: "center", gap: "8px", background: "none", border: "none", cursor: "pointer", color: "#64748b", marginBottom: "20px", fontSize: "14px", fontWeight: 600 }}
+                className="back-to-orders-btn"
             >
                 <FaArrowLeft /> Back to Orders
             </button>
 
-            <div style={{ background: "#fff", borderRadius: "16px", padding: "28px", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
+            <div className="order-details-card">
                 {/* Header Section */}
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #f1f5f9", paddingBottom: "20px", flexWrap: "wrap", gap: "10px" }}>
+                <div className="order-header-row">
                     <div>
-                        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-                            <h2 style={{ fontSize: "22px", margin: 0, color: "#0f172a" }}>
+                        <div className="order-title-group">
+                            <h2 className="order-main-title">
                                 Order #{order.orderNumber || order._id?.slice(-8).toUpperCase()}
                             </h2>
                             {order.isMultiSeller && (
-                                <span style={{ background: "#eff6ff", color: "#1d4ed8", border: "1px solid #bfdbfe", padding: "3px 10px", borderRadius: "999px", fontSize: "12px", fontWeight: 600 }}>
+                                <span className="multi-seller-badge">
                                     Multi-Seller Order ({order.sellerOrders?.length || "Multiple"} Packages)
                                 </span>
                             )}
                         </div>
-                        <span style={{ fontSize: "13px", color: "#64748b", display: "block", marginTop: "4px" }}>
+                        <span className="order-placed-date">
                             Placed on {new Date(order.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
                         </span>
                     </div>
-                    <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                    <div className="order-badges-group">
                         <Badge variant={getStatusVariant(order.orderStatus)}>{order.orderStatus}</Badge>
                         <Badge variant={order.paymentStatus === "Paid" ? "success" : "warning"}>{order.paymentStatus}</Badge>
                     </div>
@@ -148,18 +149,18 @@ const OrderDetails = () => {
 
                 {/* Multi-Seller Fulfillment Packages Section */}
                 {hasSellerOrders ? (
-                    <div style={{ margin: "28px 0" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
-                            <FaTruck color="#ff6b35" size={18} />
-                            <h3 style={{ fontSize: "17px", color: "#1e293b", margin: 0 }}>
+                    <div className="fulfillment-packages-container">
+                        <div className="packages-heading-row">
+                            <FaTruck className="packages-heading-icon" />
+                            <h3 className="packages-heading-title">
                                 Fulfillment Packages ({order.sellerOrders.length})
                             </h3>
-                            <span style={{ fontSize: "12px", color: "#64748b" }}>
+                            <span className="packages-heading-subtitle">
                                 (Dispatched separately by independent sellers)
                             </span>
                         </div>
 
-                        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+                        <div className="packages-stack">
                             {order.sellerOrders.map((so, idx) => {
                                 const currentStep = getTimelineStepIndex(so.orderStatus);
                                 const steps = ["Confirmed", "Packed", "Dispatched", "Out for Delivery", "Delivered"];
@@ -168,32 +169,27 @@ const OrderDetails = () => {
                                 return (
                                     <div
                                         key={so._id || idx}
-                                        style={{
-                                            border: "1px solid #e2e8f0",
-                                            borderRadius: "12px",
-                                            padding: "20px",
-                                            background: "#fafafa"
-                                        }}
+                                        className="package-box"
                                     >
                                         {/* Package Header */}
-                                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px", borderBottom: "1px solid #edf2f7", paddingBottom: "14px" }}>
+                                        <div className="package-header">
                                             <div>
-                                                <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-                                                    <span style={{ fontWeight: 700, color: "#0f172a", fontSize: "15px" }}>
+                                                <div className="package-title-row">
+                                                    <span className="package-number-tag">
                                                         Package {idx + 1}: {so.sellerOrderNumber || `Sub-Order #${so._id?.slice(-8).toUpperCase()}`}
                                                     </span>
-                                                    <span style={{ fontSize: "12px", background: so.deliveryMethod === "seller_delivery" ? "#fef3c7" : "#e0e7ff", color: so.deliveryMethod === "seller_delivery" ? "#92400e" : "#3730a3", padding: "2px 8px", borderRadius: "6px", fontWeight: 500 }}>
+                                                    <span className={`delivery-method-pill ${so.deliveryMethod === "seller_delivery" ? "seller" : "platform"}`}>
                                                         {so.deliveryMethod === "seller_delivery" ? "Seller Direct Delivery" : "ElectroNova Logistics"}
                                                     </span>
                                                 </div>
 
-                                                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "6px", fontSize: "13px", color: "#475569" }}>
-                                                    <FaStore color="#64748b" />
+                                                <div className="sold-by-row">
+                                                    <FaStore />
                                                     <span>Sold by: </span>
                                                     {so.storeId ? (
                                                         <Link
                                                             to={`/stores/${so.storeId.slug || ""}`}
-                                                            style={{ color: "#ff6b35", fontWeight: 600, textDecoration: "none" }}
+                                                            className="store-link-accent"
                                                         >
                                                             {so.storeId.name || so.storeId.storeName}
                                                         </Link>
@@ -203,11 +199,11 @@ const OrderDetails = () => {
                                                 </div>
                                             </div>
 
-                                            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "4px" }}>
+                                            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "6px" }}>
                                                 <Badge variant={getStatusVariant(so.orderStatus)}>{so.orderStatus}</Badge>
                                                 {so.trackingNumber && (
-                                                    <span style={{ fontSize: "11px", color: "#64748b" }}>
-                                                        Track: <strong style={{ color: "#0f172a" }}>{so.courierPartner || "Express"}: {so.trackingNumber}</strong>
+                                                    <span className="tracking-info-text">
+                                                        Track: <strong>{so.courierPartner || "Express"}: {so.trackingNumber}</strong>
                                                     </span>
                                                 )}
                                             </div>
@@ -215,32 +211,19 @@ const OrderDetails = () => {
 
                                         {/* Shipment Step Indicator */}
                                         {!isCancelled ? (
-                                            <div style={{ margin: "20px 0 16px 0", padding: "12px 16px", background: "#fff", borderRadius: "10px", border: "1px solid #f1f5f9" }}>
-                                                <div style={{ display: "flex", justifyContent: "space-between", position: "relative" }}>
+                                            <div className="stepper-container">
+                                                <div className="stepper-steps-row">
                                                     {steps.map((st, stepIdx) => {
                                                         const isDone = currentStep >= stepIdx;
                                                         const isCurrent = currentStep === stepIdx;
                                                         return (
-                                                            <div key={st} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, position: "relative", zIndex: 1 }}>
+                                                            <div key={st} className="step-item">
                                                                 <div
-                                                                    style={{
-                                                                        width: "28px",
-                                                                        height: "28px",
-                                                                        borderRadius: "50%",
-                                                                        display: "flex",
-                                                                        alignItems: "center",
-                                                                        justifyContent: "center",
-                                                                        fontSize: "12px",
-                                                                        fontWeight: 700,
-                                                                        background: isDone ? "#10b981" : "#e2e8f0",
-                                                                        color: isDone ? "#fff" : "#64748b",
-                                                                        boxShadow: isCurrent ? "0 0 0 4px #d1fae5" : "none",
-                                                                        transition: "all 0.2s"
-                                                                    }}
+                                                                    className={`step-circle ${isDone ? "done" : ""} ${isCurrent ? "current" : ""}`}
                                                                 >
                                                                     {isDone ? <FaCheckCircle size={14} /> : stepIdx + 1}
                                                                 </div>
-                                                                <span style={{ fontSize: "11px", marginTop: "6px", color: isDone ? "#0f172a" : "#94a3b8", fontWeight: isCurrent ? 700 : 500, textAlign: "center" }}>
+                                                                <span className={`step-label ${isDone ? "done" : ""} ${isCurrent ? "current" : ""}`}>
                                                                     {st}
                                                                 </span>
                                                             </div>
@@ -249,38 +232,30 @@ const OrderDetails = () => {
                                                 </div>
                                             </div>
                                         ) : (
-                                            <div style={{ margin: "14px 0", padding: "10px 14px", background: "#fef2f2", color: "#991b1b", borderRadius: "8px", fontSize: "13px" }}>
+                                            <div style={{ margin: "14px 0", padding: "10px 14px", background: "var(--error-bg)", color: "var(--error)", borderRadius: "var(--radius-sm)", fontSize: "13px" }}>
                                                 This package has been cancelled.
                                             </div>
                                         )}
 
                                         {/* Products in this Package */}
-                                        <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "14px" }}>
+                                        <div className="package-products-list">
                                             {(so.products || []).map((itm, iIdx) => (
                                                 <div
                                                     key={iIdx}
-                                                    style={{
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        gap: "14px",
-                                                        padding: "10px",
-                                                        background: "#fff",
-                                                        borderRadius: "8px",
-                                                        border: "1px solid #f1f5f9"
-                                                    }}
+                                                    className="package-product-item"
                                                 >
                                                     <img
                                                         src={itm.image || "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=80"}
                                                         alt={itm.title}
-                                                        style={{ width: "48px", height: "48px", objectFit: "contain", borderRadius: "6px", background: "#f8fafc" }}
+                                                        className="package-product-img"
                                                     />
                                                     <div style={{ flex: 1 }}>
-                                                        <h5 style={{ margin: 0, fontSize: "14px", color: "#1e293b" }}>{itm.title}</h5>
-                                                        <span style={{ fontSize: "12px", color: "#64748b" }}>
+                                                        <h5 className="package-product-title">{itm.title}</h5>
+                                                        <span className="package-product-qty">
                                                             Qty: {itm.quantity} × ₹{Number(itm.price || 0).toLocaleString()}
                                                         </span>
                                                     </div>
-                                                    <span style={{ fontWeight: 600, color: "#0f172a", fontSize: "14px" }}>
+                                                    <span className="package-product-price">
                                                         ₹{(Number(itm.price || 0) * Number(itm.quantity || 1)).toLocaleString()}
                                                     </span>
                                                 </div>
@@ -289,13 +264,13 @@ const OrderDetails = () => {
 
                                         {/* Shipment timeline events if logged */}
                                         {Array.isArray(so.shipmentTimeline) && so.shipmentTimeline.length > 0 && (
-                                            <div style={{ marginTop: "12px", paddingTop: "10px", borderTop: "1px dashed #e2e8f0" }}>
-                                                <span style={{ fontSize: "12px", fontWeight: 600, color: "#64748b", display: "flex", alignItems: "center", gap: "5px" }}>
+                                            <div className="timeline-updates-box">
+                                                <span className="timeline-updates-title">
                                                     <FaClock size={11} /> Shipment Updates:
                                                 </span>
-                                                <div style={{ marginTop: "6px", display: "flex", flexDirection: "column", gap: "4px" }}>
+                                                <div className="timeline-events-list">
                                                     {so.shipmentTimeline.slice(-3).map((ev, eIdx) => (
-                                                        <div key={eIdx} style={{ fontSize: "11px", color: "#475569" }}>
+                                                        <div key={eIdx} className="timeline-event-item">
                                                             • <strong>{ev.status}</strong>: {ev.note || "Status updated"} {ev.timestamp ? `(${new Date(ev.timestamp).toLocaleDateString()})` : ""}
                                                         </div>
                                                     ))}
@@ -310,20 +285,20 @@ const OrderDetails = () => {
                 ) : (
                     /* Fallback Single Store / Legacy Products List */
                     <div style={{ margin: "24px 0" }}>
-                        <h3 style={{ fontSize: "16px", color: "#334155", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
-                            <FaBox color="#ff6b35" /> Products ({order.products?.length || 0})
+                        <h3 style={{ fontSize: "16px", color: "var(--text-primary)", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+                            <FaBox style={{ color: "var(--electric-blue)" }} /> Products ({order.products?.length || 0})
                         </h3>
                         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                             {order.products?.map((item, idx) => (
-                                <div key={idx} style={{ display: "flex", alignItems: "center", gap: "16px", padding: "12px", border: "1px solid #f1f5f9", borderRadius: "10px" }}>
+                                <div key={idx} className="package-product-item">
                                     {item.image && (
-                                        <img src={item.image} alt={item.title} style={{ width: "56px", height: "56px", objectFit: "contain", borderRadius: "6px" }} />
+                                        <img src={item.image} alt={item.title} className="package-product-img" />
                                     )}
                                     <div style={{ flex: 1 }}>
-                                        <h4 style={{ margin: 0, fontSize: "15px", color: "#1e293b" }}>{item.title}</h4>
-                                        <span style={{ fontSize: "13px", color: "#64748b" }}>Qty: {item.quantity} × ₹{item.price?.toLocaleString()}</span>
+                                        <h4 className="package-product-title">{item.title}</h4>
+                                        <span className="package-product-qty">Qty: {item.quantity} × ₹{item.price?.toLocaleString()}</span>
                                     </div>
-                                    <span style={{ fontWeight: 600, color: "#ff6b35" }}>₹{(item.price * item.quantity).toLocaleString()}</span>
+                                    <span className="package-product-price">₹{(item.price * item.quantity).toLocaleString()}</span>
                                 </div>
                             ))}
                         </div>
@@ -331,56 +306,56 @@ const OrderDetails = () => {
                 )}
 
                 {/* Shipping & Payment Address Grid */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "20px", margin: "24px 0" }}>
-                    <div style={{ padding: "16px", background: "#f8fafc", borderRadius: "10px" }}>
-                        <h4 style={{ margin: "0 0 10px 0", fontSize: "14px", color: "#475569", display: "flex", alignItems: "center", gap: "6px" }}>
-                            <FaMapMarkerAlt color="#ff6b35" /> Shipping Address
+                <div className="order-info-grid">
+                    <div className="order-info-card">
+                        <h4>
+                            <FaMapMarkerAlt /> Shipping Address
                         </h4>
-                        <p style={{ margin: 0, fontSize: "13px", color: "#1e293b", lineHeight: 1.6 }}>
+                        <p>
                             {order.shippingAddress?.fullName && <strong>{order.shippingAddress.fullName}<br /></strong>}
                             {order.shippingAddress?.address}<br />
                             {order.shippingAddress?.city}, {order.shippingAddress?.state} {order.shippingAddress?.pincode}
                         </p>
                     </div>
 
-                    <div style={{ padding: "16px", background: "#f8fafc", borderRadius: "10px" }}>
-                        <h4 style={{ margin: "0 0 10px 0", fontSize: "14px", color: "#475569", display: "flex", alignItems: "center", gap: "6px" }}>
-                            <FaCreditCard color="#ff6b35" /> Payment Details
+                    <div className="order-info-card">
+                        <h4>
+                            <FaCreditCard /> Payment Details
                         </h4>
-                        <p style={{ margin: 0, fontSize: "13px", color: "#1e293b", lineHeight: 1.6 }}>
+                        <p>
                             Method: <strong>{order.paymentMethod}</strong><br />
-                            Status: <strong style={{ color: order.paymentStatus === "Paid" ? "#10b981" : "#f59e0b" }}>{order.paymentStatus}</strong>
+                            Status: <strong style={{ color: order.paymentStatus === "Paid" ? "var(--success)" : "var(--warning)" }}>{order.paymentStatus}</strong>
                         </p>
                     </div>
                 </div>
 
                 {/* Total Summary */}
-                <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: "16px", display: "flex", flexDirection: "column", gap: "8px", maxWidth: "300px", marginLeft: "auto" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px", color: "#64748b" }}>
+                <div className="order-totals-card">
+                    <div className="order-total-row">
                         <span>Subtotal:</span>
                         <span>₹{order.subtotal?.toLocaleString()}</span>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px", color: "#64748b" }}>
+                    <div className="order-total-row">
                         <span>Shipping:</span>
                         <span>{order.shippingCharge === 0 ? "FREE" : `₹${order.shippingCharge}`}</span>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px", color: "#64748b" }}>
+                    <div className="order-total-row">
                         <span>Tax:</span>
                         <span>₹{order.tax?.toLocaleString()}</span>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "17px", fontWeight: 700, color: "#0f172a", borderTop: "1px solid #e2e8f0", paddingTop: "8px" }}>
+                    <div className="order-total-grand">
                         <span>Total:</span>
-                        <span style={{ color: "#ff6b35" }}>₹{order.total?.toLocaleString()}</span>
+                        <span className="order-total-grand-amount">₹{order.total?.toLocaleString()}</span>
                     </div>
                 </div>
 
                 {/* Cancellation Action */}
                 {order.orderStatus !== "Delivered" && order.orderStatus !== "Cancelled" && (
-                    <div style={{ marginTop: "24px", paddingTop: "16px", borderTop: "1px solid #f1f5f9", textAlign: "right" }}>
+                    <div style={{ marginTop: "24px", paddingTop: "16px", borderTop: "1px solid var(--border-subtle)", textAlign: "right" }}>
                         <button
                             onClick={handleCancelOrder}
                             disabled={cancelling}
-                            style={{ padding: "10px 18px", background: "#fef2f2", color: "#ef4444", border: "1px solid #fecaca", borderRadius: "8px", fontWeight: 600, cursor: cancelling ? "not-allowed" : "pointer" }}
+                            className="cancel-order-btn"
                         >
                             {cancelling ? "Cancelling..." : "Cancel Order"}
                         </button>

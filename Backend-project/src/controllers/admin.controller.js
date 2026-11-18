@@ -8,6 +8,9 @@ import User from "../models/user.model.js";
 import Cart from "../models/Cart.js";
 import Wishlist from "../models/wishlist.model.js";
 import Address from "../models/address.model.js";
+import Seller from "../models/seller.model.js";
+import Store from "../models/store.model.js";
+import AuditLog from "../models/auditLog.model.js";
 
 class AdminController {
     async getProducts(req, res, next) {
@@ -309,6 +312,138 @@ class AdminController {
                 carts,
                 "Carts fetched successfully."
             );
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getSellers(req, res, next) {
+        try {
+            const { status, search } = req.query;
+            const filter = {};
+            if (status && status !== "all") {
+                filter.status = status;
+            }
+            if (search && search.trim()) {
+                const escaped = search.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+                filter.$or = [
+                    { legalName: { $regex: escaped, $options: "i" } },
+                    { displayName: { $regex: escaped, $options: "i" } },
+                    { contactEmail: { $regex: escaped, $options: "i" } },
+                    { gstin: { $regex: escaped, $options: "i" } },
+                ];
+            }
+
+            let query = Seller.find(filter).sort({ createdAt: -1 });
+            if (typeof query.populate === "function") {
+                query = query.populate("userId", "name email mobile");
+            }
+            const sellers = await query;
+
+            // Attach stores safely
+            let sellersWithStores = sellers;
+            try {
+                sellersWithStores = await Promise.all(
+                    sellers.map(async (s) => {
+                        const store = await Store.findOne({
+                            $or: [{ sellerId: s.userId?._id || s.userId }, { sellerProfileId: s._id }],
+                        });
+                        const sObj = s.toObject ? s.toObject() : { ...s };
+                        sObj.store = store;
+                        return sObj;
+                    })
+                );
+            } catch {
+                sellersWithStores = sellers;
+            }
+
+            return ApiResponse.success(res, sellersWithStores, "Sellers fetched successfully.");
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async updateSellerStatus(req, res, next) {
+        try {
+            const { id } = req.params;
+            const { status, remarks } = req.body;
+
+            if (!id || !mongoose.isValidObjectId(id)) {
+                return ApiResponse.error(res, "Invalid seller ID format.", 400);
+            }
+
+            const allowed = ["pending", "approved", "suspended", "rejected"];
+            if (!status || !allowed.includes(status)) {
+                return ApiResponse.error(res, `Invalid status. Allowed: ${allowed.join(", ")}`, 400);
+            }
+
+            const seller = await Seller.findById(id);
+            if (!seller) {
+                return ApiResponse.error(res, "Seller profile not found.", 404);
+            }
+
+            seller.status = status;
+            if (status === "approved") {
+                seller.isVerified = true;
+                seller.verifiedAt = new Date();
+                seller.verifiedBy = req.user._id;
+            }
+            await seller.save();
+
+            // Sync with User
+            if (seller.userId) {
+                await User.findByIdAndUpdate(seller.userId, {
+                    sellerStatus: status,
+                    role: status === "approved" ? "seller" : "customer",
+                });
+            }
+
+            // Also sync Store isActive
+            await Store.updateMany(
+                { $or: [{ sellerId: seller.userId }, { sellerProfileId: seller._id }] },
+                { isActive: status === "approved" }
+            );
+
+            try {
+                await AuditLog.create({
+                    action: "ADMIN_SELLER_STATUS_UPDATE",
+                    actor: { userId: req.user._id, role: "admin" },
+                    target: { model: "Seller", id: seller._id },
+                    details: { newStatus: status, remarks },
+                });
+            } catch {}
+
+            return ApiResponse.success(res, seller, `Seller status updated to ${status}.`);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async updateSellerCommission(req, res, next) {
+        try {
+            const { id } = req.params;
+            const { commissionRate } = req.body;
+
+            if (!id || !mongoose.isValidObjectId(id)) {
+                return ApiResponse.error(res, "Invalid seller ID format.", 400);
+            }
+
+            const numRate = Number(commissionRate);
+            if (commissionRate === undefined || isNaN(numRate) || numRate < 0 || numRate > 100) {
+                return ApiResponse.error(res, "commissionRate must be a number between 0 and 100", 400);
+            }
+
+            const seller = await Seller.findByIdAndUpdate(
+                id,
+                { commissionRateOverride: numRate },
+                { new: true }
+            );
+
+            if (!seller) {
+                return ApiResponse.error(res, "Seller not found.", 404);
+            }
+
+            return ApiResponse.success(res, seller, `Seller commission override set to ${numRate}%.`);
         } catch (error) {
             next(error);
         }

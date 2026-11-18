@@ -4,8 +4,10 @@ import Store from "../models/store.model.js";
 import User from "../models/user.model.js";
 import Product from "../models/Product.js";
 import SellerOrder from "../models/sellerOrder.model.js";
+import orderModel from "../models/order.model.js";
 import Payout from "../models/payout.model.js";
 import AuditLog from "../models/auditLog.model.js";
+import shipmentService from "../services/shipment.service.js";
 
 const generateSlug = (text) => {
     return text
@@ -196,7 +198,7 @@ export const sellerRepository = {
         }).populate("customerId", "name email mobile");
     },
 
-    // Update Status with Fulfillment Timeline
+    // Update Status with Fulfillment Timeline and Shipment Auto-Sync
     async updateSellerOrderStatus(sellerOrderId, sellerUserId, newStatus, { note, trackingNumber, carrier } = {}) {
         if (!mongoose.isValidObjectId(sellerOrderId)) return null;
 
@@ -219,9 +221,58 @@ export const sellerRepository = {
         });
 
         if (trackingNumber) order.trackingNumber = trackingNumber;
-        if (carrier) order.carrier = carrier;
+        if (carrier) {
+            order.courierPartner = carrier;
+            order.carrier = carrier;
+        }
+        if (newStatus === "Delivered") {
+            order.deliveredAt = new Date();
+        }
 
         await order.save();
+
+        // Sync with Shipment service
+        try {
+            await shipmentService.createOrUpdateShipment({
+                sellerOrderId: order._id,
+                carrier: carrier || order.courierPartner || "ElectroNova Logistics",
+                trackingNumber: trackingNumber || order.trackingNumber,
+                deliveryMethod: order.deliveryMethod,
+                currentStatus: newStatus === "Delivered" ? "Delivered" : newStatus === "Dispatched" ? "In Transit" : newStatus === "Packed" ? "Picked Up" : "Created",
+                note,
+                updatedBy: sellerUserId,
+            });
+        } catch {
+            // Non-blocking shipment sync
+        }
+
+        // Auto-sync parent order
+        try {
+            if (order.parentOrderId) {
+                const parentOrder = await orderModel.findById(order.parentOrderId);
+                if (parentOrder) {
+                    const siblings = await SellerOrder.find({ parentOrderId: order.parentOrderId });
+                    if (siblings.length > 0) {
+                        const allDelivered = siblings.every(s => s.orderStatus === "Delivered");
+                        const allCancelled = siblings.every(s => s.orderStatus === "Cancelled");
+                        const anyDispatched = siblings.some(s => ["Packed", "Dispatched", "In Transit", "Out for Delivery"].includes(s.orderStatus));
+
+                        if (allDelivered) {
+                            parentOrder.orderStatus = "Delivered";
+                            await parentOrder.save();
+                        } else if (allCancelled) {
+                            parentOrder.orderStatus = "Cancelled";
+                            await parentOrder.save();
+                        } else if (anyDispatched && parentOrder.orderStatus !== "Delivered") {
+                            parentOrder.orderStatus = "Shipped";
+                            await parentOrder.save();
+                        }
+                    }
+                }
+            }
+        } catch {
+            // Parent order sync fallback
+        }
 
         // Audit Log
         try {

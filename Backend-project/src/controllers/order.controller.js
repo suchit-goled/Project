@@ -7,6 +7,7 @@ import SellerOrder from "../models/sellerOrder.model.js";
 import Seller from "../models/seller.model.js";
 import Store from "../models/store.model.js";
 import Category from "../models/category.model.js";
+import commissionService from "../services/commission.service.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import { orderConfirmationTemplate } from "../templates/orderConfirmationEmail.js";
 import ApiResponse from "../utils/apiResponse.js";
@@ -173,10 +174,19 @@ export const createOrder = async (req, res, next) => {
                 }
             }
 
-            // Commission Resolution: Override -> Category Default -> Platform Default (5%)
+            // Commission Resolution: Dynamic Engine (Seller Override -> Category Default -> Platform Default)
+            const primaryCategory = grp.items[0]?.category || "";
             let commissionRate = 5.0;
-            if (sellerProfile && sellerProfile.commissionRateOverride !== null && sellerProfile.commissionRateOverride !== undefined) {
-                commissionRate = Number(sellerProfile.commissionRateOverride);
+            try {
+                commissionRate = await commissionService.resolveCommissionRate({
+                    sellerId: grp.sellerId,
+                    category: primaryCategory,
+                    sellerProfile,
+                });
+            } catch {
+                if (sellerProfile && sellerProfile.commissionRateOverride !== null && sellerProfile.commissionRateOverride !== undefined) {
+                    commissionRate = Number(sellerProfile.commissionRateOverride);
+                }
             }
 
             const commAmount = Math.round((grp.subtotal * commissionRate) / 100);

@@ -2,6 +2,7 @@ import express from "express";
 import { protect } from "../middleware/auth.middleware.js";
 import { sellerOnly } from "../middleware/seller.middleware.js";
 import sellerController from "../controllers/seller.controller.js";
+import commissionController from "../controllers/commission.controller.js";
 
 const router = express.Router();
 
@@ -22,6 +23,7 @@ router.put("/orders/:id/status", protect, sellerOnly, sellerController.updateOrd
 
 // Financial Ledger & Payouts
 router.get("/earnings", protect, sellerOnly, sellerController.getEarnings);
+router.get("/payouts", protect, sellerOnly, commissionController.getSellerPayouts);
 
 // Product Catalog & Inventory Management (Tenant Isolation Guarded)
 router.get("/products", protect, sellerOnly, sellerController.getProducts);

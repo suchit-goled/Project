@@ -20,6 +20,7 @@ import storeRoutes from "./routes/store.routes.js";
 import categoryRoutes from "./routes/category.routes.js";
 import deliveryRoutes from "./routes/delivery.routes.js";
 import sellerRoutes from "./routes/seller.routes.js";
+import shipmentRoutes from "./routes/shipment.routes.js";
 
 import errorMiddleware from "./middleware/error.middleware.js";
 import mongoSanitize from "./middleware/sanitize.middleware.js";
@@ -158,6 +159,7 @@ app.use("/api/stores", storeRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/delivery", deliveryRoutes);
 app.use("/api/seller", sellerRoutes);
+app.use("/api/shipments", shipmentRoutes);
 
 // 7. 404 Handler for Unmatched API Routes
 app.use((req, res, next) => {

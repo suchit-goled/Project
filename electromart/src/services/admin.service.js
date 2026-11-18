@@ -62,6 +62,65 @@ const AdminService = {
         const response = await api.delete(`/admin/users/${id}`);
         return response.data;
     },
+
+    // Marketplace Sellers
+    async getSellers(params = {}) {
+        const response = await api.get("/admin/sellers", { params });
+        const payload = response.data?.data || response.data;
+        return Array.isArray(payload) ? payload : [];
+    },
+
+    async updateSellerStatus(id, status, remarks = "") {
+        const response = await api.put(`/admin/sellers/${id}/status`, { status, remarks });
+        return response.data?.data || response.data;
+    },
+
+    async updateSellerCommission(id, commissionRate) {
+        const response = await api.put(`/admin/sellers/${id}/commission`, { commissionRate });
+        return response.data?.data || response.data;
+    },
+
+    // Commission Engine
+    async getCommissionSettings() {
+        const response = await api.get("/admin/commission");
+        return response.data?.data || response.data;
+    },
+
+    async updateDefaultCommissionRate(defaultRate) {
+        const response = await api.put("/admin/commission/default", { defaultRate });
+        return response.data?.data || response.data;
+    },
+
+    async setCategoryCommissionRate(category, rate) {
+        const response = await api.put("/admin/commission/category", { category, rate });
+        return response.data?.data || response.data;
+    },
+
+    async deleteCategoryCommissionRate(category) {
+        const response = await api.delete(`/admin/commission/category/${encodeURIComponent(category)}`);
+        return response.data?.data || response.data;
+    },
+
+    async getCommissionReports(params = {}) {
+        const response = await api.get("/admin/commission/reports", { params });
+        return response.data?.data || response.data;
+    },
+
+    // Payout Settlements
+    async getPayouts(params = {}) {
+        const response = await api.get("/admin/payouts", { params });
+        return response.data?.data || response.data;
+    },
+
+    async generatePayout(data) {
+        const response = await api.post("/admin/payouts/generate", data);
+        return response.data?.data || response.data;
+    },
+
+    async updatePayoutStatus(id, data) {
+        const response = await api.put(`/admin/payouts/${id}/status`, data);
+        return response.data?.data || response.data;
+    },
 };
 
 export default AdminService;

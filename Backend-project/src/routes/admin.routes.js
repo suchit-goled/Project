@@ -4,6 +4,7 @@ import { protect } from "../middleware/auth.middleware.js";
 import { adminOnly } from "../middleware/admin.middleware.js";
 
 import adminController from "../controllers/admin.controller.js";
+import commissionController from "../controllers/commission.controller.js";
 import upload from "../middleware/upload.middleware.js";
 
 const router = express.Router();
@@ -37,5 +38,23 @@ router.delete("/delete-user/:id", adminController.deleteUser);
 
 // Carts
 router.get("/carts", adminController.getAllCarts);
+
+// Marketplace Sellers Management
+router.get("/sellers", adminController.getSellers);
+router.put("/sellers/:id/status", adminController.updateSellerStatus);
+router.put("/sellers/:id/commission", adminController.updateSellerCommission);
+
+// Commission Engine Management
+router.get("/commission", commissionController.getSettings);
+router.put("/commission/default", commissionController.updateDefaultRate);
+router.put("/commission/category", commissionController.setCategoryRate);
+router.delete("/commission/category/:category", commissionController.deleteCategoryRate);
+router.put("/commission/seller", commissionController.setSellerRate);
+router.get("/commission/reports", commissionController.getReports);
+
+// Seller Settlement Payouts
+router.get("/payouts", commissionController.getAllPayouts);
+router.post("/payouts/generate", commissionController.generatePayout);
+router.put("/payouts/:id/status", commissionController.updatePayoutStatus);
 
 export default router;

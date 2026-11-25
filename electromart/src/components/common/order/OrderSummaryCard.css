@@ -69,8 +69,8 @@
 .summary-total {
     font-size: 18px;
     font-weight: 700;
-    color: #0284c7;
-    font-family: var(--font-heading);
+    color: var(--accent);
+    font-family: var(--font-sans);
 }
 
 .summary-card hr {
@@ -103,6 +103,6 @@
 }
 
 .price-row.total span:last-child {
-    color: #0284c7;
-    font-family: var(--font-heading);
+    color: var(--accent);
+    font-family: var(--font-sans);
 }

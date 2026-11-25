@@ -1,33 +1,36 @@
-/* ===================================================
-   MY ORDERS PAGE - Glassmorphic & Minimalist
-   Dual Theme (Light & Dark) Compatible
-=================================================== */
-
 .my-orders-page {
-  max-width: 1200px;
-  margin: auto;
-  padding: 40px 20px 80px;
+  max-width: var(--container-narrow);
+  margin: 0 auto;
+  padding: 28px 24px 64px;
 }
 
-.my-orders-page h1 {
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  margin-bottom: 30px;
-  color: var(--text-primary);
+.my-orders-header {
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-fine);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-.orders-grid {
+.my-orders-header h1 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 1.85rem;
+  font-weight: 500;
+  color: var(--ink-primary);
+}
+
+.orders-list {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
 }
 
-.orders-loading {
-  min-height: 50vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.25rem;
-  color: var(--text-secondary);
+@media (max-width: 600px) {
+  .my-orders-page {
+    padding: 20px 16px 48px;
+  }
 }

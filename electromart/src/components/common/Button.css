@@ -6,7 +6,7 @@
     padding: 12px 26px;
     font-size: 15px;
     font-weight: 600;
-    transition: all var(--transition-fast);
+    transition: all 150ms ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -14,27 +14,27 @@
 }
 
 .btn--primary {
-    background: var(--accent-blue);
+    background: var(--accent);
     color: white;
-    box-shadow: 0 4px 14px var(--accent-glow);
+    box-shadow: 0 4px 14px none;
 }
 
 .btn--primary:hover {
     transform: translateY(-2px);
-    background: var(--primary-glow);
-    box-shadow: 0 6px 20px var(--accent-glow);
+    background: none;
+    box-shadow: 0 6px 20px none;
 }
 
 .btn--secondary {
     background: var(--bg-card);
-    border: 1px solid var(--border-glass);
+    border: 1px solid var(--border-fine);
     color: var(--text-primary);
 }
 
 .btn--secondary:hover {
-    background: var(--bg-card-hover);
-    border-color: var(--accent-blue);
-    color: var(--accent-blue);
+    background: var(--bg-surface-muted);
+    border-color: var(--accent);
+    color: var(--accent);
     transform: translateY(-2px);
 }
 

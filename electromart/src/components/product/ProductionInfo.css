@@ -1,5 +1,5 @@
 .category {
-    color: #0284c7;
+    color: var(--accent);
     font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 1.5px;
@@ -32,8 +32,8 @@
 .new-price {
     font-size: 36px;
     font-weight: 700;
-    color: #0284c7;
-    font-family: var(--font-heading);
+    color: var(--accent);
+    font-family: var(--font-sans);
 }
 
 .old-price {

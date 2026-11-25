@@ -15,7 +15,7 @@
 
 .related-products .swiper-button-prev,
 .related-products .swiper-button-next {
-    color: #0284c7;
+    color: var(--accent);
 }
 
 .related-products .swiper-button-prev:hover,

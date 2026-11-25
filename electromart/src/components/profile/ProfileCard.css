@@ -1,77 +1,44 @@
-/* ===================================================
-   PROFILE CARD - Glassmorphic & Minimalist
-   Dual Theme (Light & Dark) Compatible
-=================================================== */
-
 .profile-card {
-  background: var(--glass-surface);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  padding: 32px 24px;
-  border-radius: var(--radius-lg);
-  text-align: center;
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  transition: all var(--transition-normal);
-}
-
-.profile-card:hover {
-  border-color: var(--border-medium);
-  box-shadow: var(--glass-shadow-hover);
-}
-
-.avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background: var(--primary-light);
-  border: 3px solid var(--border-medium);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 42px;
-  margin: 0 auto 18px;
-  color: var(--electric-blue);
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.2);
-}
-
-.profile-card h2 {
-  color: var(--text-primary);
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.profile-card p {
-  color: var(--text-secondary);
-  font-size: 14px;
-  margin-bottom: 12px;
-}
-
-.profile-card span {
-  color: var(--success);
-  font-weight: 600;
-}
-
-.edit-profile-btn {
-  margin-top: 20px;
-  border: none;
-  cursor: pointer;
-  background: var(--electric-blue);
-  color: white;
-  padding: 12px 24px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-fine);
   border-radius: var(--radius-sm);
-  display: inline-flex;
+  padding: 24px;
+  margin-bottom: 24px;
+  display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  transition: all var(--transition-fast);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
 }
 
-.edit-profile-btn:hover {
-  transform: translateY(-2px);
-  background: var(--electric-blue-hover);
-  box-shadow: 0 6px 18px rgba(59, 130, 246, 0.4);
+.profile-card-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-sm);
+  background-color: var(--ink-primary);
+  color: var(--ink-inverse);
+  font-size: 1.4rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-card-meta h2 {
+  margin: 0 0 3px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ink-primary);
+}
+
+.profile-card-meta p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ink-secondary);
 }

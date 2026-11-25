@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 import "./App.css";
@@ -59,6 +59,15 @@ import WarrantyGuide from "./pages/WarrantyGuide";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 
+const PageTransitionShell = ({ children }) => {
+    const location = useLocation();
+    return (
+        <div key={location.pathname} className="app-main-content page-transition-wrapper">
+            {children}
+        </div>
+    );
+};
+
 function App() {
     return (
         <BrowserRouter>
@@ -92,7 +101,7 @@ function App() {
 
             <Navbar />
 
-            <div className="app-main-content">
+            <PageTransitionShell>
                 <Routes>
                     {/* Public Storefront */}
                     <Route path="/" element={<Home />} />
@@ -240,7 +249,7 @@ function App() {
                     {/* 404 Recovery Fallback */}
                     <Route path="*" element={<NotFound />} />
                 </Routes>
-            </div>
+            </PageTransitionShell>
 
             <WhatsAppButton />
             <Footer />

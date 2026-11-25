@@ -1,14 +1,12 @@
-.card {
-    background: var(--bg-glass-card);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--border-glass);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-glass);
-    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+.ui-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-fine);
+  border-radius: var(--radius-sm);
+  padding: 20px;
 }
 
-.card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-glass-lg);
+.ui-skeleton {
+  background-color: var(--bg-surface-muted);
+  border: 1px solid var(--border-fine);
+  border-radius: var(--radius-sm);
 }

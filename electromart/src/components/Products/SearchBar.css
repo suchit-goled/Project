@@ -6,23 +6,23 @@
 .search-bar {
   display: flex;
   align-items: center;
-  background: var(--glass-surface);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
+  background: var(--bg-surface);
+  
+  -webkit-
   border-radius: var(--radius-md);
   padding: 12px 18px;
-  border: 1px solid var(--glass-border);
-  transition: all var(--transition-fast);
+  border: 1px solid var(--border-fine);
+  transition: all 150ms ease;
   box-shadow: var(--shadow-sm);
 }
 
 .search-bar:focus-within {
-  border-color: var(--electric-blue);
-  box-shadow: 0 0 0 3px var(--primary-glow);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px none;
 }
 
 .search-icon {
-  color: var(--electric-blue);
+  color: var(--accent);
   margin-right: 12px;
   font-size: 18px;
   flex-shrink: 0;

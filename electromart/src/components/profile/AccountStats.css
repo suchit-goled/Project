@@ -1,91 +1,36 @@
-/* ===================================================
-   ACCOUNT STATS - Glassmorphic & Minimalist
-   Dual Theme (Light & Dark) Compatible
-=================================================== */
-
-.stats-grid {
+.account-stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
 }
 
-.stat-card {
-  background: var(--glass-surface);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
-  padding: 24px 20px;
-  transition: all var(--transition-normal);
-  cursor: pointer;
-  box-shadow: var(--glass-shadow);
+.account-stat-card {
+  padding: 16px 18px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-fine);
+  border-radius: var(--radius-sm);
+  font-variant-numeric: tabular-nums;
 }
 
-.stat-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--border-medium);
-  box-shadow: var(--glass-shadow-hover);
-  background: var(--glass-surface-hover);
-}
-
-.stat-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: var(--radius-md);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 24px;
-  margin-bottom: 16px;
-}
-
-/* Orders */
-.orders .stat-icon {
-  background: var(--primary-light);
-  color: var(--electric-blue);
-}
-
-/* Wishlist */
-.wishlist .stat-icon {
-  background: var(--error-bg);
-  color: var(--error);
-}
-
-/* Cart */
-.cart .stat-icon {
-  background: var(--success-bg);
-  color: var(--success);
-}
-
-/* Address */
-.address .stat-icon {
-  background: var(--warning-bg);
-  color: var(--warning);
-}
-
-.stat-card h3 {
-  color: var(--text-primary);
-  margin-bottom: 8px;
-  font-size: 16px;
+.account-stat-label {
+  display: block;
+  font-size: 0.72rem;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  margin-bottom: 6px;
 }
 
-.stat-card p {
-  color: var(--electric-blue);
-  font-size: 28px;
-  font-weight: 800;
-  margin: 0;
-  font-family: var(--font-heading);
+.account-stat-value {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ink-primary);
 }
 
-@media (max-width: 768px) {
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 500px) {
-  .stats-grid {
+@media (max-width: 640px) {
+  .account-stats-grid {
     grid-template-columns: 1fr;
   }
 }

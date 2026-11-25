@@ -2,7 +2,7 @@
   position: relative;
 }
 
-.user-menu__trigger {
+.user-menu .user-btn {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -18,11 +18,11 @@
   transition: border-color 150ms ease;
 }
 
-.user-menu__trigger:hover {
+.user-menu .user-btn:hover {
   border-color: var(--ink-primary);
 }
 
-.user-menu__avatar {
+.user-avatar {
   width: 22px;
   height: 22px;
   border-radius: var(--radius-xs);
@@ -35,7 +35,7 @@
   justify-content: center;
 }
 
-.user-menu__dropdown {
+.user-menu .dropdown {
   position: absolute;
   top: calc(100% + 6px);
   right: 0;
@@ -48,19 +48,19 @@
   padding: 6px 0;
 }
 
-.user-menu__header {
+.dropdown-header {
   padding: 8px 14px 10px;
   border-bottom: 1px solid var(--border-fine);
 }
 
-.user-menu__name {
+.user-name {
   display: block;
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--ink-primary);
 }
 
-.user-menu__email {
+.dropdown-email {
   display: block;
   font-size: 0.75rem;
   color: var(--ink-muted);
@@ -69,7 +69,7 @@
   text-overflow: ellipsis;
 }
 
-.user-menu__item {
+.user-menu .dropdown-item {
   width: 100%;
   display: flex;
   align-items: center;
@@ -83,18 +83,18 @@
   cursor: pointer;
 }
 
-.user-menu__item:hover {
+.user-menu .dropdown-item:hover {
   background-color: var(--bg-surface-muted);
 }
 
-.user-menu__item--danger {
+.user-menu .logout-item {
   color: var(--status-error);
   border-top: 1px solid var(--border-fine);
   margin-top: 4px;
   padding-top: 10px;
 }
 
-.login-btn {
+.user-login-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -109,12 +109,12 @@
   cursor: pointer;
 }
 
-.login-btn:hover {
+.user-login-btn:hover {
   background-color: #2D2D29;
 }
 
 @media (max-width: 480px) {
-  .user-menu__name-label {
+  .user-name-label {
     display: none;
   }
 }

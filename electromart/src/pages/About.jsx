@@ -9,11 +9,11 @@ const About = () => {
   return (
     <div className="policy-page container">
       <div className="policy-header">
-        <span className="policy-badge">Our Mission</span>
-        <h1>Engineered for Tech Enthusiasts</h1>
+        <h1>About ElectroNova</h1>
         <p>Curating cutting-edge electronics with relentless quality standards and transparent service.</p>
       </div>
 
+      <img className="about-photo" src="/media/design/auth-hardware-detail.webp" alt="Close-up of the controls on a camera" />
       <div className="policy-card">
         <h2>Who We Are</h2>
         <p>

@@ -103,7 +103,7 @@ const SearchBar = () => {
                 <FiSearch className="search-icon" />
                 <input
                     type="text"
-                    placeholder="Search 250+ electronics, brands, specs..."
+                    placeholder="Search products and brands"
                     value={inputValue}
                     onChange={handleChange}
                     onFocus={() => {

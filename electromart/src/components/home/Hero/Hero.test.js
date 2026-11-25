@@ -1,84 +1,34 @@
-import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Hero from "./Hero";
 
-const mockNavigate = jest.fn();
-jest.mock("react-router-dom", () => ({
-    ...jest.requireActual("react-router-dom"),
-    useNavigate: () => mockNavigate
-}));
+function mount() { render(<MemoryRouter><Hero /></MemoryRouter>); }
 
-describe("Hero Component Tests", () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
+test("opens on the audio collection with a working catalogue link", () => {
+  mount();
+  expect(screen.getByRole("button", {name:"Audio"})).toHaveAttribute("aria-pressed","true");
+  expect(screen.getByRole("link", {name:"Shop headphones"})).toHaveAttribute("href","/products?category=Headphones");
+  expect(screen.getByRole("link", {name:"Full catalogue"})).toHaveAttribute("href","/products");
+});
 
-    test("renders authoritative hero heading, badge, and value pillars", () => {
-        render(
-            <MemoryRouter>
-                <Hero />
-            </MemoryRouter>
-        );
+test("switches image, copy and destination together", () => {
+  mount();
+  fireEvent.click(screen.getByRole("button", {name:"Workspace"}));
+  expect(screen.getByRole("img", {name:/keys/})).toHaveAttribute("src","/media/design/editorial-keyboard.webp");
+  expect(screen.getByRole("heading")).toHaveTextContent("desk.");
+  expect(screen.getByRole("link", {name:"Shop desk gear"})).toHaveAttribute("href","/products?category=Computer%20Accessories");
+});
 
-        expect(screen.getByText(/Authorised Consumer Electronics Retailer/i)).toBeInTheDocument();
-        expect(screen.getByText(/Delivered to Your Door/i)).toBeInTheDocument();
-        expect(screen.getByText("8,800+")).toBeInTheDocument();
-        expect(screen.getByText("Verified Products")).toBeInTheDocument();
-        expect(screen.getByText("100%")).toBeInTheDocument();
-        expect(screen.getByText("Brand Warranty")).toBeInTheDocument();
-        expect(screen.getByText("Free 48h")).toBeInTheDocument();
-    });
-
-    test("renders device switcher tabs and switches spotlight display on click", () => {
-        render(
-            <MemoryRouter>
-                <Hero />
-            </MemoryRouter>
-        );
-
-        // Default tab is Laptops (MacBook)
-        expect(screen.getByText("Apple MacBook Pro 16\"")).toBeInTheDocument();
-        expect(screen.getByText("Apple M3 Max Chip")).toBeInTheDocument();
-
-        // Switch to Phones tab
-        const phonesTab = screen.getByRole("button", { name: /^Phones$/i });
-        fireEvent.click(phonesTab);
-
-        expect(screen.getByText("iPhone 16 Pro Max")).toBeInTheDocument();
-        expect(screen.getByText("A18 Pro Bionic")).toBeInTheDocument();
-
-        // Switch to Wearables tab
-        const wearablesTab = screen.getByRole("button", { name: /^Wearables$/i });
-        fireEvent.click(wearablesTab);
-
-        expect(screen.getByText("Apple Watch Ultra 2")).toBeInTheDocument();
-        expect(screen.getByText("Precision Dual GPS")).toBeInTheDocument();
-    });
-
-    test("clicking Explore Products routes to /products", () => {
-        render(
-            <MemoryRouter>
-                <Hero />
-            </MemoryRouter>
-        );
-
-        const exploreBtn = screen.getByRole("button", { name: /Explore 8,800\+ Products/i });
-        fireEvent.click(exploreBtn);
-
-        expect(mockNavigate).toHaveBeenCalledWith("/products");
-    });
-
-    test("clicking Festive Flash Deals routes to /deals", () => {
-        render(
-            <MemoryRouter>
-                <Hero />
-            </MemoryRouter>
-        );
-
-        const dealsBtn = screen.getByRole("button", { name: /Festive Flash Deals/i });
-        fireEvent.click(dealsBtn);
-
-        expect(mockNavigate).toHaveBeenCalledWith("/deals");
-    });
+test("horizontal swipes wrap the collection while vertical swipes leave it alone", () => {
+  mount();
+  const photo = () => screen.getByRole("img").parentElement;
+  function swipe(x, y) {
+    fireEvent.touchStart(photo(), {touches:[{clientX:10,clientY:10}]});
+    fireEvent.touchEnd(photo(), {touches:[],changedTouches:[{clientX:x,clientY:y}]});
+  }
+  swipe(100,170);
+  expect(screen.getByRole("button", {name:"Audio"})).toHaveAttribute("aria-pressed","true");
+  swipe(100,12);
+  expect(screen.getByRole("button", {name:"Camera"})).toHaveAttribute("aria-pressed","true");
+  expect(screen.getByRole("link", {name:"Shop cameras"})).toHaveAttribute("href","/products?category=Cameras");
 });

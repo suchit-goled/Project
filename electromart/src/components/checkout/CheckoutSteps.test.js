@@ -12,6 +12,15 @@ describe("CheckoutSteps Component Tests", () => {
         expect(screen.getByText("Success")).toBeInTheDocument();
     });
 
+    test("advances to payment when the delivery details are supplied", () => {
+        const { container, rerender } = render(<CheckoutSteps />);
+        expect(container.querySelector("[aria-current=step]")).toHaveTextContent("Address");
+        rerender(<CheckoutSteps addressComplete />);
+        expect(container.querySelector("[aria-current=step]")).toHaveTextContent("Payment");
+        rerender(<CheckoutSteps addressComplete={false} />);
+        expect(container.querySelector("[aria-current=step]")).toHaveTextContent("Address");
+    });
+
     test("applies active class to completed and current steps", () => {
         const { container } = render(<CheckoutSteps />);
         const activeSteps = container.querySelectorAll(".step.active");

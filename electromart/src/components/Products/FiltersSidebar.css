@@ -21,7 +21,7 @@
   color: var(--ink-primary);
 }
 
-.clear-filters-btn {
+.reset-filters-link {
   border: none;
   background: transparent;
   color: var(--accent);
@@ -53,14 +53,14 @@
   color: var(--ink-muted);
 }
 
-.filter-options {
+.filter-options-list {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.filter-option-btn,
-.filter-option-label {
+.filter-category-btn,
+.rating-radio-label {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -75,13 +75,13 @@
   cursor: pointer;
 }
 
-.filter-option-btn:hover,
-.filter-option-label:hover {
+.filter-category-btn:hover,
+.rating-radio-label:hover {
   background-color: var(--bg-surface-muted);
   color: var(--ink-primary);
 }
 
-.filter-option-btn.active {
+.filter-category-btn.active {
   background-color: var(--accent-subtle);
   color: var(--accent);
   font-weight: 600;
@@ -100,3 +100,18 @@
   font-variant-numeric: tabular-nums;
   margin-top: 6px;
 }
+.filters-title,.toggle-switch-label,.filter-group-header { display:flex; align-items:center; gap:8px; }
+.filter-group-header { justify-content:space-between; }
+.filter-options-list.brand-list { max-height:210px; overflow-y:auto; }
+.filter-check { margin-left:auto; }
+.discount-pills { display:flex; flex-wrap:wrap; gap:5px; }
+.discount-pill-btn { padding:5px 7px; border:1px solid var(--border-fine); border-radius:3px; background:var(--bg-surface); cursor:pointer; }
+.discount-pill-btn.active { background:#263d32; color:white; }
+.toggle-switch-label { cursor:pointer; font-size:.83rem; font-weight:600; }
+.toggle-switch-label input { appearance:none; width:36px; height:22px; background:#aaa99e; border:1px solid #79796c; border-radius:16px; display:grid; align-items:center; padding:2px; cursor:pointer; }
+.toggle-switch-label input::after { content:''; width:16px; height:16px; background:white; border-radius:50%; }
+.toggle-switch-label input:checked { background:#31593f; border-color:#31593f; }
+.toggle-switch-label input:checked::after { transform:translateX(13px); }
+.toggle-slider { display:none; }
+@media(prefers-reduced-motion:no-preference) { .toggle-switch-label input::after { transition:transform .17s ease; } }
+@media(forced-colors:active) { .toggle-switch-label input { appearance:auto; } }

@@ -25,3 +25,7 @@
   outline: none;
   border-color: var(--ink-primary);
 }
+.sort-dropdown-wrapper,.sort-select-box { display:inline-flex; align-items:center; gap:6px; }
+.sort-label { font-size:.8rem; color:var(--ink-secondary); }
+select.sort-dropdown { height:44px; max-width:100%; padding:0 8px; font:inherit; font-size:.82rem; color:var(--ink-primary); border:1px solid var(--border-strong); border-radius:3px; background:var(--bg-surface); cursor:pointer; }
+.sort-select-arrow { display:none; }

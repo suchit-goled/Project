@@ -8,6 +8,7 @@ import "./ProductGrid.css";
 
 const ProductGrid = ({
     products = [],
+    layout = "grid",
     loading = false,
     error = "",
     page = 1,
@@ -77,7 +78,7 @@ const ProductGrid = ({
 
             {/* Main content states */}
             {loading ? (
-                <div className="product-cards-grid">
+                <div className={"product-cards-grid catalog-" + layout}>
                     {Array.from({ length: 8 }).map((_, index) => (
                         <ProductSkeleton key={index} />
                     ))}
@@ -104,7 +105,7 @@ const ProductGrid = ({
                 </div>
             ) : (
                 <>
-                    <div className="product-cards-grid">
+                    <div className={"product-cards-grid catalog-" + layout}>
                         {products.map((product) => (
                             <ProductCard key={product._id} product={product} />
                         ))}

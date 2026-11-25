@@ -1,4 +1,4 @@
-.delivery-selector-btn {
+.navbar-delivery-selector {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -12,30 +12,30 @@
   transition: border-color 150ms ease;
 }
 
-.delivery-selector-btn:hover {
+.navbar-delivery-selector:hover {
   border-color: var(--ink-primary);
 }
 
-.delivery-selector-icon {
+.delivery-pin-icon {
   color: var(--accent);
   font-size: 0.95rem;
   flex-shrink: 0;
 }
 
-.delivery-selector-text {
+.delivery-text-wrap {
   display: flex;
   flex-direction: column;
   line-height: 1.15;
 }
 
-.delivery-selector-label {
+.delivery-label {
   font-size: 0.65rem;
   color: var(--ink-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-.delivery-selector-value {
+.delivery-city {
   font-size: 0.78rem;
   font-weight: 600;
   color: var(--ink-primary);
@@ -43,7 +43,7 @@
 }
 
 @media (max-width: 900px) {
-  .delivery-selector-btn {
+  .navbar-delivery-selector {
     display: none;
   }
 }

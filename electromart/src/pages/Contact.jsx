@@ -53,16 +53,12 @@ function Contact() {
   };
 
   return (
-    <div className="contact-page">
+    <div className="contact-page container">
       {/* HERO */}
       <section className="contact-hero">
         <div className="contact-hero-content">
-          <span className="contact-tag">
-            GET IN TOUCH
-          </span>
           <h1>
-            Let's Talk About
-            <span> Your Tech.</span>
+            Contact ElectroNova
           </h1>
           <p>
             Have a question about a product, your order, or anything

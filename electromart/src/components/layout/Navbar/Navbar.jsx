@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { FiMenu } from "react-icons/fi";
+import { Link, useLocation } from "react-router-dom";
+import { FiMenu, FiArrowLeft } from "react-icons/fi";
 import "./Navbar.css";
 
 import Logo from "./Logo";
@@ -13,6 +14,7 @@ import CategoryStrip from "./CategoryStrip";
 import PincodeModal from "../../common/PincodeModal/PincodeModal";
 
 const Navbar = () => {
+    const { pathname } = useLocation();
     const [mobileOpen, setMobileOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
@@ -28,6 +30,14 @@ const Navbar = () => {
         window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    if (["/login", "/register", "/forgot-password", "/checkout"].includes(pathname) || pathname.startsWith("/reset-password/")) {
+        const backToCart = pathname === "/checkout";
+        return <header className="transaction-nav"><div className="container">
+            <Logo /><Link to={backToCart ? "/cart" : "/products"}><FiArrowLeft aria-hidden="true" />
+                {backToCart ? "Back to cart" : "Back to shopping"}</Link>
+        </div></header>;
+    }
 
     return (
         <>

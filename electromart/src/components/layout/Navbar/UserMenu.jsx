@@ -70,6 +70,7 @@ const UserMenu = () => {
         <div className="user-menu" ref={dropdownRef}>
             <button
                 className="user-btn"
+                aria-label={"Account menu for " + (user.name || "shopper")}
                 onClick={() => setOpen(!open)}
                 aria-expanded={open}
             >

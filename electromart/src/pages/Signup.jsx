@@ -1,12 +1,14 @@
 import React, { useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 import "./Login.css";
+import { authReturn } from "../utils/authReturn";
 
 const Signup = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { signup, loading } = useAuth();
 
     const [form, setForm] = useState({
@@ -76,7 +78,7 @@ const Signup = () => {
                 password: form.password
             });
             toast.success("Account created. Welcome to ElectroNova.");
-            navigate("/");
+            navigate(authReturn(location, "/"), { replace: true });
         } catch (error) {
             const msg = error.response?.data?.message || "Could not create account. Please try again.";
             setInlineError(msg);
@@ -207,7 +209,7 @@ const Signup = () => {
 
                     <div className="auth-switch-row auth-rise-2">
                         <span>Already have an account?</span>
-                        <Link to="/login" className="auth-switch-link">
+                        <Link to={{ pathname: "/login", search: location.search }} state={location.state} className="auth-switch-link">
                             Sign in
                         </Link>
                     </div>

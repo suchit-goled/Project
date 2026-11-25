@@ -110,7 +110,7 @@ const StorePage = () => {
             <div className="store-profile-card">
                 <div className="store-banner-wrapper">
                     <img
-                        src={store.banner || "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1400&q=80"}
+                        src={store.banner || "/media/design/editorial-keyboard.webp"}
                         alt={`${store.name} Banner`}
                         className="store-banner-img"
                     />

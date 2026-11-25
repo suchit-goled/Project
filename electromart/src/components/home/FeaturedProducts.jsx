@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { FiArrowRight, FiRefreshCw } from "react-icons/fi";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation } from "swiper/modules";
+import { Navigation, A11y } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -23,9 +23,7 @@ const FeaturedProducts = () => {
             <div className="container">
                 <div className="featured-products__header-row">
                     <SectionHeader
-                        badge="CURATED PICKS"
-                        title="Featured Flagships & Bestsellers"
-                        subtitle="Handpicked high-performance devices for work, creative mastery, and everyday entertainment."
+                        title="On the shelf"
                     />
                     <button
                         className="featured-view-all-btn"
@@ -58,14 +56,9 @@ const FeaturedProducts = () => {
                     </div>
                 ) : (
                     <Swiper
-                        modules={[Autoplay, Navigation]}
+                        modules={[Navigation, A11y]}
                         spaceBetween={24}
                         navigation
-                        loop={displayProducts.length > 4}
-                        autoplay={{
-                            delay: 3500,
-                            disableOnInteraction: false,
-                        }}
                         breakpoints={{
                             320: {
                                 slidesPerView: 1,

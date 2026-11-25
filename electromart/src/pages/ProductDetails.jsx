@@ -25,7 +25,7 @@ import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { useAuth } from "../context/AuthContext";
 import { useDelivery } from "../context/DeliveryContext";
-import CatalogImage from "../components/common/CatalogImage";
+import PhotoViewer from "../components/product/PhotoViewer";
 import ProductCard from "../components/common/Card/ProductCard";
 import ProductSkeleton from "../components/common/Skeleton/ProductSkeleton";
 import OtherSellersComparison from "../components/Products/OtherSellersComparison";
@@ -71,7 +71,7 @@ const ProductDetails = () => {
 
             const data = await ProductService.getProductById(id);
             setProduct(data);
-            setSelectedImage(data.product_image_url || data.image);
+            setSelectedImage(data.product_image_url || data.image || data.images?.[0] || "");
 
             // Record to recently viewed in localStorage
             try {
@@ -236,9 +236,10 @@ const ProductDetails = () => {
     const store = product.store || {};
     const storeName = store.name || "ElectroNova Official Store";
     const storeSlug = store.slug || "";
-    const imagesList = Array.isArray(product.images) && product.images.length > 0
-        ? product.images
-        : [selectedImage || product.product_image_url || product.image];
+    const imagesList = [...new Set([
+        product.product_image_url || product.image,
+        ...(Array.isArray(product.images) ? product.images : []),
+    ].filter(src => typeof src === "string" && src.trim()))];
 
     return (
         <div className="product-details-page container">
@@ -285,12 +286,8 @@ const ProductDetails = () => {
                             </button>
                         </div>
 
-                        <CatalogImage
-                            src={selectedImage || product.product_image_url || product.image}
-                            alt={product.product_title}
-                            className="primary-product-image"
-                            loading="eager"
-                        />
+                        <PhotoViewer photos={imagesList} selected={selectedImage}
+                            onSelect={setSelectedImage} title={product.product_title || product.title || "Product"} />
                     </div>
 
                     {/* Image Thumbnail Selector */}
@@ -298,7 +295,8 @@ const ProductDetails = () => {
                         <div className="thumbnails-row">
                             {imagesList.map((imgUrl, idx) => (
                                 <button
-                                    key={idx}
+                                    key={imgUrl}
+                                    aria-pressed={imgUrl === (selectedImage || imagesList[0])}
                                     type="button"
                                     className={`thumbnail-btn ${selectedImage === imgUrl ? "active" : ""}`}
                                     onClick={() => setSelectedImage(imgUrl)}

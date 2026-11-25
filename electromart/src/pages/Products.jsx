@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import "./Products.css";
 
@@ -33,28 +33,21 @@ const Products = () => {
     const [minDiscount, setMinDiscount] = useState(0);
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
+    const [layout, setLayout] = useState(() => {
+        try { return localStorage.getItem("electronova.catalog.layout") === "list" ? "list" : "grid"; }
+        catch { return "grid"; }
+    });
+    const changeLayout = (next) => {
+        setLayout(next);
+        try { localStorage.setItem("electronova.catalog.layout", next); } catch { /* In-memory preference still works. */ }
+    };
+
     // Sync from URL params
     useEffect(() => {
-        if (paramCategory) {
-            setCategory(paramCategory);
-            setPage(1);
-        } else if (searchParams.get("category")) {
-            setCategory(searchParams.get("category"));
-            setPage(1);
-        }
-
-        if (searchParams.get("brand")) {
-            setBrand(searchParams.get("brand"));
-            setPage(1);
-        }
-
-        if (paramKey) {
-            setSearch(paramKey);
-            setPage(1);
-        } else if (searchParams.get("search")) {
-            setSearch(searchParams.get("search"));
-            setPage(1);
-        }
+        setCategory(paramCategory || searchParams.get("category") || "");
+        setBrand(searchParams.get("brand") || "");
+        setSearch(paramKey || searchParams.get("search") || "");
+        setPage(1);
     }, [paramCategory, paramKey, searchParams, setSearch]);
 
     // Fetch categories and brands from backend
@@ -79,8 +72,11 @@ const Products = () => {
         fetchMeta();
     }, []);
 
+    const latestRequest = useRef(0);
+
     // Fetch products from server with all query parameters
     const fetchProducts = useCallback(async () => {
+        const request = ++latestRequest.current;
         try {
             setLoading(true);
             setError("");
@@ -121,20 +117,23 @@ const Products = () => {
 
             const response = await ProductService.getProducts(params);
 
+            if (request !== latestRequest.current) return;
             setProducts(response.data.products || []);
             setTotalPages(response.data.totalPages || 1);
             setTotalProducts(response.data.total || 0);
 
         } catch (err) {
+            if (request !== latestRequest.current) return;
             console.error("Error fetching catalogue:", err);
             setError("Failed to load products. Please check your connection.");
         } finally {
-            setLoading(false);
+            if (request === latestRequest.current) setLoading(false);
         }
     }, [page, category, brand, search, rating, maxPrice, inStock, minDiscount, sort]);
 
     useEffect(() => {
         fetchProducts();
+        return () => { latestRequest.current += 1; };
     }, [fetchProducts]);
 
     const handleCategoryChange = (newCat) => {
@@ -188,17 +187,20 @@ const Products = () => {
         <section className="products-page">
             <div className="container">
                 <ProductsHeader
+                    layout={layout}
+                    onLayoutChange={changeLayout}
                     total={totalProducts}
                     sort={sort}
                     setSort={handleSortChange}
                     category={category}
                     brand={brand}
                     search={search}
+                    filtersOpen={mobileFiltersOpen}
                     onToggleMobileFilters={() => setMobileFiltersOpen(!mobileFiltersOpen)}
                 />
 
                 <div className="products-layout">
-                    <div className={`products-sidebar-col ${mobileFiltersOpen ? "open" : ""}`}>
+                    <div id="catalog-filters" className={`products-sidebar-col ${mobileFiltersOpen ? "open" : ""}`}>
                         <FiltersSidebar
                             categories={categories}
                             category={category}
@@ -220,6 +222,7 @@ const Products = () => {
 
                     <div className="products-content">
                         <ProductGrid
+                            layout={layout}
                             products={products}
                             loading={loading}
                             error={error}

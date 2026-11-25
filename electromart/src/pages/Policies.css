@@ -59,3 +59,6 @@
     padding: 22px 18px;
   }
 }
+.policy-header h1 { font:500 clamp(38px,5vw,66px)/1.04 var(--font-serif); letter-spacing:-.04em; margin:0 0 12px; }
+.policy-header { margin-bottom:24px; }
+.about-photo { width:100%; height:clamp(170px,25vw,290px); object-fit:cover; display:block; }

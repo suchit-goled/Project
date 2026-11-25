@@ -1,4 +1,5 @@
 import React from "react";
+import CatalogImage from "../common/CatalogImage";
 import { Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { FiShoppingBag, FiEdit2, FiTruck, FiCheckCircle } from "react-icons/fi";
@@ -44,14 +45,10 @@ const CheckoutItemsReview = () => {
                     return (
                         <div className="checkout-item-row" key={key}>
                             <div className="checkout-item-image-wrapper">
-                                <img
+                                <CatalogImage
                                     src={image}
                                     alt={title}
                                     className="checkout-item-img"
-                                    onError={(e) => {
-                                        e.target.onerror = null;
-                                        e.target.src = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&q=80";
-                                    }}
                                 />
                             </div>
 

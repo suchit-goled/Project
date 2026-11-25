@@ -101,3 +101,10 @@
     grid-template-columns: 1fr;
   }
 }
+.contact-hero h1 { font:500 clamp(38px,5vw,66px)/1.04 var(--font-serif); margin:0 0 10px; letter-spacing:-.04em; }
+.contact-section { display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:clamp(16px,4vw,54px); }
+.contact-info-card { margin-bottom:10px; }
+.contact-hero { padding:24px 0; border-bottom:1px solid var(--border-fine); margin-bottom:24px; }
+.contact-input-group { display:grid; gap:5px; margin-bottom:15px; }
+.contact-input-group input,.contact-input-group textarea,.contact-input-group select { width:100%; padding:10px; border:1px solid var(--border-strong); border-radius:3px; font:inherit; }
+@media(max-width:760px) { .contact-section { grid-template-columns:1fr; } }

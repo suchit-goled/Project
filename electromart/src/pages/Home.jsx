@@ -1,6 +1,5 @@
 import React from "react";
 import Hero from "../components/home/Hero/Hero";
-import PromotionalBanners from "../components/home/PromotionalBanners";
 import TodaysDeals from "../components/home/TodaysDeals";
 import BrandStrip from "../components/home/BandStrip/BrandStrip";
 import Categories from "../components/home/Categories";
@@ -13,10 +12,9 @@ const Home = () => {
   return (
     <main className="home-main">
       <Hero />
-      <PromotionalBanners />
-      <TodaysDeals />
       <Categories />
       <FeaturedProducts />
+      <TodaysDeals />
       <BrandStrip />
       <TopSellersSection />
       <RecentlyViewed />

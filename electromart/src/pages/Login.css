@@ -305,3 +305,13 @@
     border-top: 1px solid var(--border-fine);
   }
 }
+.auth-heading { font:500 clamp(36px,4vw,60px)/1.04 var(--font-serif); letter-spacing:-.045em; }
+.auth-submit-btn { background:#243b30; }
+.auth-submit-btn:hover { background:#304c3c; }
+.auth-photo-panel { background:#293831; }
+.auth-photo-img { position:absolute; inset:0; }
+@media (max-width:768px) {
+  .auth-spread { min-height:auto; }
+  .auth-photo-panel { display:block; min-height:125px; height:clamp(125px,30vw,200px); border-left:0; }
+  .auth-photo-img { object-position:50% 46%; }
+}

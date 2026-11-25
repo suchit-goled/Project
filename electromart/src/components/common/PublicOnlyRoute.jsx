@@ -1,5 +1,6 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { authReturn } from "../../utils/authReturn";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 /**
@@ -7,11 +8,12 @@ import { useAuth } from "../../context/AuthContext";
  * If user is already authenticated, redirects them directly to their profile.
  */
 const PublicOnlyRoute = ({ children }) => {
+    const location = useLocation();
     const { token } = useAuth();
     const hasToken = Boolean(token || localStorage.getItem("token"));
 
     if (hasToken) {
-        return <Navigate to="/profile" replace />;
+        return <Navigate to={authReturn(location, "/profile")} replace />;
     }
 
     return children;

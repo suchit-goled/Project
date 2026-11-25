@@ -3,26 +3,10 @@
   background-color: var(--bg-page);
 }
 
-/* Subtle Page-Change Entrance Transition */
-@keyframes pageCatalogEnter {
-  0% {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.page-transition-wrapper {
-  animation: pageCatalogEnter 220ms var(--ease-catalog) both;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .page-transition-wrapper {
-    animation: none !important;
-    transform: none !important;
-    opacity: 1 !important;
-  }
+/* Direction follows browser history while shared navigation stays in place. */
+@media (prefers-reduced-motion: no-preference) {
+  .page-transition-wrapper { --entry-offset: 10px; animation: shop-page-in 210ms var(--ease-catalog); }
+  .page-transition-wrapper[data-travel="POP"] { --entry-offset: -8px; }
+  @keyframes shop-page-in { from { opacity: .7; transform: translateX(var(--entry-offset)); } }
+  :where(.product-card, .checkout-page, .auth-spread, .order-tracker-page, .products-header) button:active:not(:disabled) { scale: .975; }
 }

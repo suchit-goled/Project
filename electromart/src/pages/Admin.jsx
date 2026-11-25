@@ -19,6 +19,7 @@ import {
 import AdminService from "../services/admin.service";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
+import MarketplaceAnalyticsChart from "../components/common/MarketplaceAnalyticsChart/MarketplaceAnalyticsChart";
 import "./Admin.css";
 
 function Admin() {
@@ -428,6 +429,13 @@ function Admin() {
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Interactive Neural Analytics HUD Chart */}
+                            <MarketplaceAnalyticsChart
+                                title="Marketplace Gross Volume & Order Velocity"
+                                totalAmount={stats?.grossMerchandiseValue || stats?.totalRevenue || 0}
+                                subtitle="Live 30-day transactional velocity and platform settlements across all certified merchants"
+                            />
 
                             {/* Recent Orders Preview */}
                             <div className="admin-card-table-box" style={{ marginTop: "24px" }}>

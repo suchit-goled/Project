@@ -1,285 +1,194 @@
-/* ===========================
-   Glassmorphic Minimalist Navbar
-=================================================== */
-
 .navbar {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    height: var(--navbar-height);
-    background: var(--glass-surface);
-    backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
-    border-bottom: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
-    transition: background var(--transition-normal), border-color var(--transition-normal), box-shadow var(--transition-normal);
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  background-color: var(--bg-page);
+  border-bottom: 1px solid var(--border-fine);
+  transition: background-color 150ms ease, border-color 150ms ease;
 }
 
-[data-theme="dark"] .navbar {
-    background: rgba(15, 23, 42, 0.75);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+.navbar--scrolled {
+  background-color: rgba(247, 244, 238, 0.96);
+  border-bottom-color: var(--border-strong);
 }
 
 .navbar__container {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
 }
 
 .navbar__left {
-    display: flex;
-    align-items: center;
-    gap: 14px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
 }
 
 .mobile-hamburger-btn {
-    display: none;
-    width: 38px;
-    height: 38px;
-    border-radius: var(--radius-sm);
-    background: var(--glass-surface);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid var(--glass-border);
-    color: var(--text-primary);
-    font-size: 1.25rem;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all var(--transition-fast);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border-fine);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  color: var(--ink-primary);
+  cursor: pointer;
 }
-
-.mobile-hamburger-btn:hover {
-    background: var(--glass-surface-hover);
-    color: var(--primary);
-    transform: translateY(-1px);
-}
-
-/* ===========================
-   Logo & Brand Identity
-=========================== */
 
 .logo {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    user-select: none;
-    transition: opacity 0.2s ease;
-}
-
-.logo:hover {
-    opacity: 0.92;
-}
-
-.logo__mark {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 4px 14px var(--primary-glow);
-    border-radius: 8px;
-}
-
-.logo__svg {
-    display: block;
-    border-radius: 8px;
-}
-
-.logo__text-group {
-    display: flex;
-    flex-direction: column;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--ink-primary);
 }
 
 .logo__text {
-    font-family: var(--font-heading);
-    font-size: 1.35rem;
-    font-weight: 800;
-    letter-spacing: -0.025em;
-    color: var(--text-primary);
-    line-height: 1.1;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--ink-primary);
 }
 
 .logo__accent {
-    color: var(--electric-blue);
+  color: var(--accent);
 }
 
 .logo__sub {
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    color: var(--text-muted);
-    text-transform: uppercase;
+  display: block;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--ink-muted);
+  margin-top: -2px;
 }
-
-.logo--sm .logo__svg {
-    width: 26px;
-    height: 26px;
-}
-
-.logo--sm .logo__text {
-    font-size: 1.15rem;
-}
-
-.logo--lg .logo__svg {
-    width: 38px;
-    height: 38px;
-}
-
-.logo--lg .logo__text {
-    font-size: 1.55rem;
-}
-
-/* ===========================
-   Navigation Links
-=========================== */
 
 .navbar__center {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 28px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-links a {
-    position: relative;
-    color: var(--text-secondary);
-    font-size: 0.92rem;
-    font-weight: 500;
-    padding: 6px 0;
-    transition: color var(--transition-fast);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink-secondary);
+  white-space: nowrap;
+  padding: 4px 0;
+  border-bottom: 1.5px solid transparent;
+  transition: color 150ms ease, border-color 150ms ease;
 }
 
-.nav-links a:hover {
-    color: var(--text-primary);
-}
-
+.nav-links a:hover,
 .nav-links a.active {
-    color: var(--primary);
-    font-weight: 600;
+  color: var(--ink-primary);
+  border-bottom-color: var(--accent);
 }
-
-.nav-links a.active::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -4px;
-    width: 100%;
-    height: 2px;
-    background: var(--primary);
-    border-radius: var(--radius-pill);
-    box-shadow: 0 0 8px var(--primary-glow);
-}
-
-/* ===========================
-   Search in Navbar
-=========================== */
 
 .navbar__search {
-    flex: 1;
-    max-width: 360px;
+  flex: 1;
+  max-width: 380px;
+  min-width: 200px;
 }
 
-/* ===========================
-   Actions & Buttons
-=========================== */
-
 .navbar__right {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.actions .wishlist-button,
-.actions .cart-button,
-.theme-toggle-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: var(--radius-pill);
-    background: var(--glass-surface);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    cursor: pointer;
-    box-shadow: var(--shadow-sm);
-    transition: all var(--transition-fast);
+.wishlist-button,
+.cart-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border-fine);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  color: var(--ink-primary);
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease;
 }
 
-.actions .wishlist-button svg,
-.actions .cart-button svg,
-.theme-toggle-btn svg {
-    font-size: 1.15rem;
+.wishlist-button:hover,
+.cart-button:hover {
+  border-color: var(--ink-primary);
+  background: var(--bg-surface-subtle);
 }
 
-.actions .wishlist-button:hover,
-.actions .cart-button:hover,
-.theme-toggle-btn:hover {
-    background: var(--glass-surface-hover);
-    border-color: var(--border-medium);
-    color: var(--primary);
-    transform: translateY(-2px);
-    box-shadow: var(--glass-shadow-hover);
+.actions .badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--radius-xs);
+  background-color: var(--accent);
+  color: #FFFFFF;
+  font-size: 0.68rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--bg-page);
 }
 
-/* Badges */
-.badge {
-    position: absolute;
-    top: -3px;
-    right: -3px;
-    min-width: 18px;
-    height: 18px;
-    padding: 0 4px;
-    border-radius: var(--radius-pill);
-    background: var(--primary);
-    color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 0.68rem;
-    font-weight: 700;
-    border: 2px solid var(--glass-surface-solid);
-    box-shadow: 0 2px 6px var(--primary-glow);
-    pointer-events: none;
-}
-
-/* ===========================
-   Responsive Breakpoints
-=========================== */
-
-@media (max-width: 1024px) {
-    .navbar__center {
-        display: none;
-    }
-    .mobile-hamburger-btn {
-        display: flex;
-    }
-    .navbar__search {
-        max-width: 260px;
-    }
+/* Tablet & Mobile Responsive Header */
+@media (max-width: 1080px) {
+  .navbar__center {
+    display: none;
+  }
 }
 
 @media (max-width: 768px) {
-    .navbar__search {
-        display: none;
-    }
-    .navbar__container {
-        gap: 12px;
-    }
+  .navbar__container {
+    padding: 10px 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .mobile-hamburger-btn {
+    display: inline-flex;
+  }
+
+  .navbar__left {
+    gap: 10px;
+  }
+
+  /* Make Search easy to reach on a phone: full-width second row inside header */
+  .navbar__search {
+    order: 3;
+    flex: 1 1 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .navbar__right {
+    order: 2;
+  }
 }

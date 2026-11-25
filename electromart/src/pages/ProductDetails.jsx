@@ -25,6 +25,7 @@ import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { useAuth } from "../context/AuthContext";
 import { useDelivery } from "../context/DeliveryContext";
+import CatalogImage from "../components/common/CatalogImage";
 import ProductCard from "../components/common/Card/ProductCard";
 import ProductSkeleton from "../components/common/Skeleton/ProductSkeleton";
 import OtherSellersComparison from "../components/Products/OtherSellersComparison";
@@ -40,7 +41,7 @@ const ProductDetails = () => {
     const { user } = useAuth();
     const { addToCart } = useCart();
     const { addToWishlist, removeFromWishlist, isWishlisted } = useWishlist();
-    const { pincode, location, openModal } = useDelivery();
+    const { pincode, deliveryInfo, openPincodeModal } = useDelivery();
 
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -284,18 +285,11 @@ const ProductDetails = () => {
                             </button>
                         </div>
 
-                        <img
+                        <CatalogImage
                             src={selectedImage || product.product_image_url || product.image}
                             alt={product.product_title}
                             className="primary-product-image"
-                            width="450"
-                            height="420"
                             loading="eager"
-                            decoding="async"
-                            onError={(e) => {
-                                e.target.onerror = null;
-                                e.target.src = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80";
-                            }}
                         />
                     </div>
 
@@ -430,7 +424,7 @@ const ProductDetails = () => {
                             <span className="pincode-title">
                                 <FiMapPin className="pin-icon" />
                                 {pincode ? (
-                                    <span>Deliver to: <strong>{location.city || "PIN"} - {pincode}</strong></span>
+                                    <span>Deliver to: <strong>{deliveryInfo?.city || "PIN"} - {pincode}</strong></span>
                                 ) : (
                                     <span>Check Delivery & Cash on Delivery Availability</span>
                                 )}
@@ -438,7 +432,7 @@ const ProductDetails = () => {
                             <button
                                 type="button"
                                 className="change-pin-btn"
-                                onClick={openModal}
+                                onClick={openPincodeModal}
                             >
                                 {pincode ? "Change PIN" : "Select PIN"}
                             </button>

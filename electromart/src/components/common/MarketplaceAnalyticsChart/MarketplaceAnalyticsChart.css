@@ -1,0 +1,73 @@
+.analytics-chart-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-fine);
+  border-radius: var(--radius-sm);
+  padding: 20px 22px;
+  margin-bottom: 24px;
+}
+
+.analytics-chart-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-fine);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.analytics-chart-title {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.analytics-chart-title svg {
+  color: var(--accent);
+}
+
+.analytics-chart-sub {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--ink-secondary);
+}
+
+.analytics-timeframe-pills {
+  display: inline-flex;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+}
+
+.timeframe-btn {
+  padding: 5px 12px;
+  border: none;
+  background-color: var(--bg-surface);
+  color: var(--ink-secondary);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.timeframe-btn.active {
+  background-color: var(--ink-primary);
+  color: var(--ink-inverse);
+}
+
+.analytics-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.analytics-chart-tooltip {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: var(--ink-secondary);
+  font-variant-numeric: tabular-nums;
+}

@@ -1,53 +1,42 @@
 .brand-strip {
-    padding: 60px 0;
-    background: transparent;
-    border-top: 1px solid var(--border-glass);
-    border-bottom: 1px solid var(--border-glass);
+  padding: 36px 0;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-fine);
 }
 
 .brand-strip__container {
-    width: min(1400px, 92%);
-    margin: 0 auto;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 24px;
 }
 
 .brand-title {
-    text-align: center;
-    color: var(--text-secondary);
-    margin-bottom: 36px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-size: 13px;
-    font-weight: 700;
+  text-align: center;
+  color: var(--ink-muted);
+  margin: 0 0 22px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  font-weight: 600;
 }
 
 .brand-list {
-    display: flex;
-    justify-content: center;
-    gap: 60px;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
 }
 
 .brand-item {
-    font-size: clamp(20px, 2vw, 24px);
-    font-weight: 700;
-    color: var(--text-secondary);
-    opacity: 0.75;
-    cursor: pointer;
-    transition: transform var(--transition-normal), opacity var(--transition-normal), color var(--transition-fast);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink-secondary);
+  cursor: pointer;
+  transition: color 150ms ease;
 }
 
 .brand-item:hover {
-    opacity: 1;
-    color: var(--accent-blue);
-    transform: translateY(-3px);
-}
-
-@media (max-width: 768px) {
-    .brand-strip {
-        padding: 40px 0;
-    }
-
-    .brand-list {
-        gap: 30px;
-    }
+  color: var(--accent);
 }

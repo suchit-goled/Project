@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import env from "../config/env.js";
+import messageQueue from "../queue/messageQueue.js";
 
 let transporter = null;
 
@@ -30,6 +31,16 @@ const getTransporter = () => {
     return transporter;
 };
 
+/**
+ * Enqueues an email into the background Message Queue for non-blocking worker delivery
+ */
+export const queueEmail = ({ email, subject, html, priority = false }) => {
+    return messageQueue.enqueue("email:send", { email, subject, html }, { priority });
+};
+
+/**
+ * Direct SMTP mail sender (with fallback handling and test mocking)
+ */
 export const sendEmail = async ({ email, subject, html }) => {
     // In test environment, bypass external SMTP calls to run tests deterministically and swiftly
     if (process.env.NODE_ENV === "test" || !process.env.EMAIL_USER || !process.env.EMAIL_PASS) {

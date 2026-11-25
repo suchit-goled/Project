@@ -1,42 +1,44 @@
 .announcement-bar {
-  background: linear-gradient(90deg, #172554, #111827);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  color: #ffffff;
-  font-size: 0.8rem;
-  font-weight: 500;
-  padding: 8px 0;
-  letter-spacing: 0.02em;
+  background-color: #161614;
+  color: #EAE6DC;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  border-bottom: 1px solid #2A2925;
+  overflow: hidden;
+  padding: 7px 16px;
 }
 
-[data-theme="dark"] .announcement-bar {
-  background: linear-gradient(90deg, #0f172a, #080d18);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.announcement-bar__container {
+.announcement-bar__inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.announcement-bar__inner::-webkit-scrollbar {
+  display: none;
 }
 
 .announcement-item {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
+  color: #D5D0C5;
 }
 
-.announcement-icon {
-  color: var(--soft-blue);
-  font-size: 0.95rem;
+.announcement-item svg {
+  color: var(--accent);
+  flex-shrink: 0;
 }
 
-@media (max-width: 900px) {
-  .announcement-item--desktop {
-    display: none;
-  }
-  .announcement-bar__container {
-    justify-content: center;
-    text-align: center;
+@media (max-width: 768px) {
+  .announcement-bar__inner {
+    justify-content: flex-start;
   }
 }

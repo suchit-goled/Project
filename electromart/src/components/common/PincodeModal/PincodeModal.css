@@ -1,218 +1,149 @@
 .pincode-modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.65);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    padding: 1rem;
-    animation: fadeIn 0.2s ease-out;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(22, 22, 20, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
 }
 
 .pincode-modal-card {
-    background: var(--bg-glass-modal);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border-radius: var(--radius-lg);
-    width: 100%;
-    max-width: 480px;
-    box-shadow: var(--shadow-glass-lg);
-    padding: 1.75rem;
-    position: relative;
-    border: 1px solid var(--border-glass-strong);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  width: 100%;
+  max-width: 460px;
+  box-shadow: var(--shadow-lg);
+  padding: 24px;
+  position: relative;
 }
 
 .pincode-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-fine);
 }
 
 .pincode-modal-title {
-    display: flex;
-    gap: 0.75rem;
-    align-items: flex-start;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
 }
 
 .pincode-modal-title .pin-icon {
-    color: var(--accent-blue);
-    font-size: 1.5rem;
-    margin-top: 2px;
-    flex-shrink: 0;
+  color: var(--accent);
+  font-size: 1.25rem;
+  margin-top: 2px;
+  flex-shrink: 0;
 }
 
 .pincode-modal-title h3 {
-    margin: 0 0 0.25rem 0;
-    font-size: 1.2rem;
-    font-weight: 800;
-    color: var(--text-primary);
-    letter-spacing: -0.01em;
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink-primary);
 }
 
 .pincode-modal-title p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    line-height: 1.4;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--ink-secondary);
 }
 
-.close-btn {
-    background: transparent;
-    border: none;
-    font-size: 1.35rem;
-    color: var(--text-muted);
-    cursor: pointer;
-    padding: 4px;
-    border-radius: var(--radius-sm);
-    transition: all var(--transition-fast);
+.pincode-close-btn {
+  border: 1px solid var(--border-fine);
+  background: transparent;
+  color: var(--ink-primary);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
-.close-btn:hover {
-    color: var(--text-primary);
-    background: var(--bg-card-hover);
+.pincode-close-btn:hover {
+  border-color: var(--ink-primary);
 }
 
 .pincode-form {
-    margin-bottom: 1.25rem;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
 }
 
-.pincode-input-group {
-    display: flex;
-    gap: 0.5rem;
+.pincode-input {
+  flex: 1;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-primary);
+  background-color: var(--bg-surface);
 }
 
-.pincode-input-group input {
-    flex: 1;
-    padding: 0.75rem 1rem;
-    border: 1.5px solid var(--border-glass);
-    border-radius: var(--radius-sm);
-    background: var(--bg-card);
-    color: var(--text-primary);
-    font-size: 0.95rem;
-    outline: none;
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-    letter-spacing: 1px;
-    font-weight: 600;
+.pincode-input:focus {
+  outline: none;
+  border-color: var(--ink-primary);
 }
 
-.pincode-input-group input:focus {
-    border-color: var(--accent-blue);
-    box-shadow: 0 0 0 3px var(--accent-glow);
+.pincode-submit-btn {
+  height: 40px;
+  padding: 0 18px;
+  border: 1px solid var(--ink-primary);
+  border-radius: var(--radius-sm);
+  background-color: var(--ink-primary);
+  color: var(--ink-inverse);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
 }
 
-.apply-pin-btn {
-    background: var(--accent-blue);
-    color: #ffffff;
-    border: none;
-    padding: 0.75rem 1.35rem;
-    border-radius: var(--radius-sm);
-    font-weight: 700;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all var(--transition-fast);
-    white-space: nowrap;
-    box-shadow: 0 4px 12px var(--accent-glow);
+.pincode-submit-btn:hover:not(:disabled) {
+  background-color: var(--accent);
+  border-color: var(--accent);
 }
 
-.apply-pin-btn:hover:not(:disabled) {
-    background: var(--primary-glow);
-    transform: translateY(-1px);
+.pincode-presets-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  margin: 0 0 10px;
 }
 
-.apply-pin-btn:disabled {
-    background: var(--border-glass-strong);
-    color: var(--text-muted);
-    cursor: not-allowed;
-    box-shadow: none;
+.pincode-presets-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
 }
 
-.current-location-status {
-    display: flex;
-    gap: 0.65rem;
-    align-items: flex-start;
-    background: rgba(22, 163, 74, 0.12);
-    border: 1px solid rgba(22, 163, 74, 0.25);
-    border-radius: var(--radius-sm);
-    padding: 0.75rem 1rem;
-    margin-bottom: 1.25rem;
-    font-size: 0.85rem;
-    color: var(--success);
+.pincode-preset-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border: 1px solid var(--border-fine);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-surface-subtle);
+  color: var(--ink-primary);
+  font-size: 0.82rem;
+  cursor: pointer;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
 }
 
-.current-location-status .check-icon {
-    color: var(--success);
-    font-size: 1.15rem;
-    margin-top: 1px;
-    flex-shrink: 0;
-}
-
-.delivery-time-note {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    margin-top: 0.2rem;
-}
-
-.quick-locations-section {
-    border-top: 1px solid var(--border-glass);
-    padding-top: 1.1rem;
-}
-
-.quick-label {
-    display: block;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-    margin-bottom: 0.65rem;
-    letter-spacing: 0.5px;
-}
-
-.quick-locations-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.65rem;
-}
-
-.quick-loc-btn {
-    background: var(--bg-card);
-    border: 1px solid var(--border-glass);
-    border-radius: var(--radius-sm);
-    padding: 0.6rem 0.75rem;
-    text-align: left;
-    cursor: pointer;
-    transition: all var(--transition-fast);
-    display: flex;
-    flex-direction: column;
-}
-
-.quick-loc-btn:hover {
-    border-color: var(--accent-blue);
-    background: var(--bg-card-hover);
-    transform: translateY(-1px);
-}
-
-.quick-loc-btn.active {
-    border-color: var(--accent-blue);
-    background: rgba(59, 130, 246, 0.12);
-    box-shadow: 0 0 0 1px var(--accent-blue);
-}
-
-.quick-loc-btn .city-name {
-    font-size: 0.84rem;
-    font-weight: 700;
-    color: var(--text-primary);
-}
-
-.quick-loc-btn .city-pin {
-    font-size: 0.72rem;
-    color: var(--text-secondary);
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.97); }
-    to { opacity: 1; transform: scale(1); }
+.pincode-preset-btn:hover,
+.pincode-preset-btn.active {
+  border-color: var(--accent);
+  background-color: var(--accent-subtle);
 }

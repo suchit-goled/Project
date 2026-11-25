@@ -1,43 +1,35 @@
 .section-header {
-  text-align: center;
-  max-width: 700px;
-  margin: 0 auto;
+  text-align: left;
+  max-width: var(--container-max);
+  margin: 0 auto 24px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-fine);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .section-header__badge {
   display: inline-block;
-  padding: 6px 16px;
-  border-radius: var(--radius-pill);
-  background: rgba(59, 130, 246, 0.12);
-  border: 1px solid rgba(59, 130, 246, 0.25);
-  color: var(--accent-blue);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 1px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  margin-bottom: 16px;
+  color: var(--accent);
 }
 
 .section-header__title {
-  font-size: clamp(30px, 4.5vw, 44px);
-  font-weight: 800;
-  color: var(--text-primary);
-  letter-spacing: -0.02em;
-  margin-bottom: 14px;
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 500;
+  color: var(--ink-primary);
+  letter-spacing: -0.015em;
+  margin: 0;
 }
 
 .section-header__subtitle {
-  font-size: 17px;
-  line-height: 1.7;
-  color: var(--text-secondary);
-}
-
-@media (max-width: 768px) {
-  .section-header__title {
-    font-size: 28px;
-  }
-
-  .section-header__subtitle {
-    font-size: 15px;
-  }
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ink-secondary);
+  margin: 2px 0 0;
 }

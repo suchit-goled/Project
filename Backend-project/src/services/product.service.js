@@ -1,4 +1,5 @@
 import productRepository from "../repositories/product.repository.js";
+import cacheService from "../cache/cacheService.js";
 
 class ProductService {
     async getProducts(query) {
@@ -41,15 +42,27 @@ class ProductService {
     }
 
     async createProduct(productData) {
-        return await productRepository.createProduct(productData);
+        const product = await productRepository.createProduct(productData);
+        // Invalidate product & deals hot-read caches
+        cacheService.delPattern("http:/api/products*");
+        cacheService.delPattern("http:/api/home*");
+        return product;
     }
 
     async updateProduct(id, productData) {
-        return await productRepository.updateProduct(id, productData);
+        const product = await productRepository.updateProduct(id, productData);
+        // Invalidate product & deals hot-read caches
+        cacheService.delPattern("http:/api/products*");
+        cacheService.delPattern("http:/api/home*");
+        return product;
     }
 
     async deleteProduct(id) {
-        return await productRepository.deleteProduct(id);
+        const result = await productRepository.deleteProduct(id);
+        // Invalidate product & deals hot-read caches
+        cacheService.delPattern("http:/api/products*");
+        cacheService.delPattern("http:/api/home*");
+        return result;
     }
 
     async getAllProducts() {

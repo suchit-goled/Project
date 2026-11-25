@@ -68,23 +68,23 @@ function App() {
                 toastOptions={{
                     duration: 3200,
                     style: {
-                        background: "#ffffff",
-                        color: "#0f172a",
-                        border: "1px solid #bae6fd",
-                        borderRadius: "12px",
-                        fontSize: "0.9rem",
-                        boxShadow: "0 8px 24px rgba(2, 132, 199, 0.12)",
+                        background: "#FFFFFF",
+                        color: "#161614",
+                        border: "1px solid #DFDBD2",
+                        borderRadius: "4px",
+                        fontSize: "0.875rem",
+                        boxShadow: "0 4px 16px rgba(22, 22, 20, 0.08)",
                     },
                     success: {
                         iconTheme: {
-                            primary: "#0284c7",
-                            secondary: "#ffffff",
+                            primary: "#1F6B45",
+                            secondary: "#FFFFFF",
                         },
                     },
                     error: {
                         iconTheme: {
-                            primary: "#ef4444",
-                            secondary: "#ffffff",
+                            primary: "#B3261E",
+                            secondary: "#FFFFFF",
                         },
                     },
                 }}

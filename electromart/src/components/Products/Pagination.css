@@ -1,49 +1,40 @@
-/* ===================================================
-   PAGINATION - Glassmorphic & Minimalist
-   Dual Theme (Light & Dark) Compatible
-=================================================== */
-
 .pagination {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 8px;
-  margin: 40px 0;
-  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 32px;
+  font-variant-numeric: tabular-nums;
 }
 
-.pagination button {
-  background: var(--glass-surface);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: var(--text-primary);
-  border: 1px solid var(--glass-border);
-  padding: 10px 16px;
+.pagination-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--border-fine);
   border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: 14px;
+  background-color: var(--bg-surface);
+  color: var(--ink-primary);
+  font-size: 0.85rem;
   font-weight: 500;
-  transition: all var(--transition-fast);
-  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.pagination button:hover:not(:disabled) {
-  background: var(--glass-surface-hover);
-  border-color: var(--electric-blue);
-  color: var(--electric-blue);
-  transform: translateY(-1px);
+.pagination-btn:hover:not(:disabled) {
+  border-color: var(--ink-primary);
+  background-color: var(--bg-surface-muted);
 }
 
-.pagination button.active {
-  background: var(--electric-blue);
-  border-color: var(--electric-blue);
-  color: #ffffff;
-  font-weight: 700;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+.pagination-btn.active {
+  background-color: var(--ink-primary);
+  border-color: var(--ink-primary);
+  color: var(--ink-inverse);
 }
 
-.pagination button:disabled {
+.pagination-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
-  background: var(--bg-secondary);
 }

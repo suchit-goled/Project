@@ -93,13 +93,21 @@ export const useDelivery = () => {
     const context = useContext(DeliveryContext);
     if (!context) {
         return {
-            pincode: "400001",
-            location: { city: "Mumbai", state: "Maharashtra", pincode: "400001", serviceable: true, estimatedDays: 3 },
-            isModalOpen: false,
-            openModal: () => {},
-            closeModal: () => {},
-            setDeliveryInfo: () => {},
-            resetPincode: () => {},
+            pincode: "560038",
+            deliveryInfo: {
+                pincode: "560038",
+                city: "Bengaluru",
+                state: "Karnataka",
+                serviceable: true,
+                estimatedDays: 2,
+                estimatedDeliveryDate: "2–3 business days",
+                freeDeliveryEligible: true,
+            },
+            isPincodeModalOpen: false,
+            openPincodeModal: () => {},
+            closePincodeModal: () => {},
+            checkAndSetPincode: async () => true,
+            loading: false,
         };
     }
     return context;

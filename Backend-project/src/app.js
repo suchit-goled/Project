@@ -27,8 +27,19 @@ import mongoSanitize from "./middleware/sanitize.middleware.js";
 import env from "./config/env.js";
 import ApiResponse from "./utils/apiResponse.js";
 
+import { checkDatabaseHealth, isDatabaseConnected } from "./config/database.js";
+import cacheService from "./cache/cacheService.js";
+import messageQueue from "./queue/messageQueue.js";
+import initBackgroundWorkers from "./workers/jobWorker.js";
+
+// Initialize Background Workers for Async Queue Processing
+initBackgroundWorkers();
+
 const app = express();
 app.disable("x-powered-by");
+
+// Load Balancer Layer: Trust reverse proxy / ALB / Cloudflare headers
+app.set("trust proxy", parseInt(env.trust_proxy || "1", 10));
 
 // 1. Security Headers via Helmet
 app.use(helmet({
@@ -58,15 +69,41 @@ app.use(cors({
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
+    allowedHeaders: ["Content-Type", "Authorization", "Cache-Control", "X-Skip-Cache"]
 }));
 
-// 3. Body Parsing with safe size limit & NoSQL Injection Sanitization
+// 3. CDN & Edge Cache-Control Header Policy
+app.use((req, res, next) => {
+    // For public GET requests on hot reads (products, categories, stores, home)
+    if (req.method === "GET" && (
+        req.path.startsWith("/api/products") ||
+        req.path.startsWith("/api/categories") ||
+        req.path.startsWith("/api/stores") ||
+        req.path.startsWith("/api/home")
+    )) {
+        res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300, stale-while-revalidate=600");
+    } else if (
+        req.path.startsWith("/api/auth") ||
+        req.path.startsWith("/api/cart") ||
+        req.path.startsWith("/api/orders") ||
+        req.path.startsWith("/api/payment") ||
+        req.path.startsWith("/api/admin") ||
+        req.path.startsWith("/api/users") ||
+        req.path.startsWith("/api/seller")
+    ) {
+        // Stateful & sensitive routes must never be cached at the edge
+        res.setHeader("Cache-Control", "private, no-cache, no-store, must-revalidate");
+        res.setHeader("Pragma", "no-cache");
+    }
+    next();
+});
+
+// 4. Body Parsing with safe size limit & NoSQL Injection Sanitization
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true, limit: "5mb" }));
 app.use(mongoSanitize);
 
-// 4. Rate Limiting
+// 5. Rate Limiting
 const globalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 1000, // Limit each IP to 1000 requests per window
@@ -123,7 +160,7 @@ const paymentLimiter = rateLimit({
 });
 app.use("/api/payment", paymentLimiter);
 
-// 5. Health Check
+// 6. Root & Health Probes (Load Balancer & CDN Integration)
 app.get("/", (req, res) => {
     res.status(200).json({
         success: true,
@@ -133,15 +170,67 @@ app.get("/", (req, res) => {
     });
 });
 
-app.get("/api/health", (req, res) => {
+// Liveness Probe: Verifies App Server process is running
+app.get(["/healthz", "/live"], (req, res) => {
     res.status(200).json({
-        status: "healthy",
+        status: "alive",
         uptime: process.uptime(),
         timestamp: new Date().toISOString()
     });
 });
 
-// 6. Routes
+// Readiness Probe: Verifies database connectivity for Load Balancer traffic routing
+app.get("/ready", (req, res) => {
+    const isConnected = isDatabaseConnected();
+    if (isConnected) {
+        return res.status(200).json({
+            ready: true,
+            database: "connected",
+            timestamp: new Date().toISOString()
+        });
+    }
+    return res.status(503).json({
+        ready: false,
+        database: "reconnecting",
+        message: "Database connection undergoing failover or reconnection",
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Comprehensive Telemetry: Observability across Cache, Database, Queue & Workers
+app.get("/api/health", async (req, res) => {
+    const dbHealth = await checkDatabaseHealth();
+    const cacheStats = cacheService.getStats();
+    const queueStats = messageQueue.getStats();
+
+    res.status(200).json({
+        status: "healthy",
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString(),
+        architecture: {
+            entryLayer: {
+                cdn: "Edge Caching Configured",
+                loadBalancer: {
+                    trustedProxies: env.trust_proxy,
+                    clientIp: req.ip,
+                    protocol: req.protocol
+                }
+            },
+            compute: {
+                type: "Stateless Express App Server",
+                workers: "Active In-Process Worker Pool",
+                memory: process.memoryUsage()
+            },
+            dataAndAsync: {
+                database: dbHealth,
+                cache: cacheStats,
+                messageQueue: queueStats
+            }
+        }
+    });
+});
+
+// 7. API Routes
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/auth", authRoutes);
@@ -161,7 +250,7 @@ app.use("/api/delivery", deliveryRoutes);
 app.use("/api/seller", sellerRoutes);
 app.use("/api/shipments", shipmentRoutes);
 
-// 7. 404 Handler for Unmatched API Routes
+// 8. 404 Handler for Unmatched API Routes
 app.use((req, res, next) => {
     return ApiResponse.error(
         res,
@@ -170,7 +259,7 @@ app.use((req, res, next) => {
     );
 });
 
-// 8. Centralized Error Handling Middleware
+// 9. Centralized Error Handling Middleware
 app.use(errorMiddleware);
 
 export default app;

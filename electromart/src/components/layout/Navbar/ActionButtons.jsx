@@ -1,9 +1,8 @@
-import { FiHeart, FiShoppingCart, FiSun, FiMoon } from "react-icons/fi";
+import { FiHeart, FiShoppingCart } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
 import { useCart } from "../../../context/CartContext";
 import { useWishlist } from "../../../context/WishlistContext";
-import { useTheme } from "../../../context/ThemeContext";
 
 import UserMenu from "./UserMenu";
 
@@ -12,32 +11,18 @@ const ActionButtons = () => {
 
     const { cartCount } = useCart();
     const { wishlistCount } = useWishlist();
-    const { toggleTheme, isDark } = useTheme();
 
     return (
         <div className="actions">
             <button
-                className="theme-toggle-btn"
-                onClick={toggleTheme}
-                title={`Switch to ${isDark ? "Light" : "Dark"} Mode`}
-                aria-label="Toggle visual theme"
-            >
-                {isDark ? (
-                    <FiSun size={17} style={{ color: "#F59E0B" }} />
-                ) : (
-                    <FiMoon size={17} style={{ color: "#3B82F6" }} />
-                )}
-            </button>
-
-            <button
                 className="wishlist-button"
                 onClick={() => navigate("/wishlist")}
                 aria-label="View wishlist"
+                title="Wishlist"
             >
-                <FiHeart />
-
+                <FiHeart size={18} />
                 {wishlistCount > 0 && (
-                    <span className="badge">
+                    <span className="badge tabular-nums">
                         {wishlistCount}
                     </span>
                 )}
@@ -47,11 +32,11 @@ const ActionButtons = () => {
                 className="cart-button"
                 onClick={() => navigate("/cart")}
                 aria-label="View shopping cart"
+                title="Cart"
             >
-                <FiShoppingCart />
-
+                <FiShoppingCart size={18} />
                 {cartCount > 0 && (
-                    <span className="badge">
+                    <span className="badge tabular-nums">
                         {cartCount}
                     </span>
                 )}

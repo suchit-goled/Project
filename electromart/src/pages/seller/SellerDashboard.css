@@ -1,456 +1,60 @@
-/* ===================================================
-   SELLER DASHBOARD - Glassmorphic & Minimalist
-   Dual Theme (Light & Dark) Compatible
-=================================================== */
-
-.seller-dashboard-view {
+.seller-portal-layout .seller-dashboard-header {
   display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
-
-/* Welcome Card */
-.seller-welcome-card {
-  background: linear-gradient(135deg, var(--midnight-blue) 0%, var(--deep-navy) 100%);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-xl);
-  padding: 28px 32px;
-  display: flex;
+  align-items: flex-end;
   justify-content: space-between;
-  align-items: center;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-fine);
+  margin-bottom: 24px;
   flex-wrap: wrap;
-  gap: 20px;
-  box-shadow: var(--shadow-md);
-  position: relative;
-  overflow: hidden;
 }
 
-.welcome-tag {
-  display: inline-block;
-  background: rgba(59, 130, 246, 0.2);
-  color: var(--soft-blue);
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 3px 10px;
-  border-radius: var(--radius-pill);
-  letter-spacing: 0.5px;
-  margin-bottom: 8px;
-}
-
-.welcome-left h2 {
-  font-size: 1.7rem;
-  font-weight: 800;
-  color: #ffffff;
-  margin: 0 0 6px 0;
-  letter-spacing: -0.02em;
-}
-
-.welcome-left p {
-  font-size: 0.92rem;
-  color: #cbd5e1;
+.seller-portal-layout .seller-dashboard-header h1 {
   margin: 0;
-}
-
-.welcome-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.quick-add-product-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--electric-blue);
-  color: #ffffff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: var(--radius-sm);
-  font-size: 0.9rem;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
-  transition: all var(--transition-fast);
-}
-
-.quick-add-product-btn:hover {
-  background: var(--electric-blue-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
-}
-
-.quick-view-store-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  padding: 10px 18px;
-  border-radius: var(--radius-sm);
-  font-size: 0.88rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  text-decoration: none;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition: all var(--transition-fast);
+  color: var(--ink-primary);
 }
 
-.quick-view-store-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
-}
-
-/* Low Stock Alert */
-.low-stock-alert-bar {
-  background: var(--warning-bg);
-  border: 1px solid rgba(245, 158, 11, 0.35);
-  border-radius: var(--radius-md);
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-
-.alert-icon {
-  color: var(--warning);
-  font-size: 1.4rem;
-  flex-shrink: 0;
-}
-
-.alert-text {
-  flex: 1;
-  font-size: 0.88rem;
-  color: var(--text-primary);
-}
-
-.alert-text strong {
-  color: var(--warning);
-}
-
-.manage-inventory-link {
-  color: var(--warning);
-  font-size: 0.84rem;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.manage-inventory-link:hover {
-  text-decoration: underline;
-}
-
-/* KPI Grid */
-.seller-metrics-grid {
+.seller-portal-layout .seller-kpi-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-}
-
-.kpi-card {
-  background: var(--glass-surface);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  border-radius: var(--radius-lg);
-  padding: 22px;
-  display: flex;
-  align-items: flex-start;
   gap: 16px;
-  transition: all var(--transition-fast);
+  margin-bottom: 24px;
 }
 
-.kpi-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--border-medium);
-  box-shadow: var(--glass-shadow-hover);
-  background: var(--glass-surface-hover);
+.seller-portal-layout .seller-kpi-card {
+  padding: 16px 18px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-fine);
+  border-radius: var(--radius-sm);
+  font-variant-numeric: tabular-nums;
 }
 
-.kpi-card.accent-blue {
-  border-left: 4px solid var(--electric-blue);
-}
-
-.kpi-card.accent-amber {
-  border-left: 4px solid var(--warning);
-}
-
-.kpi-card.accent-green {
-  border-left: 4px solid var(--success);
-}
-
-.kpi-card.accent-purple {
-  border-left: 4px solid #8b5cf6;
-}
-
-.kpi-icon-box {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-md);
-  background: var(--primary-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  color: var(--electric-blue);
-  flex-shrink: 0;
-}
-
-.kpi-info {
-  flex: 1;
-}
-
-.kpi-label {
+.seller-portal-layout .seller-kpi-label {
   display: block;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 600;
-  color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 4px;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  margin-bottom: 6px;
 }
 
-.kpi-value {
-  font-size: 1.55rem;
-  font-weight: 800;
-  color: var(--text-primary);
-  margin: 0 0 2px 0;
-  line-height: 1.2;
-  font-family: var(--font-heading);
-}
-
-.kpi-value.highlight-amber {
-  color: var(--warning);
-}
-
-.kpi-value.highlight-green {
-  color: var(--success);
-}
-
-.kpi-sub {
-  display: block;
-  font-size: 0.74rem;
-  color: var(--text-secondary);
-}
-
-/* Recent Orders Section */
-.seller-dashboard-section {
-  background: var(--glass-surface);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  transition: all var(--transition-normal);
-}
-
-.section-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.section-header-row h3 {
-  font-size: 1.25rem;
+.seller-portal-layout .seller-kpi-value {
+  font-size: 1.45rem;
   font-weight: 700;
-  color: var(--text-primary);
-  margin: 0 0 4px 0;
+  color: var(--ink-primary);
 }
 
-.section-header-row p {
-  font-size: 0.84rem;
-  color: var(--text-secondary);
-  margin: 0;
-}
-
-.view-all-orders-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--electric-blue);
-  font-size: 0.84rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: color var(--transition-fast);
-}
-
-.view-all-orders-link:hover {
-  color: var(--electric-blue-hover);
-  text-decoration: underline;
-}
-
-/* Table */
-.seller-table-card {
-  overflow-x: auto;
-}
-
-.seller-data-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.85rem;
-  text-align: left;
-}
-
-.seller-data-table th {
-  background: var(--bg-secondary);
-  color: var(--text-secondary);
-  font-weight: 600;
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--border-subtle);
-  white-space: nowrap;
-}
-
-.seller-data-table td {
-  padding: 14px;
-  border-bottom: 1px solid var(--border-subtle);
-  color: var(--text-primary);
-  vertical-align: middle;
-}
-
-.bold-cell {
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.subtle-cell {
-  color: var(--text-muted);
-  font-size: 0.8rem;
-}
-
-.commission-cell {
-  color: var(--error);
-  font-weight: 600;
-}
-
-.commission-cell small {
-  display: block;
-  color: var(--text-muted);
-  font-weight: normal;
-  font-size: 0.72rem;
-}
-
-.earnings-cell {
-  color: var(--success);
-  font-weight: 700;
-}
-
-/* Status Badges */
-.seller-status-badge {
-  display: inline-block;
-  padding: 3px 9px;
-  border-radius: var(--radius-pill);
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: capitalize;
-  white-space: nowrap;
-}
-
-.seller-status-badge.status-pending {
-  background: var(--warning-bg);
-  color: var(--warning);
-  border: 1px solid rgba(245, 158, 11, 0.3);
-}
-
-.seller-status-badge.status-confirmed,
-.seller-status-badge.status-processing {
-  background: var(--primary-light);
-  color: var(--primary);
-  border: 1px solid var(--border-medium);
-}
-
-.seller-status-badge.status-packed,
-.seller-status-badge.status-dispatched {
-  background: rgba(14, 165, 233, 0.15);
-  color: #0284c7;
-  border: 1px solid rgba(14, 165, 233, 0.3);
-}
-
-.seller-status-badge.status-delivered {
-  background: var(--success-bg);
-  color: var(--success);
-  border: 1px solid rgba(22, 163, 74, 0.3);
-}
-
-.seller-status-badge.status-cancelled {
-  background: var(--error-bg);
-  color: var(--error);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-.table-manage-btn {
-  background: var(--glass-surface);
-  color: var(--text-primary);
-  border: 1px solid var(--glass-border);
-  padding: 6px 14px;
-  border-radius: var(--radius-xs);
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.table-manage-btn:hover {
-  background: var(--electric-blue);
-  color: #ffffff;
-  border-color: var(--electric-blue);
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-}
-
-.empty-orders-state-box {
-  text-align: center;
-  padding: 48px 20px;
-  color: var(--text-secondary);
-}
-
-.empty-orders-state-box svg {
-  color: var(--text-muted);
-  margin-bottom: 12px;
-}
-
-.empty-orders-state-box h4 {
-  font-size: 1.15rem;
-  color: var(--text-primary);
-  margin: 0 0 6px 0;
-}
-
-.seller-skeleton-card {
-  background: var(--bg-secondary);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-subtle);
-  position: relative;
-  overflow: hidden;
-}
-
-.seller-skeleton-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
-  animation: skeletonShimmer 1.6s infinite;
-}
-
-@media (max-width: 1200px) {
-  .seller-metrics-grid {
+@media (max-width: 1024px) {
+  .seller-portal-layout .seller-kpi-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 640px) {
-  .seller-metrics-grid {
+@media (max-width: 600px) {
+  .seller-portal-layout .seller-kpi-grid {
     grid-template-columns: 1fr;
-  }
-  .welcome-actions {
-    width: 100%;
-  }
-  .quick-add-product-btn,
-  .quick-view-store-btn {
-    flex: 1;
-    justify-content: center;
   }
 }

@@ -4,15 +4,6 @@ const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
     const [theme, setTheme] = useState(() => {
-        try {
-            const saved = localStorage.getItem("electronova_theme");
-            if (saved === "light" || saved === "dark") return saved;
-            if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-                return "dark";
-            }
-        } catch {
-            // Fallback for SSR or non-browser environments
-        }
         return "light";
     });
 

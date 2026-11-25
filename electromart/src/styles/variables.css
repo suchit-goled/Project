@@ -1,165 +1,83 @@
+/* ==========================================================================
+   ElectroNova — Printed Equipment Catalog Design Tokens
+   ========================================================================== */
+
 :root {
-  /* ===================================================
-     LIGHT THEME (DEFAULT)
-     Modern Glassmorphic Minimalist Design System
-  =================================================== */
+  /* Surfaces */
+  --bg-page: #F7F4EE;
+  --bg-surface: #FFFFFF;
+  --bg-surface-muted: #EFECE4;
+  --bg-surface-subtle: #FAF8F4;
+  --bg-inset: #EAE6DC;
 
-  /* Primary Brand Palette */
-  --deep-navy: #111827;
-  --midnight-blue: #172554;
-  --electric-blue: #3B82F6;
-  --electric-blue-hover: #2563EB;
-  --soft-blue: #60A5FA;
-  --soft-blue-light: #EFF6FF;
-  --accent-cyan: #0284C7;
+  /* Ink & Typography */
+  --ink-primary: #161614;
+  --ink-secondary: #54524C;
+  --ink-muted: #76736C;
+  --ink-inverse: #F7F4EE;
 
-  /* Aliases for compatibility */
-  --primary: #3B82F6;
-  --primary-hover: #2563EB;
-  --primary-dark: #1D4ED8;
-  --primary-light: #EFF6FF;
-  --primary-glow: rgba(59, 130, 246, 0.25);
-  --sky-blue: #3B82F6;
-  --sky-blue-light: #EFF6FF;
-  --sky-blue-border: #BFDBFE;
+  /* Restrained Burnt-Orange Accent */
+  --accent: #C84B1E;
+  --accent-hover: #A63B14;
+  --accent-subtle: rgba(200, 75, 30, 0.08);
+  --accent-border: rgba(200, 75, 30, 0.35);
 
-  /* Backgrounds */
-  --bg-main: #F4F7FB;
-  --bg-primary: #F4F7FB;
-  --bg-secondary: #EAF0F7;
-  --bg-tertiary: #FFFFFF;
-  --bg-card: rgba(255, 255, 255, 0.65);
-  --bg-card-hover: rgba(255, 255, 255, 0.85);
-  --bg-input: rgba(255, 255, 255, 0.85);
-  --bg: #F4F7FB;
-  --surface: #FFFFFF;
-  --surface-light: #F8FAFC;
-  --surface-sky: #EAF0F7;
+  /* Fine Catalog Rules & Borders */
+  --border-fine: #DFDBD2;
+  --border-strong: #B8B3A8;
+  --border-focus: #161614;
 
-  /* Glassmorphism Surface Tokens */
-  --glass-surface: rgba(255, 255, 255, 0.65);
-  --glass-surface-hover: rgba(255, 255, 255, 0.85);
-  --glass-surface-solid: #FFFFFF;
-  --glass-border: rgba(255, 255, 255, 0.75);
-  --glass-border-subtle: rgba(226, 232, 240, 0.8);
-  --glass-shadow: 0 8px 32px rgba(15, 23, 42, 0.06), 0 2px 8px rgba(15, 23, 42, 0.04);
-  --glass-shadow-hover: 0 14px 40px rgba(15, 23, 42, 0.10), 0 4px 12px rgba(15, 23, 42, 0.06);
-  --glass-blur: 18px;
-
-  /* Typography Colors */
-  --text-primary: #172033;
-  --text-secondary: #64748B;
-  --text-muted: #94A3B8;
-  --text-inverse: #FFFFFF;
-  --text: #172033;
-  --muted: #64748B;
-
-  /* Borders & Dividers */
-  --border: rgba(226, 232, 240, 0.8);
-  --border-subtle: rgba(226, 232, 240, 0.6);
-  --border-medium: rgba(191, 219, 254, 0.7);
-  --border-focus: #3B82F6;
-
-  /* Status Colors */
-  --success: #16A34A;
-  --success-bg: rgba(22, 163, 74, 0.12);
-  --warning: #F59E0B;
-  --warning-bg: rgba(245, 158, 11, 0.12);
-  --error: #EF4444;
-  --error-bg: rgba(239, 68, 68, 0.12);
-  --info: #3B82F6;
-  --info-bg: rgba(59, 130, 246, 0.12);
+  /* Status Colors (Text & Soft Tints) */
+  --status-success: #1F6B45;
+  --status-success-bg: #EDF5F0;
+  --status-warning: #9A5B13;
+  --status-warning-bg: #FBF4EA;
+  --status-error: #B3261E;
+  --status-error-bg: #FBEFEE;
+  --status-info: #2C5282;
+  --status-info-bg: #EEF4FA;
 
   /* Typography */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
 
-  /* Layout & Spacing */
-  --container-width: 1240px;
-  --section-spacing: 56px;
-  --navbar-height: 72px;
+  /* Radii — Crisp Printed Edges */
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-full: 9999px;
 
-  /* Border Radii System */
-  --radius-xs: 6px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 22px;
-  --radius-pill: 9999px;
+  /* Elevation — Minimal Hairline Shadows */
+  --shadow-none: none;
+  --shadow-sm: 0 1px 2px rgba(22, 22, 20, 0.04);
+  --shadow-md: 0 4px 16px rgba(22, 22, 20, 0.08);
+  --shadow-lg: 0 12px 32px rgba(22, 22, 20, 0.12);
 
-  /* Elevation Shadows */
-  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05);
-  --shadow-md: 0 6px 18px rgba(15, 23, 42, 0.06);
-  --shadow-lg: 0 12px 36px rgba(15, 23, 42, 0.09);
-  --shadow-glow: 0 0 24px rgba(59, 130, 246, 0.22);
+  /* Spacing & Layout */
+  --container-max: 1320px;
+  --container-narrow: 960px;
+  --nav-height: 64px;
 
-  /* Animation Timings */
-  --transition-fast: 160ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-normal: 220ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 320ms cubic-bezier(0.16, 1, 0.3, 1);
-  --transition: 200ms ease;
-}
+  /* Motion Curves */
+  --ease-catalog: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-reveal: 420ms;
 
-/* ===================================================
-   DARK THEME
-   Midnight Glassmorphism & High Contrast Contrast
-=================================================== */
-
-[data-theme="dark"] {
-  /* Backgrounds */
-  --bg-main: #080D18;
-  --bg-primary: #080D18;
-  --bg-secondary: #111827;
-  --bg-tertiary: #1E293B;
-  --bg-card: rgba(30, 41, 59, 0.62);
-  --bg-card-hover: rgba(30, 41, 59, 0.85);
-  --bg-input: rgba(15, 23, 42, 0.65);
-  --bg: #080D18;
-  --surface: #0F172A;
-  --surface-light: #1E293B;
-  --surface-sky: #172554;
-
-  /* Glassmorphism Surface Tokens - Dark Mode */
-  --glass-surface: rgba(30, 41, 59, 0.62);
-  --glass-surface-hover: rgba(30, 41, 59, 0.82);
-  --glass-surface-solid: #0F172A;
-  --glass-border: rgba(255, 255, 255, 0.10);
-  --glass-border-subtle: rgba(255, 255, 255, 0.06);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.40), 0 2px 8px rgba(0, 0, 0, 0.25);
-  --glass-shadow-hover: 0 14px 44px rgba(0, 0, 0, 0.55), 0 4px 14px rgba(0, 0, 0, 0.35);
-
-  /* Typography Colors - High Contrast */
-  --text-primary: #F8FAFC;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
-  --text-inverse: #080D18;
-  --text: #F8FAFC;
-  --muted: #94A3B8;
-
-  /* Borders & Dividers */
-  --border: rgba(255, 255, 255, 0.10);
-  --border-subtle: rgba(255, 255, 255, 0.07);
-  --border-medium: rgba(255, 255, 255, 0.16);
-  --border-focus: #60A5FA;
-
-  /* Accents in Dark Theme */
-  --electric-blue: #60A5FA;
-  --electric-blue-hover: #3B82F6;
-  --primary: #3B82F6;
-  --primary-hover: #60A5FA;
-  --primary-light: rgba(59, 130, 246, 0.18);
-  --primary-glow: rgba(96, 165, 250, 0.30);
-  --sky-blue-border: rgba(59, 130, 246, 0.35);
-
-  /* Status Colors */
-  --success-bg: rgba(22, 163, 74, 0.20);
-  --warning-bg: rgba(245, 158, 11, 0.20);
-  --error-bg: rgba(239, 68, 68, 0.20);
-  --info-bg: rgba(59, 130, 246, 0.20);
-
-  /* Elevation Shadows */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.45);
-  --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.55);
-  --shadow-glow: 0 0 28px rgba(59, 130, 246, 0.35);
+  /* Legacy Alias Support (ensures zero breakage in untouched sub-components) */
+  --bg-primary: var(--bg-page);
+  --bg-secondary: var(--bg-surface-muted);
+  --bg-card: var(--bg-surface);
+  --bg-glass: var(--bg-surface);
+  --text-primary: var(--ink-primary);
+  --text-secondary: var(--ink-secondary);
+  --text-muted: var(--ink-muted);
+  --primary-color: var(--accent);
+  --primary-hover: var(--accent-hover);
+  --border-color: var(--border-fine);
+  --border-light: var(--border-fine);
+  --danger-color: var(--status-error);
+  --success-color: var(--status-success);
+  --warning-color: var(--status-warning);
 }

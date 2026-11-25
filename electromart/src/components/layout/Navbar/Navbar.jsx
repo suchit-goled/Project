@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FiMenu } from "react-icons/fi";
 import "./Navbar.css";
 
@@ -14,11 +14,25 @@ import PincodeModal from "../../common/PincodeModal/PincodeModal";
 
 const Navbar = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 25) {
+                setScrolled(true);
+            } else {
+                setScrolled(false);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     return (
         <>
             <AnnouncementBar />
-            <header className="navbar">
+            <header className={`navbar ${scrolled ? "navbar--scrolled" : ""}`}>
                 <div className="container navbar__container">
                     <div className="navbar__left">
                         <button

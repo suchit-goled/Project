@@ -1,66 +1,6 @@
-/* ===================================================
-   RECENTLY VIEWED - Glassmorphic & Minimalist
-   Dual Theme (Light & Dark) Compatible
-=================================================== */
-
 .recently-viewed-section {
-  padding: 44px 0;
-  position: relative;
-  background: transparent;
-  border-top: 1px solid var(--border-subtle);
-}
-
-.recently-viewed-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.recently-viewed-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--bg-secondary);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-subtle);
-  padding: 4px 12px;
-  border-radius: var(--radius-pill);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  margin-bottom: 8px;
-}
-
-.recently-viewed-title {
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-.clear-recent-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--glass-surface);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-subtle);
-  padding: 6px 14px;
-  border-radius: var(--radius-sm);
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.clear-recent-btn:hover {
-  color: var(--error);
-  border-color: rgba(239, 68, 68, 0.4);
-  background: var(--error-bg);
+  padding: 48px 0;
+  border-bottom: 1px solid var(--border-fine);
 }
 
 .recently-viewed-grid {
@@ -69,24 +9,20 @@
   gap: 20px;
 }
 
-.recent-card-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-@media (max-width: 1200px) {
+@media (max-width: 1100px) {
   .recently-viewed-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .recently-viewed-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 }
 
-@media (max-width: 540px) {
+@media (max-width: 480px) {
   .recently-viewed-grid {
     grid-template-columns: 1fr;
   }

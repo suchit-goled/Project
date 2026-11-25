@@ -30,15 +30,15 @@ function Categories() {
       <div className="container">
         <div className="category-section-header">
           <div>
-            <span className="section-pill">Browse Catalogue</span>
-            <h2 className="category-title">Shop by Category</h2>
-            <p className="category-subtitle">Explore engineered devices tailored for productivity, creative mastery, and entertainment.</p>
+            <span className="section-pill">Interactive Category Universe</span>
+            <h2 className="category-title">Explore the Device Multiverse</h2>
+            <p className="category-subtitle">Engineered flagship hardware, pro creator workstations, and hi-res soundscapes from certified brands.</p>
           </div>
           <button
             className="view-all-cats-btn"
             onClick={() => navigate("/products")}
           >
-            All Categories <FiArrowRight />
+            <span>Explore All Sectors</span> <FiArrowRight />
           </button>
         </div>
 

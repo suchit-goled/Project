@@ -272,33 +272,44 @@ class ProductRepository {
     }
 
     async getBrands() {
-        const brandDocs = await Brand.find({ isActive: true }).sort({ name: 1 });
-        if (brandDocs && brandDocs.length > 0) {
-            return brandDocs;
+        try {
+            const brandDocs = await Brand.find({ isActive: true }).sort({ name: 1 });
+            if (brandDocs && brandDocs.length > 0) {
+                return brandDocs;
+            }
+        } catch (err) {}
+
+        try {
+            const distinctBrands = await Product.distinct("brand");
+            return distinctBrands.filter(Boolean).sort().map(name => ({ name, slug: name.toLowerCase() }));
+        } catch (err) {
+            return [];
         }
-        const distinctBrands = await Product.distinct("brand");
-        return distinctBrands.filter(Boolean).sort().map(name => ({ name, slug: name.toLowerCase() }));
     }
 
     async getCategories() {
-        const rawCats = await Product.distinct("product_category");
-        if (Array.isArray(rawCats) && rawCats.length > 0) {
-            const cleanMap = new Map();
-            for (const cat of rawCats) {
-                if (cat && typeof cat === "string" && cat.trim()) {
-                    const trimmed = cat.trim();
-                    const lower = trimmed.toLowerCase();
-                    if (!cleanMap.has(lower)) {
-                        const formatted = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
-                        cleanMap.set(lower, formatted);
+        try {
+            const rawCats = await Product.distinct("product_category");
+            if (Array.isArray(rawCats) && rawCats.length > 0) {
+                const cleanMap = new Map();
+                for (const cat of rawCats) {
+                    if (cat && typeof cat === "string" && cat.trim()) {
+                        const trimmed = cat.trim();
+                        const lower = trimmed.toLowerCase();
+                        if (!cleanMap.has(lower)) {
+                            const formatted = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+                            cleanMap.set(lower, formatted);
+                        }
                     }
                 }
+                return Array.from(cleanMap.values()).sort();
             }
-            return Array.from(cleanMap.values()).sort();
-        }
 
-        const catDocs = await Category.find({ isActive: true }).sort({ displayOrder: 1, name: 1 });
-        return catDocs.map(c => c.name);
+            const catDocs = await Category.find({ isActive: true }).sort({ displayOrder: 1, name: 1 });
+            return catDocs.map(c => c.name);
+        } catch (err) {
+            return [];
+        }
     }
 
     async getRelatedProducts(productId, limit = 4) {

@@ -1,20 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import api from "../api/axios";
-import toast from "react-hot-toast";
-
 import "./Login.css";
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const [inlineError, setInlineError] = useState("");
+
+    const emailRef = useRef(null);
+    const errorRef = useRef(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setInlineError("");
 
         if (!email.trim()) {
-            toast.error("Please enter your registered email address.");
+            setInlineError("Enter your registered email address.");
+            requestAnimationFrame(() => emailRef.current?.focus());
             return;
         }
 
@@ -23,90 +27,92 @@ const ForgotPassword = () => {
             await api.post("/password/forgot-password", {
                 email: email.trim()
             });
-
             setSubmitted(true);
-            toast.success("Password reset link has been dispatched!");
         } catch (error) {
-            toast.error(
-                error.response?.data?.message ||
-                "Failed to send reset link. Please check your email and try again."
-            );
+            const msg = error.response?.data?.message || "Unable to send reset link. Verify your email address and try again.";
+            setInlineError(msg);
+            requestAnimationFrame(() => errorRef.current?.focus());
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="auth-page">
-            <div className="auth-card">
-                <h1>Forgot Your Password?</h1>
-                <p>
-                    {submitted
-                        ? "Check your inbox for instructions to reset your password."
-                        : "Enter your registered email and we'll send you a password recovery link."}
-                </p>
-
-                {submitted ? (
-                    <div style={{ textAlign: "center", padding: "10px 0 20px" }}>
-                        <div
-                            style={{
-                                background: "rgba(56, 189, 248, 0.1)",
-                                border: "1px solid rgba(56, 189, 248, 0.3)",
-                                color: "#38bdf8",
-                                padding: "14px",
-                                borderRadius: "12px",
-                                fontSize: "0.95rem",
-                                marginBottom: "20px"
-                            }}
-                        >
-                            If an account exists for <strong>{email}</strong>, you will receive an email shortly with a secure password reset link valid for 15 minutes.
-                        </div>
-
-                        <button
-                            type="button"
-                            onClick={() => {
-                                setSubmitted(false);
-                                setEmail("");
-                            }}
-                            style={{
-                                background: "transparent",
-                                border: "1px solid rgba(255, 255, 255, 0.2)",
-                                color: "#f8fafc",
-                                padding: "12px 20px",
-                                borderRadius: "12px",
-                                cursor: "pointer",
-                                width: "100%",
-                                marginBottom: "12px"
-                            }}
-                        >
-                            Try Another Email
-                        </button>
+        <main className="auth-spread">
+            <section className="auth-form-panel" aria-labelledby="forgot-heading">
+                <div className="auth-form-inner">
+                    <div className="auth-rise-1">
+                        <span className="auth-kicker">Password Recovery</span>
+                        <h1 id="forgot-heading" className="auth-heading">Reset your password</h1>
+                        <p className="auth-subheading">
+                            {submitted
+                                ? "Check your inbox for a password reset link."
+                                : "Enter the email address linked to your account and we will send a reset link."}
+                        </p>
                     </div>
-                ) : (
-                    <form onSubmit={handleSubmit}>
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="Enter your registered email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
 
-                        <button
-                            type="submit"
-                            disabled={loading}
-                        >
-                            {loading ? "Sending Link..." : "Send Reset Link"}
-                        </button>
-                    </form>
-                )}
+                    {inlineError && (
+                        <div ref={errorRef} role="alert" tabIndex={-1} className="auth-inline-error">
+                            {inlineError}
+                        </div>
+                    )}
 
-                <p className="auth-link">
-                    Remember your password? <Link to="/login">Back to Login</Link>
-                </p>
-            </div>
-        </div>
+                    {submitted ? (
+                        <div className="auth-rise-2">
+                            <div className="auth-inline-success" role="status">
+                                A reset link has been sent to <strong>{email}</strong> if an account exists with that address.
+                            </div>
+                            <Link to="/login" className="auth-submit-btn">
+                                Return to sign in
+                            </Link>
+                        </div>
+                    ) : (
+                        <form onSubmit={handleSubmit} noValidate className="auth-rise-2">
+                            <div className="auth-field">
+                                <label htmlFor="forgot-email" className="auth-label">
+                                    Email address
+                                </label>
+                                <input
+                                    ref={emailRef}
+                                    id="forgot-email"
+                                    type="email"
+                                    name="email"
+                                    className="auth-input"
+                                    placeholder="you@example.com"
+                                    value={email}
+                                    onChange={(e) => {
+                                        if (inlineError) setInlineError("");
+                                        setEmail(e.target.value);
+                                    }}
+                                    autoComplete="email"
+                                    required
+                                />
+                            </div>
+
+                            <button type="submit" className="auth-submit-btn" disabled={loading}>
+                                {loading ? "Sending link…" : "Send reset link"}
+                            </button>
+                        </form>
+                    )}
+
+                    <div className="auth-switch-row auth-rise-2">
+                        <span>Remembered your password?</span>
+                        <Link to="/login" className="auth-switch-link">
+                            Sign in
+                        </Link>
+                    </div>
+                </div>
+            </section>
+
+            <aside className="auth-photo-panel auth-photo-wipe" aria-label="Hardware detail">
+                <img
+                    src="/media/design/auth-hardware-detail.webp"
+                    alt="Close-up of machined aluminum camera aperture dial and mechanical keyboard switches"
+                    className="auth-photo-img"
+                />
+                <span className="auth-photo-caption">Anodized Dial &amp; Tactile Switches</span>
+            </aside>
+        </main>
     );
 };
 

@@ -1,105 +1,60 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { FiArrowRight, FiShield, FiTruck, FiTag, FiZap } from "react-icons/fi";
+import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import "./PromotionalBanners.css";
 
 const PromotionalBanners = () => {
-    const navigate = useNavigate();
+  return (
+    <section className="editorial-spreads" aria-label="Featured equipment departments">
+      <div className="catalog-container editorial-spreads__grid">
+        {/* Feature 1: Optical & Rangefinder Cameras */}
+        <article className="editorial-feature">
+          <div className="editorial-feature__media">
+            <img
+              src="/media/design/editorial-camera.webp"
+              alt="Silver and matte black mirrorless rangefinder camera on warm alabaster surface"
+              loading="lazy"
+            />
+          </div>
+          <div className="editorial-feature__copy">
+            <span className="editorial-feature__kicker">Optics &amp; Imaging</span>
+            <h2 className="editorial-feature__title font-serif">
+              Rangefinder &amp; Mirrorless Systems
+            </h2>
+            <p className="editorial-feature__desc">
+              Full-frame bodies, prime lenses, and field monitors stocked by authorised imaging dealers.
+            </p>
+            <Link to="/products/category/cameras" className="editorial-feature__link">
+              Browse Cameras <FiArrowRight size={15} />
+            </Link>
+          </div>
+        </article>
 
-    const banners = [
-        {
-            id: 1,
-            badge: "SUPER DEALS",
-            tagIcon: <FiZap />,
-            title: "Flagship Smartphones & Laptops",
-            subtitle: "Up to 45% off from verified marketplace sellers. 100% Brand Authenticity Guaranteed.",
-            ctaText: "Shop Smartphones",
-            ctaLink: "/products?category=Smartphones",
-            highlight: "₹15,000 Instant Exchange",
-            bgGradient: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 60%, #312e81 100%)",
-            accentColor: "#6366f1",
-            icon: "⚡",
-        },
-        {
-            id: 2,
-            badge: "MULTI-VENDOR ADVANTAGE",
-            tagIcon: <FiTag />,
-            title: "Compare Prices Across Sellers",
-            subtitle: "Find the best deals from top-rated stores across India with transparent seller ratings.",
-            ctaText: "View Today's Deals",
-            ctaLink: "/deals",
-            highlight: "Zero Commission Pricing",
-            bgGradient: "linear-gradient(135deg, #042f2e 0%, #064e3b 60%, #065f46 100%)",
-            accentColor: "#10b981",
-            icon: "🏷️",
-        },
-        {
-            id: 3,
-            badge: "EXPRESS LOGISTICS",
-            tagIcon: <FiTruck />,
-            title: "Audio, Cameras & Gaming Gear",
-            subtitle: "Next-day delivery available to 19,000+ Indian PIN codes on platform-fulfilled orders.",
-            ctaText: "Explore Audio Gear",
-            ctaLink: "/products?category=Headphones",
-            highlight: "Free Express Shipping",
-            bgGradient: "linear-gradient(135deg, #3b0764 0%, #4c1d95 60%, #5b21b6 100%)",
-            accentColor: "#a855f7",
-            icon: "🎧",
-        },
-    ];
-
-    return (
-        <section className="promotional-banners-section">
-            <div className="container">
-                <div className="promo-trust-ribbon">
-                    <div className="trust-pill">
-                        <FiShield className="trust-icon" />
-                        <span><strong>100% Verified Sellers</strong> — KYC & GST Checked</span>
-                    </div>
-                    <div className="trust-pill">
-                        <FiTag className="trust-icon" />
-                        <span><strong>Multi-Seller Price Match</strong> — Best Rate Guarantee</span>
-                    </div>
-                    <div className="trust-pill">
-                        <FiTruck className="trust-icon" />
-                        <span><strong>Doorstep Delivery</strong> — PIN Code Coverage</span>
-                    </div>
-                </div>
-
-                <div className="promo-banners-grid">
-                    {banners.map((b) => (
-                        <div
-                            key={b.id}
-                            className="promo-banner-card"
-                            style={{ background: b.bgGradient }}
-                        >
-                            <div className="promo-card-glow" style={{ background: b.accentColor }} />
-                            <div className="promo-card-content">
-                                <div className="promo-card-top">
-                                    <span className="promo-badge" style={{ borderColor: `${b.accentColor}60`, color: "#ffffff" }}>
-                                        {b.tagIcon} {b.badge}
-                                    </span>
-                                    <span className="promo-highlight-tag">{b.highlight}</span>
-                                </div>
-                                <h3 className="promo-card-title">{b.title}</h3>
-                                <p className="promo-card-subtitle">{b.subtitle}</p>
-                                <button
-                                    className="promo-card-cta"
-                                    onClick={() => navigate(b.ctaLink)}
-                                >
-                                    <span>{b.ctaText}</span>
-                                    <FiArrowRight />
-                                </button>
-                            </div>
-                            <div className="promo-card-illustration" aria-hidden="true">
-                                <span className="illustration-emoji">{b.icon}</span>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </section>
-    );
+        {/* Feature 2: Mechanical Input & Workstations */}
+        <article className="editorial-feature">
+          <div className="editorial-feature__media">
+            <img
+              src="/media/design/editorial-keyboard.webp"
+              alt="Anodized aluminum 65% mechanical keyboard with warm off-white and charcoal keycaps"
+              loading="lazy"
+            />
+          </div>
+          <div className="editorial-feature__copy">
+            <span className="editorial-feature__kicker">Input &amp; Desk Gear</span>
+            <h2 className="editorial-feature__title font-serif">
+              Machined Keyboards &amp; Peripherals
+            </h2>
+            <p className="editorial-feature__desc">
+              Tactile switches, hot-swappable aluminum frames, and calibrated desk accessories built for daily work.
+            </p>
+            <Link to="/products/search/keyboard" className="editorial-feature__link">
+              Browse Keyboards <FiArrowRight size={15} />
+            </Link>
+          </div>
+        </article>
+      </div>
+    </section>
+  );
 };
 
 export default PromotionalBanners;

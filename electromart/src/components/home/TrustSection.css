@@ -1,65 +1,59 @@
-/* ===================================================
-   TRUST SECTION - Glassmorphic & Minimalist
-   Dual Theme (Light & Dark) Compatible
-=================================================== */
-
-.home-trust-section {
+.trust-section {
   padding: 48px 0;
-  background: var(--bg-card);
-  border-top: 1px solid var(--border-subtle);
-  border-bottom: 1px solid var(--border-subtle);
-  transition: background-color var(--transition-normal);
+  background-color: var(--bg-page);
+}
+
+.trust-section__container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 24px;
 }
 
 .trust-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 24px;
-}
-
-.home-trust-card {
-  display: flex;
-  align-items: flex-start;
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
-  padding: 16px;
-  border-radius: var(--radius-md);
-  background: var(--glass-surface);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: var(--shadow-sm);
-  transition: all var(--transition-fast);
 }
 
-.home-trust-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--glass-shadow-hover);
-  border-color: var(--border-medium);
-}
-
-.home-trust-icon {
-  width: 44px;
-  height: 44px;
+.trust-card {
+  padding: 20px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-fine);
   border-radius: var(--radius-sm);
-  background: var(--primary-light);
-  color: var(--primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  flex-shrink: 0;
 }
 
-.home-trust-content h4 {
+.trust-card__icon {
+  color: var(--accent);
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+}
+
+.trust-card h3 {
+  margin: 0 0 6px;
   font-size: 0.95rem;
   font-weight: 600;
-  margin-bottom: 4px;
-  color: var(--text-primary);
+  color: var(--ink-primary);
 }
 
-.home-trust-content p {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  line-height: 1.45;
+.trust-card p {
   margin: 0;
+  font-size: 0.825rem;
+  color: var(--ink-secondary);
+  line-height: 1.5;
+}
+
+@media (max-width: 1024px) {
+  .trust-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .trust-section__container {
+    padding: 0 16px;
+  }
+
+  .trust-grid {
+    grid-template-columns: 1fr;
+  }
 }

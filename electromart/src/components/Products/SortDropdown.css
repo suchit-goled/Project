@@ -1,58 +1,27 @@
-/* ===================================================
-   SORT DROPDOWN - Glassmorphic & Minimalist
-   Dual Theme (Light & Dark) Compatible
-=================================================== */
-
-.sort-dropdown-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.sort-label {
-  font-size: 0.88rem;
-  color: var(--text-muted);
-  white-space: nowrap;
-}
-
-.sort-select-box {
-  position: relative;
+.sort-dropdown {
   display: inline-flex;
   align-items: center;
+  gap: 8px;
 }
 
-.sort-dropdown {
-  appearance: none;
-  -webkit-appearance: none;
-  background: var(--glass-surface);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: var(--text-primary);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-sm);
-  padding: 9px 36px 9px 14px;
-  font-size: 0.88rem;
+.sort-dropdown label {
+  font-size: 0.8rem;
+  color: var(--ink-muted);
   font-weight: 500;
+}
+
+.sort-dropdown select {
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-surface);
+  color: var(--ink-primary);
+  font-size: 0.85rem;
   cursor: pointer;
+}
+
+.sort-dropdown select:focus {
   outline: none;
-  transition: all var(--transition-fast);
-  box-shadow: var(--shadow-sm);
-}
-
-.sort-dropdown:hover {
-  background: var(--glass-surface-hover);
-  border-color: var(--border-medium);
-}
-
-.sort-dropdown:focus {
-  border-color: var(--electric-blue);
-  box-shadow: 0 0 0 2px var(--primary-glow);
-}
-
-.sort-select-arrow {
-  position: absolute;
-  right: 12px;
-  pointer-events: none;
-  color: var(--text-muted);
-  font-size: 0.95rem;
+  border-color: var(--ink-primary);
 }

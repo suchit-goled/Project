@@ -1,110 +1,96 @@
-/* ===================================================
-   APPLICATION-WIDE ANIMATIONS & TRANSITIONS
-   Fluid, Minimalist & Respectful of Reduced Motion
-=================================================== */
+/* ==========================================================================
+   ElectroNova — Purposeful Catalog Motion System
+   ========================================================================== */
 
-/* Page Route Transition */
-.page-transition,
-.fade-slide-up {
-    animation: fadeSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* 1. Auth Two-Panel Spread: Masked Photo Wipe & Subtle 10px Field Rise (<= 450ms) */
+@keyframes authPhotoWipe {
+  0% {
+    clip-path: inset(0 0 100% 0);
+    opacity: 0.85;
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
 }
 
-@keyframes fadeSlideUp {
-    from {
-        opacity: 0;
-        transform: translateY(12px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+@keyframes authFieldRise {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Modal and Dropdown Transitions */
-@keyframes glassFadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+.auth-photo-wipe {
+  animation: authPhotoWipe 420ms var(--ease-catalog) both;
 }
 
-@keyframes glassSlideUp {
-    from {
-        opacity: 0;
-        transform: scale(0.96) translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
+.auth-rise-1 {
+  animation: authFieldRise 360ms var(--ease-catalog) 40ms both;
 }
 
-/* Shimmer Animation for Skeleton Loaders */
-@keyframes skeletonShimmer {
-    0% {
-        background-position: -200% 0;
-    }
-    100% {
-        background-position: 200% 0;
-    }
+.auth-rise-2 {
+  animation: authFieldRise 380ms var(--ease-catalog) 90ms both;
 }
 
-.skeleton-shimmer {
-    background: linear-gradient(
-        90deg,
-        rgba(226, 232, 240, 0.4) 25%,
-        rgba(241, 245, 249, 0.8) 50%,
-        rgba(226, 232, 240, 0.4) 75%
-    );
-    background-size: 200% 100%;
-    animation: skeletonShimmer 1.8s infinite ease-in-out;
-    border-radius: var(--radius-sm);
+/* 2. Checkout Selection: Gentle Field Reveal & Brief Total Highlight */
+@keyframes checkoutFieldReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-[data-theme="dark"] .skeleton-shimmer {
-    background: linear-gradient(
-        90deg,
-        rgba(30, 41, 59, 0.5) 25%,
-        rgba(51, 65, 85, 0.8) 50%,
-        rgba(30, 41, 59, 0.5) 75%
-    );
-    background-size: 200% 100%;
+.checkout-field-reveal {
+  animation: checkoutFieldReveal 200ms var(--ease-catalog) both;
 }
 
-/* Hover Elevation Utility */
-.hover-elevate {
-    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+@keyframes totalBriefHighlight {
+  0% {
+    background-color: var(--accent-subtle);
+  }
+  100% {
+    background-color: transparent;
+  }
 }
 
-.hover-elevate:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--glass-shadow-hover);
+.total-changed-flash {
+  animation: totalBriefHighlight 400ms ease-out;
 }
 
-/* Subtle Pulse for Live Badges */
-@keyframes subtlePulse {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.6;
-    }
+/* 3. Order Tracker: 300ms Connector Line Advance on Real Status Update */
+@keyframes trackerConnectorAdvance {
+  0% {
+    transform: scaleY(0);
+  }
+  100% {
+    transform: scaleY(1);
+  }
 }
 
-.pulse-beacon {
-    animation: subtlePulse 2s infinite ease-in-out;
+.tracker-connector-animate {
+  transform-origin: top center;
+  animation: trackerConnectorAdvance 300ms var(--ease-catalog) both;
 }
 
-/* Accessibility: User Prefers Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
+  .auth-photo-wipe,
+  .auth-rise-1,
+  .auth-rise-2,
+  .checkout-field-reveal,
+  .total-changed-flash,
+  .tracker-connector-animate {
+    animation: none !important;
+    transform: none !important;
+    clip-path: none !important;
+    opacity: 1 !important;
+  }
 }

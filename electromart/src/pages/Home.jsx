@@ -15,9 +15,9 @@ const Home = () => {
       <Hero />
       <PromotionalBanners />
       <TodaysDeals />
-      <BrandStrip />
       <Categories />
       <FeaturedProducts />
+      <BrandStrip />
       <TopSellersSection />
       <RecentlyViewed />
       <TrustSection />

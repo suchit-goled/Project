@@ -1,139 +1,59 @@
-/* ===================================================
-   TODAY'S DEALS - Glassmorphic & Minimalist
-   Dual Theme (Light & Dark) Compatible
-=================================================== */
-
 .todays-deals-section {
-  padding: 44px 0;
-  position: relative;
-  background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-main) 100%);
-  border-top: 1px solid var(--border-subtle);
-  border-bottom: 1px solid var(--border-subtle);
+  padding: 48px 0;
+  border-bottom: 1px solid var(--border-fine);
 }
 
 .deals-header {
   display: flex;
-  justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 28px;
-  flex-wrap: wrap;
+  justify-content: space-between;
   gap: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-fine);
+  margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 
-.deals-header-left {
-  max-width: 600px;
-}
-
-.deals-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--error-bg);
-  color: var(--error);
-  border: 1px solid rgba(239, 68, 68, 0.25);
-  padding: 4px 12px;
-  border-radius: var(--radius-pill);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  margin-bottom: 8px;
+.deals-kicker {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--accent);
+  margin-bottom: 4px;
 }
 
 .deals-title {
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: var(--text-primary);
-  margin: 0 0 6px 0;
-  line-height: 1.25;
+  margin: 0;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 500;
+  color: var(--ink-primary);
 }
 
 .deals-subtitle {
+  margin: 4px 0 0;
   font-size: 0.9rem;
-  color: var(--text-secondary);
-  margin: 0;
-}
-
-.deals-header-right {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.deals-timer {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--glass-surface);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-sm);
-  padding: 8px 14px;
-  border-radius: var(--radius-md);
-}
-
-.timer-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.timer-boxes {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.time-box {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-subtle);
-  padding: 4px 8px;
-  border-radius: var(--radius-xs);
-  font-size: 0.85rem;
-  color: var(--text-primary);
-  min-width: 32px;
-  text-align: center;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-
-.time-box.highlight {
-  background: var(--error-bg);
-  border-color: rgba(239, 68, 68, 0.35);
-  color: var(--error);
-}
-
-.timer-colon {
-  color: var(--text-muted);
-  font-weight: bold;
+  color: var(--ink-secondary);
 }
 
 .deals-view-all-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: var(--glass-surface);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: var(--electric-blue);
-  border: 1px solid var(--border-medium);
-  padding: 8px 16px;
+  padding: 8px 14px;
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
+  background-color: var(--bg-surface);
+  color: var(--ink-primary);
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  transition: all var(--transition-fast);
 }
 
 .deals-view-all-btn:hover {
-  background: var(--electric-blue);
-  color: #ffffff;
-  border-color: var(--electric-blue);
-  transform: translateX(2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  border-color: var(--ink-primary);
+  background-color: var(--bg-surface-muted);
 }
 
 .deals-grid {
@@ -142,32 +62,20 @@
   gap: 20px;
 }
 
-.deal-card-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-@media (max-width: 1200px) {
+@media (max-width: 1100px) {
   .deals-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .deals-grid {
     grid-template-columns: repeat(2, 1fr);
-  }
-  .deals-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .deals-header-right {
-    width: 100%;
-    justify-content: space-between;
+    gap: 12px;
   }
 }
 
-@media (max-width: 540px) {
+@media (max-width: 480px) {
   .deals-grid {
     grid-template-columns: 1fr;
   }

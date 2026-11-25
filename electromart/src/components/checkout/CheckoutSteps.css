@@ -1,74 +1,62 @@
-/* ===================================================
-   CHECKOUT STEPS - Glassmorphic & Minimalist
-   Dual Theme (Light & Dark) Compatible
-=================================================== */
-
 .checkout-steps {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 18px;
-  margin-bottom: 40px;
+  gap: 12px;
+  padding: 16px 0 28px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-fine);
+  flex-wrap: wrap;
 }
 
 .step {
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--text-muted);
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   font-weight: 500;
-  transition: all var(--transition-fast);
+  color: var(--ink-muted);
 }
 
-.step svg {
-  width: 44px;
-  height: 44px;
-  padding: 10px;
-  border-radius: 50%;
-  background: var(--glass-surface);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-  color: var(--text-muted);
-  box-shadow: var(--shadow-sm);
-  transition: all var(--transition-fast);
+.step-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-strong);
+  background-color: var(--bg-surface);
+  color: var(--ink-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .step.active {
-  color: var(--electric-blue);
-  font-weight: 700;
+  color: var(--ink-primary);
+  font-weight: 600;
 }
 
-.step.active svg {
-  background: var(--electric-blue);
-  border-color: var(--electric-blue);
-  color: #ffffff;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+.step.active .step-circle {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #FFFFFF;
 }
 
-.line {
-  width: 60px;
-  height: 2px;
-  background: var(--border-medium);
-  border-radius: 2px;
+.step-divider {
+  width: 28px;
+  height: 1px;
+  background-color: var(--border-strong);
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   .checkout-steps {
     gap: 8px;
-    margin-bottom: 24px;
+    padding: 10px 0 18px;
   }
-  .line {
-    width: 28px;
-  }
-  .step {
-    font-size: 0.78rem;
-  }
-  .step svg {
-    width: 38px;
-    height: 38px;
-    padding: 8px;
+
+  .step-divider {
+    width: 14px;
   }
 }

@@ -1,45 +1,225 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../api/axios";
 import Loader from "../components/ui/Loader/Loader";
-import Badge from "../components/ui/Badge/Badge";
+import CatalogImage from "../components/common/CatalogImage";
+import { formatINR, formatDateIN } from "../utils/formatCurrency";
 import {
-    FaArrowLeft,
-    FaBox,
-    FaMapMarkerAlt,
-    FaCreditCard,
-    FaTruck,
-    FaStore,
-    FaCheckCircle,
-    FaClock
-} from "react-icons/fa";
+    FiArrowLeft,
+    FiCheck,
+    FiXCircle,
+    FiMapPin,
+    FiCreditCard,
+    FiRefreshCw,
+} from "react-icons/fi";
 import "./OrderDetails.css";
+
+const SHIPMENT_STEPS = [
+    { key: "Confirmed", label: "Order Confirmed" },
+    { key: "Packed", label: "Packed by Seller" },
+    { key: "Dispatched", label: "Dispatched" },
+    { key: "Out for Delivery", label: "Out for Delivery" },
+    { key: "Delivered", label: "Delivered" },
+];
+
+const getTimelineStepIndex = (status) => {
+    switch (status) {
+        case "Pending":
+        case "Confirmed":
+            return 0;
+        case "Packed":
+            return 1;
+        case "Shipped":
+        case "Dispatched":
+        case "In Transit":
+            return 2;
+        case "Out for Delivery":
+            return 3;
+        case "Delivered":
+            return 4;
+        default:
+            return -1;
+    }
+};
+
+const getStepTimestamp = (timeline, stepKey) => {
+    if (!Array.isArray(timeline) || timeline.length === 0) return null;
+    const aliases = {
+        Confirmed: ["Pending", "Confirmed"],
+        Packed: ["Packed"],
+        Dispatched: ["Dispatched", "Shipped", "In Transit"],
+        "Out for Delivery": ["Out for Delivery"],
+        Delivered: ["Delivered"],
+    };
+    const matchKeys = aliases[stepKey] || [stepKey];
+    const found = timeline.find((ev) => matchKeys.includes(ev.status));
+    if (!found) return null;
+    return {
+        date: found.timestamp ? formatDateIN(found.timestamp, { hour: "2-digit", minute: "2-digit" }) : null,
+        note: found.note || null,
+    };
+};
+
+const VerticalShipmentTimeline = ({
+    status,
+    timeline,
+    animatedConnectorIdx,
+}) => {
+    const isCancelled = status === "Cancelled";
+    const currentStep = getTimelineStepIndex(status);
+
+    if (isCancelled) {
+        const cancelEvent = Array.isArray(timeline)
+            ? timeline.find((ev) => ev.status === "Cancelled")
+            : null;
+        return (
+            <div className="tracker-cancelled-box" role="status">
+                <FiXCircle size={18} />
+                <div>
+                    <strong>Shipment Cancelled</strong>
+                    <p>
+                        {cancelEvent?.note || "This shipment was cancelled and will not be dispatched."}
+                        {cancelEvent?.timestamp ? ` · ${formatDateIN(cancelEvent.timestamp)}` : ""}
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <ol className="vertical-timeline" aria-label="Shipment progress">
+            {SHIPMENT_STEPS.map((step, idx) => {
+                const isCompleted = currentStep > idx || (currentStep === 4 && idx === 4);
+                const isCurrent = currentStep === idx && currentStep < 4;
+                const stateLabel = isCompleted ? "Completed" : isCurrent ? "Current" : "Upcoming";
+                const stepMeta = getStepTimestamp(timeline, step.key);
+                const shouldAnimateConnector = animatedConnectorIdx === idx;
+
+                return (
+                    <li
+                        key={step.key}
+                        className={`timeline-step ${isCompleted ? "is-completed" : ""} ${isCurrent ? "is-current" : ""} ${!isCompleted && !isCurrent ? "is-upcoming" : ""}`}
+                        aria-current={isCurrent ? "step" : undefined}
+                    >
+                        <div className="timeline-track">
+                            <span className="timeline-marker" aria-hidden="true">
+                                {isCompleted ? (
+                                    <FiCheck size={13} strokeWidth={2.5} />
+                                ) : isCurrent ? (
+                                    <span className="timeline-current-dot" />
+                                ) : null}
+                            </span>
+                            {idx < SHIPMENT_STEPS.length - 1 && (
+                                <span className="timeline-connector-bg">
+                                    {(isCompleted || isCurrent) && currentStep > idx && (
+                                        <span
+                                            className={`timeline-connector-fill ${shouldAnimateConnector ? "tracker-connector-animate" : ""}`}
+                                        />
+                                    )}
+                                </span>
+                            )}
+                        </div>
+
+                        <div className="timeline-content">
+                            <div className="timeline-row-top">
+                                <span className="timeline-step-label">{step.label}</span>
+                                <span className={`timeline-state-tag state-${stateLabel.toLowerCase()}`}>
+                                    {stateLabel}
+                                </span>
+                            </div>
+                            {stepMeta?.date ? (
+                                <div className="timeline-step-meta tabular-nums">
+                                    {stepMeta.date}
+                                    {stepMeta.note ? ` — ${stepMeta.note}` : ""}
+                                </div>
+                            ) : stepMeta?.note ? (
+                                <div className="timeline-step-meta">{stepMeta.note}</div>
+                            ) : isCompleted || isCurrent ? (
+                                <div className="timeline-step-meta">Recorded</div>
+                            ) : null}
+                        </div>
+                    </li>
+                );
+            })}
+        </ol>
+    );
+};
 
 const OrderDetails = () => {
     const { orderId } = useParams();
     const navigate = useNavigate();
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
     const [cancelling, setCancelling] = useState(false);
     const [error, setError] = useState("");
 
-    useEffect(() => {
-        const fetchOrder = async () => {
-            try {
-                setLoading(true);
-                const response = await api.get(`/orders/details/${orderId}`);
-                setOrder(response.data.data?.order || response.data.order);
-            } catch (err) {
-                setError(err.response?.data?.message || "Failed to load order details");
-            } finally {
-                setLoading(false);
-            }
-        };
+    // Track previous step indices per package key so connector animates ONLY on real status updates
+    const prevStepMapRef = useRef({});
+    const [animatedConnectors, setAnimatedConnectors] = useState({});
 
-        if (orderId) {
-            fetchOrder();
+    const applyOrderWithTransitionDetection = (nextOrder, isInitialLoad = false) => {
+        if (!nextOrder) return;
+
+        if (!isInitialLoad) {
+            const updates = {};
+            if (Array.isArray(nextOrder.sellerOrders) && nextOrder.sellerOrders.length > 0) {
+                nextOrder.sellerOrders.forEach((so, idx) => {
+                    const pkgKey = so._id || `pkg_${idx}`;
+                    const prevIdx = prevStepMapRef.current[pkgKey];
+                    const nextIdx = getTimelineStepIndex(so.orderStatus);
+                    if (typeof prevIdx === "number" && nextIdx > prevIdx) {
+                        updates[pkgKey] = prevIdx;
+                    }
+                    prevStepMapRef.current[pkgKey] = nextIdx;
+                });
+            } else {
+                const prevIdx = prevStepMapRef.current.single;
+                const nextIdx = getTimelineStepIndex(nextOrder.orderStatus);
+                if (typeof prevIdx === "number" && nextIdx > prevIdx) {
+                    updates.single = prevIdx;
+                }
+                prevStepMapRef.current.single = nextIdx;
+            }
+            setAnimatedConnectors(updates);
+        } else {
+            // Initial load / refresh: record current step without animating
+            if (Array.isArray(nextOrder.sellerOrders) && nextOrder.sellerOrders.length > 0) {
+                nextOrder.sellerOrders.forEach((so, idx) => {
+                    prevStepMapRef.current[so._id || `pkg_${idx}`] = getTimelineStepIndex(so.orderStatus);
+                });
+            } else {
+                prevStepMapRef.current.single = getTimelineStepIndex(nextOrder.orderStatus);
+            }
         }
+
+        setOrder(nextOrder);
+    };
+
+    const fetchOrder = async (isManualRefresh = false) => {
+        try {
+            if (isManualRefresh) {
+                setRefreshing(true);
+            } else {
+                setLoading(true);
+            }
+            const response = await api.get(`/orders/details/${orderId}`);
+            const fetched = response.data.data?.order || response.data.order;
+            applyOrderWithTransitionDetection(fetched, !isManualRefresh);
+        } catch (err) {
+            setError(err.response?.data?.message || "Failed to load order details");
+        } finally {
+            setLoading(false);
+            setRefreshing(false);
+        }
+    };
+
+    useEffect(() => {
+        if (orderId) {
+            fetchOrder(false);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [orderId]);
 
     const handleCancelOrder = async () => {
@@ -48,12 +228,12 @@ const OrderDetails = () => {
         try {
             setCancelling(true);
             await api.put(`/orders/cancel/${orderId}`);
-            setOrder(prev => ({
+            setOrder((prev) => ({
                 ...prev,
                 orderStatus: "Cancelled",
-                sellerOrders: prev.sellerOrders?.map(so => ({ ...so, orderStatus: "Cancelled" }))
+                sellerOrders: prev.sellerOrders?.map((so) => ({ ...so, orderStatus: "Cancelled" })),
             }));
-            toast.success("Order cancelled successfully");
+            toast.success("Order cancelled.");
         } catch (err) {
             toast.error(err.response?.data?.message || "Could not cancel order");
         } finally {
@@ -63,306 +243,208 @@ const OrderDetails = () => {
 
     if (loading) {
         return (
-            <div style={{ padding: "80px 20px", display: "flex", justifyContent: "center" }}>
-                <Loader text="Loading order details..." />
+            <div className="tracker-loading-wrap">
+                <Loader text="Loading order tracking..." />
             </div>
         );
     }
 
     if (error || !order) {
         return (
-            <div style={{ maxWidth: "600px", margin: "60px auto", textAlign: "center", padding: "30px" }}>
-                <h2>Order Not Found</h2>
-                <p style={{ color: "var(--text-secondary)", margin: "14px 0" }}>{error || "The requested order could not be found."}</p>
-                <Link to="/orders" className="back-to-orders-btn">
+            <main className="tracker-empty-wrap">
+                <h1>Order not found</h1>
+                <p>{error || "The requested order could not be located."}</p>
+                <Link to="/orders" className="btn-outline-catalog">
                     Back to My Orders
                 </Link>
-            </div>
+            </main>
         );
     }
 
-    const getStatusVariant = (status) => {
-        switch (status) {
-            case "Delivered": return "success";
-            case "Cancelled": return "danger";
-            case "Shipped":
-            case "Dispatched":
-            case "Out for Delivery":
-            case "In Transit": return "primary";
-            default: return "warning";
-        }
-    };
-
-    const getTimelineStepIndex = (status) => {
-        switch (status) {
-            case "Confirmed":
-            case "Pending":
-                return 0;
-            case "Packed":
-                return 1;
-            case "Dispatched":
-            case "In Transit":
-                return 2;
-            case "Out for Delivery":
-                return 3;
-            case "Delivered":
-                return 4;
-            default:
-                return -1;
-        }
-    };
-
     const hasSellerOrders = Array.isArray(order.sellerOrders) && order.sellerOrders.length > 0;
+    const orderNumberDisplay = order.orderNumber || order._id?.slice(-8).toUpperCase();
+    const orderDateDisplay = formatDateIN(order.createdAt, { hour: "2-digit", minute: "2-digit" });
+    const backendEstimate = order.estimatedDeliveryDate || order.estimatedDelivery || null;
 
     return (
-        <div className="order-details-page">
-            <button
-                onClick={() => navigate("/orders")}
-                className="back-to-orders-btn"
-            >
-                <FaArrowLeft /> Back to Orders
-            </button>
+        <main className="order-tracker-page">
+            <div className="catalog-container-narrow">
+                <div className="tracker-top-bar">
+                    <button
+                        type="button"
+                        onClick={() => navigate("/orders")}
+                        className="tracker-back-btn"
+                    >
+                        <FiArrowLeft size={15} />
+                        <span>All orders</span>
+                    </button>
 
-            <div className="order-details-card">
-                {/* Header Section */}
-                <div className="order-header-row">
-                    <div>
-                        <div className="order-title-group">
-                            <h2 className="order-main-title">
-                                Order #{order.orderNumber || order._id?.slice(-8).toUpperCase()}
-                            </h2>
-                            {order.isMultiSeller && (
-                                <span className="multi-seller-badge">
-                                    Multi-Seller Order ({order.sellerOrders?.length || "Multiple"} Packages)
-                                </span>
-                            )}
-                        </div>
-                        <span className="order-placed-date">
-                            Placed on {new Date(order.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
-                        </span>
-                    </div>
-                    <div className="order-badges-group">
-                        <Badge variant={getStatusVariant(order.orderStatus)}>{order.orderStatus}</Badge>
-                        <Badge variant={order.paymentStatus === "Paid" ? "success" : "warning"}>{order.paymentStatus}</Badge>
-                    </div>
+                    <button
+                        type="button"
+                        onClick={() => fetchOrder(true)}
+                        disabled={refreshing}
+                        className="tracker-refresh-btn"
+                    >
+                        <FiRefreshCw size={14} />
+                        <span>{refreshing ? "Checking…" : "Refresh status"}</span>
+                    </button>
                 </div>
 
-                {/* Multi-Seller Fulfillment Packages Section */}
-                {hasSellerOrders ? (
-                    <div className="fulfillment-packages-container">
-                        <div className="packages-heading-row">
-                            <FaTruck className="packages-heading-icon" />
-                            <h3 className="packages-heading-title">
-                                Fulfillment Packages ({order.sellerOrders.length})
-                            </h3>
-                            <span className="packages-heading-subtitle">
-                                (Dispatched separately by independent sellers)
-                            </span>
-                        </div>
-
-                        <div className="packages-stack">
-                            {order.sellerOrders.map((so, idx) => {
-                                const currentStep = getTimelineStepIndex(so.orderStatus);
-                                const steps = ["Confirmed", "Packed", "Dispatched", "Out for Delivery", "Delivered"];
-                                const isCancelled = so.orderStatus === "Cancelled";
-
-                                return (
-                                    <div
-                                        key={so._id || idx}
-                                        className="package-box"
-                                    >
-                                        {/* Package Header */}
-                                        <div className="package-header">
-                                            <div>
-                                                <div className="package-title-row">
-                                                    <span className="package-number-tag">
-                                                        Package {idx + 1}: {so.sellerOrderNumber || `Sub-Order #${so._id?.slice(-8).toUpperCase()}`}
-                                                    </span>
-                                                    <span className={`delivery-method-pill ${so.deliveryMethod === "seller_delivery" ? "seller" : "platform"}`}>
-                                                        {so.deliveryMethod === "seller_delivery" ? "Seller Direct Delivery" : "ElectroNova Logistics"}
-                                                    </span>
-                                                </div>
-
-                                                <div className="sold-by-row">
-                                                    <FaStore />
-                                                    <span>Sold by: </span>
-                                                    {so.storeId ? (
-                                                        <Link
-                                                            to={`/stores/${so.storeId.slug || ""}`}
-                                                            className="store-link-accent"
-                                                        >
-                                                            {so.storeId.name || so.storeId.storeName}
-                                                        </Link>
-                                                    ) : (
-                                                        <strong>Verified Electronics Partner</strong>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "6px" }}>
-                                                <Badge variant={getStatusVariant(so.orderStatus)}>{so.orderStatus}</Badge>
-                                                {so.trackingNumber && (
-                                                    <span className="tracking-info-text">
-                                                        Track: <strong>{so.courierPartner || "Express"}: {so.trackingNumber}</strong>
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        {/* Shipment Step Indicator */}
-                                        {!isCancelled ? (
-                                            <div className="stepper-container">
-                                                <div className="stepper-steps-row">
-                                                    {steps.map((st, stepIdx) => {
-                                                        const isDone = currentStep >= stepIdx;
-                                                        const isCurrent = currentStep === stepIdx;
-                                                        return (
-                                                            <div key={st} className="step-item">
-                                                                <div
-                                                                    className={`step-circle ${isDone ? "done" : ""} ${isCurrent ? "current" : ""}`}
-                                                                >
-                                                                    {isDone ? <FaCheckCircle size={14} /> : stepIdx + 1}
-                                                                </div>
-                                                                <span className={`step-label ${isDone ? "done" : ""} ${isCurrent ? "current" : ""}`}>
-                                                                    {st}
-                                                                </span>
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <div style={{ margin: "14px 0", padding: "10px 14px", background: "var(--error-bg)", color: "var(--error)", borderRadius: "var(--radius-sm)", fontSize: "13px" }}>
-                                                This package has been cancelled.
-                                            </div>
-                                        )}
-
-                                        {/* Products in this Package */}
-                                        <div className="package-products-list">
-                                            {(so.products || []).map((itm, iIdx) => (
-                                                <div
-                                                    key={iIdx}
-                                                    className="package-product-item"
-                                                >
-                                                    <img
-                                                        src={itm.image || "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=80"}
-                                                        alt={itm.title}
-                                                        className="package-product-img"
-                                                    />
-                                                    <div style={{ flex: 1 }}>
-                                                        <h5 className="package-product-title">{itm.title}</h5>
-                                                        <span className="package-product-qty">
-                                                            Qty: {itm.quantity} × ₹{Number(itm.price || 0).toLocaleString()}
-                                                        </span>
-                                                    </div>
-                                                    <span className="package-product-price">
-                                                        ₹{(Number(itm.price || 0) * Number(itm.quantity || 1)).toLocaleString()}
-                                                    </span>
-                                                </div>
-                                            ))}
-                                        </div>
-
-                                        {/* Shipment timeline events if logged */}
-                                        {Array.isArray(so.shipmentTimeline) && so.shipmentTimeline.length > 0 && (
-                                            <div className="timeline-updates-box">
-                                                <span className="timeline-updates-title">
-                                                    <FaClock size={11} /> Shipment Updates:
-                                                </span>
-                                                <div className="timeline-events-list">
-                                                    {so.shipmentTimeline.slice(-3).map((ev, eIdx) => (
-                                                        <div key={eIdx} className="timeline-event-item">
-                                                            • <strong>{ev.status}</strong>: {ev.note || "Status updated"} {ev.timestamp ? `(${new Date(ev.timestamp).toLocaleDateString()})` : ""}
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                );
-                            })}
-                        </div>
+                {/* Primary Status Headline */}
+                <header className="tracker-headline-block">
+                    <span className="tracker-kicker">Order Status</span>
+                    <h1 className="tracker-status-headline">{order.orderStatus}</h1>
+                    <div className="tracker-meta-strip tabular-nums">
+                        <span>Order #{orderNumberDisplay}</span>
+                        {orderDateDisplay && <span>· Placed {orderDateDisplay}</span>}
+                        {backendEstimate && <span>· Estimated delivery {formatDateIN(backendEstimate) || backendEstimate}</span>}
                     </div>
-                ) : (
-                    /* Fallback Single Store / Legacy Products List */
-                    <div style={{ margin: "24px 0" }}>
-                        <h3 style={{ fontSize: "16px", color: "var(--text-primary)", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
-                            <FaBox style={{ color: "var(--electric-blue)" }} /> Products ({order.products?.length || 0})
-                        </h3>
-                        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                            {order.products?.map((item, idx) => (
-                                <div key={idx} className="package-product-item">
-                                    {item.image && (
-                                        <img src={item.image} alt={item.title} className="package-product-img" />
-                                    )}
-                                    <div style={{ flex: 1 }}>
-                                        <h4 className="package-product-title">{item.title}</h4>
-                                        <span className="package-product-qty">Qty: {item.quantity} × ₹{item.price?.toLocaleString()}</span>
+                </header>
+
+                {/* Multi-Seller Packages or Older Single-Seller Order */}
+                {hasSellerOrders ? (
+                    <section className="tracker-packages-list" aria-label="Shipment packages">
+                        {order.sellerOrders.map((so, idx) => {
+                            const pkgKey = so._id || `pkg_${idx}`;
+                            const pkgEstimate = so.estimatedDeliveryDate || so.estimatedDelivery || null;
+
+                            return (
+                                <article key={pkgKey} className="tracker-package-card">
+                                    <div className="tracker-package-head">
+                                        <div>
+                                            <span className="tracker-package-num tabular-nums">
+                                                Package {idx + 1} of {order.sellerOrders.length} · {so.sellerOrderNumber || `#${so._id?.slice(-6).toUpperCase()}`}
+                                            </span>
+                                            <h2 className="tracker-package-status">{so.orderStatus}</h2>
+                                            <div className="tracker-package-seller">
+                                                Sold by{" "}
+                                                {so.storeId ? (
+                                                    <Link to={`/stores/${so.storeId.slug || ""}`} className="tracker-seller-link">
+                                                        {so.storeId.name || so.storeId.storeName}
+                                                    </Link>
+                                                ) : (
+                                                    <strong>Verified Seller</strong>
+                                                )}
+                                                {pkgEstimate ? ` · Est. delivery ${formatDateIN(pkgEstimate) || pkgEstimate}` : ""}
+                                            </div>
+                                        </div>
+
+                                        {so.trackingNumber && (
+                                            <div className="tracker-awb-box tabular-nums">
+                                                <span>{so.courierPartner || "Courier"}</span>
+                                                <strong>{so.trackingNumber}</strong>
+                                            </div>
+                                        )}
                                     </div>
-                                    <span className="package-product-price">₹{(item.price * item.quantity).toLocaleString()}</span>
+
+                                    {/* Items in this shipment immediately below header */}
+                                    <div className="tracker-items-list">
+                                        {(so.products || []).map((itm, iIdx) => (
+                                            <div key={iIdx} className="tracker-item-row">
+                                                <CatalogImage
+                                                    src={itm.image}
+                                                    alt={itm.title}
+                                                    className="tracker-item-thumb"
+                                                />
+                                                <div className="tracker-item-info">
+                                                    <div className="tracker-item-title">{itm.title}</div>
+                                                    <div className="tracker-item-qty tabular-nums">
+                                                        Qty {itm.quantity} × {formatINR(itm.price)}
+                                                    </div>
+                                                </div>
+                                                <div className="tracker-item-total tabular-nums">
+                                                    {formatINR(Number(itm.price || 0) * Number(itm.quantity || 1))}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Vertical Shipment Timeline */}
+                                    <div className="tracker-timeline-wrap">
+                                        <VerticalShipmentTimeline
+                                            status={so.orderStatus}
+                                            timeline={so.shipmentTimeline}
+                                            animatedConnectorIdx={animatedConnectors[pkgKey]}
+                                        />
+                                    </div>
+                                </article>
+                            );
+                        })}
+                    </section>
+                ) : (
+                    /* Older Single-Seller Order Layout */
+                    <article className="tracker-package-card">
+                        <div className="tracker-items-list">
+                            {(order.products || []).map((item, idx) => (
+                                <div key={idx} className="tracker-item-row">
+                                    <CatalogImage
+                                        src={item.image}
+                                        alt={item.title}
+                                        className="tracker-item-thumb"
+                                    />
+                                    <div className="tracker-item-info">
+                                        <div className="tracker-item-title">{item.title}</div>
+                                        <div className="tracker-item-qty tabular-nums">
+                                            Qty {item.quantity} × {formatINR(item.price)}
+                                        </div>
+                                    </div>
+                                    <div className="tracker-item-total tabular-nums">
+                                        {formatINR(Number(item.price || 0) * Number(item.quantity || 1))}
+                                    </div>
                                 </div>
                             ))}
                         </div>
-                    </div>
+
+                        <div className="tracker-timeline-wrap">
+                            <VerticalShipmentTimeline
+                                status={order.orderStatus}
+                                timeline={order.shipmentTimeline}
+                                animatedConnectorIdx={animatedConnectors.single}
+                            />
+                        </div>
+                    </article>
                 )}
 
-                {/* Shipping & Payment Address Grid */}
-                <div className="order-info-grid">
-                    <div className="order-info-card">
-                        <h4>
-                            <FaMapMarkerAlt /> Shipping Address
-                        </h4>
+                {/* Shipping Address & Payment Totals */}
+                <div className="tracker-details-grid">
+                    <div className="tracker-info-box">
+                        <h3><FiMapPin size={14} /> Delivery Address</h3>
                         <p>
-                            {order.shippingAddress?.fullName && <strong>{order.shippingAddress.fullName}<br /></strong>}
+                            {order.shippingAddress?.fullName && (
+                                <><strong>{order.shippingAddress.fullName}</strong><br /></>
+                            )}
                             {order.shippingAddress?.address}<br />
-                            {order.shippingAddress?.city}, {order.shippingAddress?.state} {order.shippingAddress?.pincode}
+                            {order.shippingAddress?.city}, {order.shippingAddress?.state}{" "}
+                            <span className="tabular-nums">{order.shippingAddress?.pincode}</span>
                         </p>
                     </div>
 
-                    <div className="order-info-card">
-                        <h4>
-                            <FaCreditCard /> Payment Details
-                        </h4>
-                        <p>
-                            Method: <strong>{order.paymentMethod}</strong><br />
-                            Status: <strong style={{ color: order.paymentStatus === "Paid" ? "var(--success)" : "var(--warning)" }}>{order.paymentStatus}</strong>
-                        </p>
+                    <div className="tracker-info-box tabular-nums">
+                        <h3><FiCreditCard size={14} /> Payment &amp; Totals</h3>
+                        <div className="tracker-summary-lines">
+                            <div><span>Method</span><strong>{order.paymentMethod} ({order.paymentStatus})</strong></div>
+                            <div><span>Subtotal</span><span>{formatINR(order.subtotal)}</span></div>
+                            <div><span>Shipping</span><span>{order.shippingCharge === 0 ? "Free" : formatINR(order.shippingCharge)}</span></div>
+                            <div><span>Tax</span><span>{formatINR(order.tax)}</span></div>
+                            <div className="tracker-summary-total"><span>Total</span><strong>{formatINR(order.total)}</strong></div>
+                        </div>
                     </div>
                 </div>
 
-                {/* Total Summary */}
-                <div className="order-totals-card">
-                    <div className="order-total-row">
-                        <span>Subtotal:</span>
-                        <span>₹{order.subtotal?.toLocaleString()}</span>
-                    </div>
-                    <div className="order-total-row">
-                        <span>Shipping:</span>
-                        <span>{order.shippingCharge === 0 ? "FREE" : `₹${order.shippingCharge}`}</span>
-                    </div>
-                    <div className="order-total-row">
-                        <span>Tax:</span>
-                        <span>₹{order.tax?.toLocaleString()}</span>
-                    </div>
-                    <div className="order-total-grand">
-                        <span>Total:</span>
-                        <span className="order-total-grand-amount">₹{order.total?.toLocaleString()}</span>
-                    </div>
-                </div>
-
-                {/* Cancellation Action */}
                 {order.orderStatus !== "Delivered" && order.orderStatus !== "Cancelled" && (
-                    <div style={{ marginTop: "24px", paddingTop: "16px", borderTop: "1px solid var(--border-subtle)", textAlign: "right" }}>
+                    <div className="tracker-cancel-bar">
                         <button
+                            type="button"
                             onClick={handleCancelOrder}
                             disabled={cancelling}
-                            className="cancel-order-btn"
+                            className="tracker-cancel-btn"
                         >
-                            {cancelling ? "Cancelling..." : "Cancel Order"}
+                            {cancelling ? "Cancelling…" : "Cancel order"}
                         </button>
                     </div>
                 )}
             </div>
-        </div>
+        </main>
     );
 };
 

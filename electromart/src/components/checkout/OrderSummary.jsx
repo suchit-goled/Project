@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import OrderService from "../../services/order.service";
 import PaymentService from "../../services/payment.service";
 import PaymentMethod from "./PaymentMethod";
+import CatalogImage from "../common/CatalogImage";
+import { formatINR } from "../../utils/formatCurrency";
 import toast from "react-hot-toast";
-import { FiLock, FiShield } from "react-icons/fi";
+import { FiLock } from "react-icons/fi";
 import "./OrderSummary.css";
 
 const OrderSummary = ({ address }) => {
@@ -16,6 +18,17 @@ const OrderSummary = ({ address }) => {
 
     const [paymentMethod, setPaymentMethod] = useState("Cash On Delivery");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [totalFlash, setTotalFlash] = useState(false);
+    const prevTotalRef = useRef(grandTotal);
+
+    useEffect(() => {
+        if (prevTotalRef.current !== grandTotal) {
+            setTotalFlash(true);
+            prevTotalRef.current = grandTotal;
+            const t = setTimeout(() => setTotalFlash(false), 400);
+            return () => clearTimeout(t);
+        }
+    }, [grandTotal]);
 
     const handleOnlinePayment = async (order) => {
         try {
@@ -24,7 +37,7 @@ const OrderSummary = ({ address }) => {
 
             const razorpayKey = rzpData.keyId || rzpData.key || process.env.REACT_APP_RAZORPAY_KEY_ID;
             if (!razorpayKey) {
-                toast.error("Payment gateway configuration missing. Please choose Cash on Delivery or contact support.");
+                toast.error("Online payment is not configured. Please choose Cash on Delivery or contact support.");
                 setIsSubmitting(false);
                 return;
             }
@@ -33,8 +46,8 @@ const OrderSummary = ({ address }) => {
                 key: razorpayKey,
                 amount: rzpData.amount,
                 currency: rzpData.currency || "INR",
-                name: "ElectroNova Tech Store",
-                description: `Payment for Order #${order._id.slice(-6).toUpperCase()}`,
+                name: "ElectroNova",
+                description: `Order #${order._id.slice(-6).toUpperCase()}`,
                 order_id: rzpData.id,
                 prefill: {
                     name: address.fullName,
@@ -42,13 +55,12 @@ const OrderSummary = ({ address }) => {
                     email: user?.email || "",
                 },
                 theme: {
-                    color: "#0284c7",
+                    color: "#C84B1E",
                 },
                 modal: {
                     ondismiss: function () {
-                        toast("Payment window closed. Your order is saved as Pending in My Orders.", {
-                            icon: "ℹ️",
-                        });
+                        setIsSubmitting(false);
+                        toast("Payment cancelled. Your order remains Pending in My Orders.");
                         navigate("/orders");
                     },
                 },
@@ -62,16 +74,17 @@ const OrderSummary = ({ address }) => {
                         });
 
                         if (verifyRes.success) {
-                            // Immediate local wipe without waiting on server deletion roundtrip
                             clearCart(true);
-                            toast.success("Payment verified! Order placed successfully.");
+                            toast.success("Payment verified. Order confirmed.");
                             navigate("/order-success", {
                                 state: { order: verifyRes.data || order },
                             });
                         } else {
+                            setIsSubmitting(false);
                             toast.error("Payment verification failed on server.");
                         }
                     } catch (verifyErr) {
+                        setIsSubmitting(false);
                         console.error("Verification error:", verifyErr);
                         toast.error("Payment verification failed. Please contact support.");
                     }
@@ -81,13 +94,16 @@ const OrderSummary = ({ address }) => {
             if (window.Razorpay) {
                 const razorpay = new window.Razorpay(options);
                 razorpay.on("payment.failed", function (response) {
-                    toast.error(`Payment failed: ${response.error.description || "Transaction declined"}`);
+                    setIsSubmitting(false);
+                    toast.error(`Payment failed: ${response.error?.description || "Transaction declined"}`);
                 });
                 razorpay.open();
             } else {
-                toast.error("Razorpay SDK not loaded. Please check your internet connection.");
+                setIsSubmitting(false);
+                toast.error("Razorpay SDK not loaded. Check your connection and try again.");
             }
         } catch (error) {
+            setIsSubmitting(false);
             console.error("Online payment error:", error);
             const msg = error.response?.data?.message || "Could not initialize online payment gateway";
             toast.error(msg);
@@ -95,6 +111,8 @@ const OrderSummary = ({ address }) => {
     };
 
     const handleCheckout = async () => {
+        if (isSubmitting) return;
+
         if (!user) {
             toast.error("Please sign in to place your order");
             navigate("/login?redirect=/checkout");
@@ -107,7 +125,6 @@ const OrderSummary = ({ address }) => {
             return;
         }
 
-        // Validate address
         if (
             !address?.fullName?.trim() ||
             !address?.phone?.trim() ||
@@ -132,9 +149,8 @@ const OrderSummary = ({ address }) => {
                 const order = response.data;
 
                 if (paymentMethod === "Cash On Delivery") {
-                    // Immediate state wipe; backend already purged cart items from DB
                     clearCart(true);
-                    toast.success("Order placed successfully via Cash on Delivery!");
+                    toast.success("Order confirmed via Cash on Delivery.");
                     navigate("/order-success", {
                         state: { order },
                     });
@@ -143,18 +159,18 @@ const OrderSummary = ({ address }) => {
                 }
             } else {
                 toast.error(response.message || "Failed to create order");
+                setIsSubmitting(false);
             }
         } catch (error) {
             console.error("Checkout error:", error);
             const msg = error.response?.data?.message || error.message || "An error occurred during checkout";
             toast.error(msg);
-        } finally {
             setIsSubmitting(false);
         }
     };
 
     return (
-        <div className="order-summary-card">
+        <aside className="order-summary-card" aria-label="Order summary and payment">
             <div className="order-summary-header">
                 <h2>Order Summary</h2>
                 <span className="summary-item-count">
@@ -162,7 +178,6 @@ const OrderSummary = ({ address }) => {
                 </span>
             </div>
 
-            {/* Cart Items Preview */}
             <div className="summary-items-scroll">
                 {cart.map((item, idx) => {
                     const product = item.productId || {};
@@ -174,98 +189,71 @@ const OrderSummary = ({ address }) => {
                     const key = product._id || item.productId || idx;
 
                     return (
-                        <div className="summary-item-row" key={key}>
-                            <img
+                        <div key={key} className="summary-item-row">
+                            <CatalogImage
                                 src={image}
                                 alt={title}
                                 className="summary-item-thumb"
-                                onError={(e) => {
-                                    e.target.onerror = null;
-                                    e.target.src = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&q=80";
-                                }}
                             />
                             <div className="summary-item-meta">
-                                <span className="summary-item-title" title={title}>
-                                    {title}
-                                </span>
-                                <div className="summary-item-qty-row">
-                                    <span className="summary-item-qty-badge">Qty: {qty}</span>
-                                    <span className="summary-item-unit-rate">₹{unitPrice.toLocaleString()} each</span>
-                                </div>
+                                <div className="summary-item-name">{title}</div>
+                                <div className="summary-item-qty">Qty: {qty}</div>
                             </div>
-                            <span className="summary-item-price">
-                                ₹{lineTotal.toLocaleString()}
-                            </span>
+                            <span className="summary-item-total">{formatINR(lineTotal)}</span>
                         </div>
                     );
                 })}
             </div>
 
-            {/* Calculations Breakdown */}
-            <div className="summary-breakdown">
-                <div className="breakdown-row">
-                    <span>Subtotal</span>
-                    <span>₹{subtotal.toLocaleString()}</span>
-                </div>
-                <div className="breakdown-row">
-                    <span>Shipping</span>
-                    <span className={shippingCharge === 0 ? "free-tag" : ""}>
-                        {shippingCharge === 0 ? "FREE" : `₹${shippingCharge}`}
-                    </span>
-                </div>
-                <div className="breakdown-row">
-                    <span>GST (18%)</span>
-                    <span>₹{taxAmount.toLocaleString()}</span>
-                </div>
-
-                <hr className="summary-divider" />
-
-                <div className="breakdown-total">
-                    <div>
-                        <strong>Total Amount</strong>
-                        <span className="sub-hint">Includes all taxes</span>
-                    </div>
-                    <span className="grand-price">₹{grandTotal.toLocaleString()}</span>
-                </div>
-            </div>
-
-            {/* Payment Method Selector */}
-            <div className="payment-selection-section">
-                <h3>Select Payment Method</h3>
+            <div className="summary-payment-block">
+                <h3 className="summary-payment-title">Payment Method</h3>
                 <PaymentMethod
                     selectedMethod={paymentMethod}
                     onChange={setPaymentMethod}
                 />
+                <div key={paymentMethod} className="payment-context-note checkout-field-reveal">
+                    {paymentMethod === "Cash On Delivery"
+                        ? "Pay in cash or via UPI QR upon doorstep delivery."
+                        : "You will be directed to Razorpay to complete UPI, Card, or NetBanking payment. Order confirms only after verification."}
+                </div>
             </div>
 
-            {/* Place Order CTA */}
+            <div className="summary-breakdown">
+                <div className="summary-line">
+                    <span>Subtotal</span>
+                    <span>{formatINR(subtotal)}</span>
+                </div>
+                <div className="summary-line">
+                    <span>Shipping</span>
+                    <span>{shippingCharge === 0 ? "Free" : formatINR(shippingCharge)}</span>
+                </div>
+                <div className="summary-line">
+                    <span>Estimated GST (Included / Tax)</span>
+                    <span>{formatINR(taxAmount)}</span>
+                </div>
+
+                <div className={`summary-total-row ${totalFlash ? "total-changed-flash" : ""}`}>
+                    <span className="summary-total-label">Total</span>
+                    <span className="summary-total-amount">{formatINR(grandTotal)}</span>
+                </div>
+            </div>
+
             <button
-                className={`place-order-btn ${isSubmitting ? "loading" : ""}`}
+                type="button"
+                className="place-order-btn"
                 onClick={handleCheckout}
                 disabled={isSubmitting || cart.length === 0}
             >
-                {isSubmitting ? (
-                    <>
-                        <span className="btn-spinner"></span>
-                        <span>Placing Your Order...</span>
-                    </>
-                ) : (
-                    <>
-                        <FiLock />
-                        <span>
-                            {paymentMethod === "Cash On Delivery"
-                                ? "Confirm & Place Order"
-                                : `Pay ₹${grandTotal.toLocaleString()} via Razorpay`}
-                        </span>
-                    </>
-                )}
+                {isSubmitting
+                    ? (paymentMethod === "Razorpay" ? "Opening Payment…" : "Placing Order…")
+                    : (paymentMethod === "Razorpay" ? `Pay ${formatINR(grandTotal)}` : `Place Order (${formatINR(grandTotal)})`)}
             </button>
 
-            <div className="checkout-trust-notice">
-                <FiShield />
-                <span>Encrypted 256-bit SSL transaction guarantee.</span>
+            <div className="summary-trust-footer">
+                <FiLock size={13} />
+                <span>256-bit encrypted checkout · Official seller warranty</span>
             </div>
-        </div>
+        </aside>
     );
 };
 

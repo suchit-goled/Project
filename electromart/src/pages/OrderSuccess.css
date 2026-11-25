@@ -1,176 +1,50 @@
 .order-success-page {
-    min-height: 100vh;
-    background: transparent;
-    padding: 50px 20px 80px;
-}
-
-.order-success-empty {
-    min-height: 70vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-}
-
-.order-success-empty h2 {
-    font-size: 28px;
-    color: var(--text-primary);
-}
-
-.order-success-empty button {
-    padding: 12px 24px;
-    border: none;
-    border-radius: var(--radius-sm);
-    background: var(--accent-blue);
-    color: white;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: 600;
-    box-shadow: 0 4px 14px var(--accent-glow);
-    transition: all var(--transition-fast);
-}
-
-.order-success-empty button:hover {
-    background: var(--primary-glow);
-    transform: translateY(-1px);
-}
-
-.success-animation {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.success-icon {
-    font-size: 96px;
-    color: var(--success);
-    filter: drop-shadow(0 10px 24px rgba(22, 163, 74, 0.35));
-    animation: scalePulse 0.5s ease-out;
-}
-
-@keyframes scalePulse {
-    0% { transform: scale(0.6); opacity: 0; }
-    70% { transform: scale(1.1); }
-    100% { transform: scale(1); opacity: 1; }
+  max-width: var(--container-narrow);
+  margin: 0 auto;
+  padding: 40px 24px 64px;
 }
 
 .success-heading {
   text-align: center;
-  margin: 24px auto 36px;
-  max-width: 700px;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-fine);
 }
 
 .success-heading h1 {
-  font-size: 38px;
-  color: var(--text-primary);
-  margin-bottom: 12px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--ink-primary);
 }
 
 .success-heading p {
-  font-size: 17px;
-  color: var(--text-secondary);
-  line-height: 1.5;
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--ink-secondary);
 }
 
-.order-info-card {
-  max-width: 1000px;
-  margin: 0 auto 36px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-}
-
-.info-box {
-  background: var(--bg-glass-card);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border-radius: var(--radius-md);
-  padding: 24px;
-  text-align: center;
-  border: 1px solid var(--border-glass);
-  box-shadow: var(--shadow-glass);
-  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
-}
-
-.info-box:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-glass-lg);
-}
-
-.info-box span {
-  display: block;
-  color: var(--text-secondary);
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.info-box strong {
-  color: var(--text-primary);
-  font-size: 17px;
-  font-weight: 700;
-}
-
-.success-buttons {
-  max-width: 700px;
-  margin: 40px auto 0;
+.order-success-actions {
   display: flex;
   justify-content: center;
-  gap: 16px;
+  gap: 12px;
+  margin-top: 28px;
   flex-wrap: wrap;
 }
 
-.success-buttons button {
-  padding: 14px 28px;
-  border: none;
+.order-success-empty {
+  max-width: 480px;
+  margin: 64px auto;
+  padding: 36px 24px;
+  text-align: center;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-fine);
   border-radius: var(--radius-sm);
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all var(--transition-fast);
 }
 
-.success-buttons button:first-child {
-  background: var(--accent-blue);
-  color: white;
-  box-shadow: 0 4px 14px var(--accent-glow);
-}
-
-.success-buttons button:first-child:hover {
-  background: var(--primary-glow);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px var(--accent-glow);
-}
-
-.success-buttons button:last-child {
-  background: var(--bg-card);
-  border: 1px solid var(--border-glass);
-  color: var(--text-primary);
-}
-
-.success-buttons button:last-child:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--accent-blue);
-  transform: translateY(-2px);
-}
-
-@media (max-width: 768px) {
-  .success-heading h1 {
-    font-size: 28px;
-  }
-
-  .success-heading p {
-    font-size: 15px;
-  }
-
-  .success-buttons {
-    flex-direction: column;
-  }
-
-  .success-buttons button {
-    width: 100%;
+@media (max-width: 600px) {
+  .order-success-page {
+    padding: 24px 16px 48px;
   }
 }

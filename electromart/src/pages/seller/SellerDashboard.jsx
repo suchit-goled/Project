@@ -14,6 +14,7 @@ import {
     FiExternalLink
 } from "react-icons/fi";
 import SellerService from "../../services/seller.service";
+import MarketplaceAnalyticsChart from "../../components/common/MarketplaceAnalyticsChart/MarketplaceAnalyticsChart";
 import "./SellerDashboard.css";
 
 const SellerDashboard = () => {
@@ -226,6 +227,13 @@ const SellerDashboard = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Interactive Store Revenue & Velocity Chart */}
+            <MarketplaceAnalyticsChart
+                title="Store Sales Velocity & Payout Analytics"
+                totalAmount={grossSales}
+                subtitle="Daily transaction trajectory, settlement forecasts, and customer order frequency"
+            />
 
             {/* Recent Orders Section */}
             <div className="seller-dashboard-section">

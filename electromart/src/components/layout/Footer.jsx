@@ -66,12 +66,12 @@ function Footer() {
         <div className="footer-col">
           <h3>Shop Categories</h3>
           <ul className="footer-links">
-            <li><button onClick={() => navigate("/products/category/smartphones")}>Smartphones</button></li>
-            <li><button onClick={() => navigate("/products/category/laptops")}>Laptops & Ultrabooks</button></li>
-            <li><button onClick={() => navigate("/products/category/audio")}>Premium Audio</button></li>
-            <li><button onClick={() => navigate("/products/category/wearables")}>Smartwatches & Wearables</button></li>
-            <li><button onClick={() => navigate("/products/category/gaming")}>Gaming & Gear</button></li>
-            <li><button onClick={() => navigate("/products/category/cameras")}>Pro Cameras & Lenses</button></li>
+            <li><button onClick={() => navigate("/products?category=Smartphones")}>Smartphones</button></li>
+            <li><button onClick={() => navigate("/products?category=Laptops")}>Laptops & Ultrabooks</button></li>
+            <li><button onClick={() => navigate("/products?category=Headphones")}>Premium Audio</button></li>
+            <li><button onClick={() => navigate("/products?category=Smartwatches")}>Smartwatches & Wearables</button></li>
+            <li><button onClick={() => navigate("/products?category=Gaming%20Accessories")}>Gaming & Gear</button></li>
+            <li><button onClick={() => navigate("/products?category=Cameras")}>Pro Cameras & Lenses</button></li>
             <li><button onClick={() => navigate("/deals")}>Flash Deals & Offers</button></li>
           </ul>
         </div>

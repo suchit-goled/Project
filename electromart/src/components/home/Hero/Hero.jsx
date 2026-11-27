@@ -1,135 +1,48 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { FiArrowRight } from "react-icons/fi";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { FiArrowRight, FiArrowUpRight } from "react-icons/fi";
+import useHorizontalSwipe from "../../../hooks/useHorizontalSwipe";
 import "./Hero.css";
 
-const SPOTLIGHT_SPECS = {
-  Laptops: {
-    name: 'Apple MacBook Pro 16"',
-    spec: "Apple M3 Max Chip",
-    category: "laptops",
-    price: "₹3,49,900",
-  },
-  Phones: {
-    name: "iPhone 16 Pro Max",
-    spec: "A18 Pro Bionic",
-    category: "smartphones",
-    price: "₹1,44,900",
-  },
-  Wearables: {
-    name: "Apple Watch Ultra 2",
-    spec: "Precision Dual GPS",
-    category: "wearables",
-    price: "₹89,900",
-  },
-};
+const collections = [
+  { label: "Audio", first: "The listening", last: "room.", detail: "Over-ear headphones, wireless sets and everyday listening gear.", category: "Headphones", action: "Shop headphones", image: "hero-headphones.webp", alt: "Over-ear headphones resting on a warm stone plinth" },
+  { label: "Workspace", first: "At your", last: "desk.", detail: "Explore keyboards and computer accessories for the place you work.", category: "Computer Accessories", action: "Shop desk gear", image: "editorial-keyboard.webp", alt: "A close study of the keys on a mechanical keyboard" },
+  { label: "Camera", first: "Behind the", last: "lens.", detail: "Browse cameras for spontaneous street shots and considered studio work.", category: "Cameras", action: "Shop cameras", image: "editorial-camera.webp", alt: "A camera body and lens photographed in warm studio light" },
+];
+const media = "/media/design/";
 
-const Hero = () => {
-  const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("Laptops");
-  const current = SPOTLIGHT_SPECS[activeTab];
-
+export default function Hero() {
+  const [index, setIndex] = useState(0);
+  const story = collections[index];
+  const swipe = useHorizontalSwipe(step => setIndex(i => (i + step + collections.length) % collections.length));
   return (
-    <section className="catalog-hero">
-      <div className="catalog-container catalog-hero__grid">
-        {/* Left: Editorial Copy Column (Clean Breathing Space) */}
-        <div className="catalog-hero__copy">
-          <span className="catalog-hero__kicker">
-            Authorised Consumer Electronics Retailer
-          </span>
-          <h1 className="catalog-hero__headline font-serif">
-            Precision Hardware, Delivered to Your Door.
-          </h1>
-          <p className="catalog-hero__lead">
-            Independent equipment catalog featuring verified laptops, cameras,
-            mechanical keyboards, and reference audio backed by manufacturer warranty.
-          </p>
-
-          <div className="catalog-hero__actions">
-            <button
-              type="button"
-              className="btn-accent-catalog"
-              onClick={() => navigate("/products")}
-            >
-              <span>Explore 8,800+ Products</span>
-              <FiArrowRight size={16} />
-            </button>
-            <button
-              type="button"
-              className="btn-outline-catalog"
-              onClick={() => navigate("/deals")}
-            >
-              Festive Flash Deals
-            </button>
-          </div>
-
-          <dl className="catalog-hero__specs tabular-nums">
-            <div className="catalog-hero__spec-item">
-              <dt>Verified Products</dt>
-              <dd>8,800+</dd>
-            </div>
-            <div className="catalog-hero__spec-item">
-              <dt>Brand Warranty</dt>
-              <dd>100%</dd>
-            </div>
-            <div className="catalog-hero__spec-item">
-              <dt>Dispatch Window</dt>
-              <dd>Free 48h</dd>
-            </div>
-          </dl>
-        </div>
-
-        {/* Right: Studio Editorial Photograph + Spec Index Card */}
-        <div className="catalog-hero__visual">
-          <div className="catalog-hero__photo-frame">
-            <img
-              src="/media/design/hero-headphones.webp"
-              alt="Matte black and anodized aluminum studio reference headphones on warm stone surface"
-              className="catalog-hero__photo"
-            />
-            <div className="catalog-hero__photo-bar">
-              <span>Studio Reference Audio</span>
-              <Link to="/products/category/headphones" className="catalog-hero__photo-link">
-                Shop Headphones <FiArrowRight size={13} />
-              </Link>
-            </div>
-          </div>
-
-          {/* Printed Spec Switcher */}
-          <div className="catalog-hero__switcher" aria-label="Featured equipment index">
-            <div className="catalog-hero__tabs">
-              {Object.keys(SPOTLIGHT_SPECS).map((tab) => (
-                <button
-                  key={tab}
-                  type="button"
-                  aria-pressed={activeTab === tab}
-                  className={`catalog-hero__tab ${activeTab === tab ? "active" : ""}`}
-                  onClick={() => setActiveTab(tab)}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-            <div className="catalog-hero__tab-body">
-              <div>
-                <div className="catalog-hero__tab-name">{current.name}</div>
-                <div className="catalog-hero__tab-spec">{current.spec}</div>
-              </div>
-              <div className="catalog-hero__tab-right">
-                <span className="catalog-hero__tab-price tabular-nums">{current.price}</span>
-                <Link
-                  to={`/products/category/${current.category}`}
-                  className="catalog-hero__tab-link"
-                >
-                  View department
-                </Link>
-              </div>
-            </div>
+    <section className="studio" aria-label="Shop the collections">
+      <div className="studio__spread" {...swipe}>
+        <div className="studio__panel">
+          <div className="studio__edition"><span aria-hidden="true" /> ElectroNova collections</div>
+          <div key={story.label} className="studio__copy" aria-live="polite">
+            <h1>{story.first}<br /><em>{story.last}</em></h1>
+            <p>{story.detail}</p>
+            <Link className="studio__shop" to={"/products?category=" + encodeURIComponent(story.category)}>
+              {story.action} <FiArrowRight aria-hidden="true" />
+            </Link>
           </div>
         </div>
+        <div className="studio__frame">
+          <img key={story.image} src={media + story.image} alt={story.alt} fetchPriority="high" />
+          <span className="studio__counter" aria-hidden="true">0{index + 1} / 03</span>
+        </div>
+      </div>
+      <div className="studio__rail">
+        <div className="studio__choices" role="group" aria-label="Choose a collection">
+          {collections.map((item, i) => (
+            <button key={item.label} type="button" aria-pressed={i === index} onClick={() => setIndex(i)}>
+              <img src={media + item.image} alt="" width="46" height="34" />{item.label}
+            </button>
+          ))}
+        </div>
+        <Link className="studio__browse" to="/products">Full catalogue <FiArrowUpRight aria-hidden="true" /></Link>
       </div>
     </section>
   );
-};
-
-export default Hero;
+}

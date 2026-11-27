@@ -8,17 +8,13 @@ const SectionHeader = ({
   return (
     <div className="section-header">
 
-      <span className="section-header__badge">
-        {badge}
-      </span>
+      {badge && <span className="section-header__badge">{badge}</span>}
 
       <h2 className="section-header__title">
         {title}
       </h2>
 
-      <p className="section-header__subtitle">
-        {subtitle}
-      </p>
+      {subtitle && <p className="section-header__subtitle">{subtitle}</p>}
 
     </div>
   );

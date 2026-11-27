@@ -192,3 +192,21 @@
     order: 2;
   }
 }
+.transaction-nav { border-bottom:1px solid var(--border-fine); background:var(--bg-page); }
+.transaction-nav .container { min-height:66px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.transaction-nav a:last-child { display:inline-flex; align-items:center; gap:8px; font-size:.85rem; min-height:44px; }
+@media (min-width:769px) and (max-width:1080px) { .mobile-hamburger-btn { display:inline-flex; } }
+.navbar__search { min-width:160px; }
+.navbar__container { gap:clamp(8px,1.15vw,20px); }
+.nav-links { gap:clamp(10px,1vw,18px); }
+.user-avatar img { width:24px; height:24px; object-fit:cover; border-radius:50%; }
+@media(max-width:768px) {
+ .navbar__container { display:grid; grid-template-columns:1fr auto; gap:8px; }
+ .navbar__left,.navbar__right,.navbar__search { min-width:0; }
+ .navbar__search { grid-column:1/-1; width:100%; }
+ .navbar__left,.actions { gap:6px; }
+ .navbar__left .navbar-delivery-selector { display:none; }
+ .user-login-btn { min-width:38px; padding:0 8px; }
+ .user-name { display:none; }
+}
+@media(max-width:390px) { .user-login-text { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); } }

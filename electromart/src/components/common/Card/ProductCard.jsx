@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./ProductCard.css";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FiHeart, FiCheck } from "react-icons/fi";
 import { FaHeart, FaStar } from "react-icons/fa";
 import { useCart } from "../../../context/CartContext";
@@ -9,7 +9,6 @@ import CatalogImage from "../CatalogImage";
 import { formatINR } from "../../../utils/formatCurrency";
 
 const ProductCard = ({ product }) => {
-    const navigate = useNavigate();
     const { addToCart } = useCart();
     const [addedEffect, setAddedEffect] = useState(false);
     const {
@@ -18,9 +17,7 @@ const ProductCard = ({ product }) => {
         isWishlisted
     } = useWishlist();
 
-    const goToProduct = () => {
-        navigate(`/products/${product._id}`);
-    };
+    const productPath = "/products/" + product._id;
 
     const handleWishlist = async (e) => {
         e.stopPropagation();
@@ -51,7 +48,6 @@ const ProductCard = ({ product }) => {
     return (
         <article
             className="product-card"
-            onClick={goToProduct}
         >
             <div className="product-card__media">
                 {product.discount_percentage > 0 && (
@@ -71,13 +67,13 @@ const ProductCard = ({ product }) => {
                         : <FiHeart size={15} />}
                 </button>
 
-                <div className="product-card__image">
+                <Link to={productPath} className="product-card__image" tabIndex={-1} aria-hidden="true">
                     <CatalogImage
                         src={product.product_image_url || product.image}
                         alt={product.product_title || product.title}
                         className="product-card__img"
                     />
-                </div>
+                </Link>
             </div>
 
             <div className="product-card__content">
@@ -91,7 +87,7 @@ const ProductCard = ({ product }) => {
                 </div>
 
                 <h3 className="product-card__title">
-                    {product.product_title || product.title}
+                    <Link to={productPath}>{product.product_title || product.title}</Link>
                 </h3>
 
                 <div className="seller-attribution">

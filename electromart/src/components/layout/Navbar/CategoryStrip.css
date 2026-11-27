@@ -19,7 +19,7 @@
   display: none;
 }
 
-.category-strip__item {
+.category-strip__link {
   font-size: 0.8125rem;
   font-weight: 500;
   color: var(--ink-secondary);
@@ -29,13 +29,13 @@
   transition: color 150ms ease, border-color 150ms ease;
 }
 
-.category-strip__item:hover,
-.category-strip__item--active {
+.category-strip__link:hover,
+.category-strip__link.active {
   color: var(--ink-primary);
   border-bottom-color: var(--accent);
 }
 
-.category-strip__deals {
+.deals-pill-link {
   color: var(--accent);
   font-weight: 600;
 }
@@ -46,3 +46,9 @@
     gap: 18px;
   }
 }
+.category-strip__container { gap:20px; overflow:hidden; }
+.category-strip__scrollable { display:flex; align-items:center; gap:22px; overflow-x:auto; flex:1; min-width:0; scrollbar-width:none; }
+.category-strip__scrollable::-webkit-scrollbar { display:none; }
+.category-strip__link,.deals-pill-link { display:inline-flex; flex:none; align-items:center; gap:5px; white-space:nowrap; font-size:.8rem; }
+.category-strip__right-deals { flex:none; }
+@media(max-width:768px) { .category-strip__right-deals { display:none; } .category-strip__container { gap:14px; } .category-strip__scrollable { gap:18px; } }

@@ -406,7 +406,9 @@ const OrderDetails = () => {
                 )}
 
                 {/* Shipping Address & Payment Totals */}
-                <div className="tracker-details-grid">
+                <details className="tracker-receipt">
+                    <summary>Delivery address and payment <span aria-hidden="true">+</span></summary>
+                    <div className="tracker-details-grid">
                     <div className="tracker-info-box">
                         <h3><FiMapPin size={14} /> Delivery Address</h3>
                         <p>
@@ -430,6 +432,8 @@ const OrderDetails = () => {
                         </div>
                     </div>
                 </div>
+
+                </details>
 
                 {order.orderStatus !== "Delivered" && order.orderStatus !== "Cancelled" && (
                     <div className="tracker-cancel-bar">

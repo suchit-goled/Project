@@ -42,3 +42,5 @@
     justify-content: flex-start;
   }
 }
+.announcement-bar__container { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+@media(max-width:1000px) { .announcement-bar__container { justify-content:center; } .announcement-item--desktop { display:none; } }

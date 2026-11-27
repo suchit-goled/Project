@@ -18,7 +18,9 @@ const Checkout = () => {
     return (
         <section className="checkout-page">
             <div className="container">
-                <CheckoutSteps />
+                <h1 className="checkout-page-title">Checkout</h1>
+                <CheckoutSteps addressComplete={["fullName", "phone", "address", "city", "state", "pincode"]
+                    .every(field => String(address[field] || "").trim())} />
 
                 <div className="checkout-layout">
                     <div className="checkout-left">

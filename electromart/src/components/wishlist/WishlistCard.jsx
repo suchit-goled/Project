@@ -1,4 +1,6 @@
 import "./WishlistCard.css";
+import { formatINR } from "../../utils/formatCurrency";
+import CatalogImage from "../common/CatalogImage";
 
 import { FaHeart, FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +27,7 @@ const WishlistCard = ({ product }) => {
         >
             <button
                 className="wishlist-remove"
+                aria-label="Remove from wishlist"
                 onClick={(e) => {
                     e.stopPropagation();
                     removeFromWishlist(product._id);
@@ -34,7 +37,7 @@ const WishlistCard = ({ product }) => {
             </button>
 
             <div className="wishlist-image">
-                <img
+                <CatalogImage
                     src={product.product_image_url}
                     alt={product.product_title}
                 />
@@ -55,11 +58,11 @@ const WishlistCard = ({ product }) => {
 
                 <div className="price">
                     <span className="current">
-                        ₹{(product.discounted_price ?? 0).toLocaleString()}
+                        {formatINR(product.discounted_price)}
                     </span>
 
                     <span className="old">
-                        ₹{(product.original_price ?? 0).toLocaleString()}
+                        {formatINR(product.original_price)}
                     </span>
                 </div>
 

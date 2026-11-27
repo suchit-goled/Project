@@ -1,12 +1,14 @@
 import React, { useState, useRef } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 import "./Login.css";
+import { authReturn } from "../utils/authReturn";
 
 const Login = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { login, loading } = useAuth();
 
     const [form, setForm] = useState({
@@ -54,7 +56,7 @@ const Login = () => {
         try {
             await login(form);
             toast.success("Signed in to ElectroNova.");
-            navigate("/");
+            navigate(authReturn(location, "/"), { replace: true });
         } catch (error) {
             const msg =
                 error.response?.data?.message ||
@@ -186,7 +188,7 @@ const Login = () => {
 
                     <div className="auth-switch-row auth-rise-2">
                         <span>New to ElectroNova?</span>
-                        <Link to="/register" className="auth-switch-link">
+                        <Link to={{ pathname: "/register", search: location.search }} state={location.state} className="auth-switch-link">
                             Create an account
                         </Link>
                     </div>

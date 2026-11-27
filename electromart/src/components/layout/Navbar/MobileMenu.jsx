@@ -21,19 +21,21 @@ import {
 import { useAuth } from "../../../context/AuthContext";
 import { useSearch } from "../../../context/SearchContext";
 import Logo from "./Logo";
+import { useDelivery } from "../../../context/DeliveryContext";
 import "./MobileMenu.css";
 
 const MobileMenu = ({ isOpen, onClose }) => {
   const { user, logout } = useAuth();
   const { search, setSearch } = useSearch();
   const navigate = useNavigate();
+  const { openPincodeModal } = useDelivery();
 
   if (!isOpen) return null;
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     onClose();
-    navigate("/products");
+    navigate("/products?search=" + encodeURIComponent(search.trim()));
   };
 
   const handleNavClick = (path) => {
@@ -42,13 +44,13 @@ const MobileMenu = ({ isOpen, onClose }) => {
   };
 
   const categories = [
-    { label: "Smartphones", path: "/products/category/smartphones" },
-    { label: "Laptops", path: "/products/category/laptops" },
-    { label: "Audio", path: "/products/category/audio" },
-    { label: "Wearables", path: "/products/category/wearables" },
-    { label: "Gaming", path: "/products/category/gaming" },
-    { label: "Cameras", path: "/products/category/cameras" },
-    { label: "Smart Home", path: "/products/category/smart home" },
+    { label: "Smartphones", path: "/products?category=Smartphones" },
+    { label: "Laptops", path: "/products?category=Laptops" },
+    { label: "Audio", path: "/products?category=Headphones" },
+    { label: "Wearables", path: "/products?category=Smartwatches" },
+    { label: "Gaming", path: "/products?category=Gaming%20Accessories" },
+    { label: "Cameras", path: "/products?category=Cameras" },
+    { label: "Smart Home", path: "/products?category=Home%20Electronics" },
   ];
 
   return (
@@ -72,7 +74,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
           <FiSearch className="mobile-search-icon" />
           <input
             type="text"
-            placeholder="Search 8,000+ tech products..."
+            aria-label="Search products and brands" placeholder="Search products and brands"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -81,6 +83,9 @@ const MobileMenu = ({ isOpen, onClose }) => {
         <div className="mobile-menu-content">
           {/* Main Navigation */}
           <div className="mobile-section">
+            <button type="button" className="drawer-location" onClick={() => { onClose(); openPincodeModal(); }}>
+              Change delivery location
+            </button>
             <div className="mobile-section-title">Navigation</div>
             <nav className="mobile-nav-list">
               <NavLink to="/" onClick={onClose} className="mobile-nav-item">

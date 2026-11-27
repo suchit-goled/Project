@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, useNavigationType } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 import "./App.css";
@@ -61,8 +61,9 @@ import NotFound from "./pages/NotFound";
 
 const PageTransitionShell = ({ children }) => {
     const location = useLocation();
+    const navigationType = useNavigationType();
     return (
-        <div key={location.pathname} className="app-main-content page-transition-wrapper">
+        <div key={location.pathname} data-travel={navigationType} className="app-main-content page-transition-wrapper">
             {children}
         </div>
     );
